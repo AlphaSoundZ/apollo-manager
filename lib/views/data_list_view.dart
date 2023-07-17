@@ -52,7 +52,8 @@ class _DataListViewState extends State<DataListView> {
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: UserWidget(
                     user: data[index],
-                    onSelected: widget.onSelected != null
+                    onSelected: widget.onSelected !=
+                            null // check if callback is provided
                         ? () {
                             widget.onSelected!(index);
                           }

@@ -15,7 +15,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int selectedView = 0;
+  int selectedIndex = 0;
   bool _isDarkMode = Get.isDarkMode;
+
+  List<Destination> destinations = Destinations().destinations;
 
   late final _colorScheme = Theme.of(context).colorScheme;
   late final _backgroundColor = Color.alphaBlend(
