@@ -22,13 +22,15 @@ class AdaptiveNavigationRail extends StatelessWidget {
       selectedIndex: selectedIndex,
       backgroundColor: backgroundColor,
       onDestinationSelected: onDestinationSelected,
+      labelType: NavigationRailLabelType.all,
       leading: Column(
         children: [
+          const SizedBox(height: 8),
           IconButton(
             onPressed: () {},
             icon: const Icon(Icons.menu),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 16),
           FloatingActionButton(
             backgroundColor: colorScheme.tertiaryContainer,
             foregroundColor: colorScheme.onTertiaryContainer,

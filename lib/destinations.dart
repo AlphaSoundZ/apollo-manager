@@ -41,6 +41,15 @@ class Destinations {
       const Center(child: Text('Prebook')),
     ),
     Destination(
+      Icons.bar_chart,
+      'Stats',
+      const Center(
+        child: Center(
+          child: Text('Stats'),
+        ),
+      ),
+    ),
+    Destination(
       Icons.settings,
       'Settings',
       Center(
