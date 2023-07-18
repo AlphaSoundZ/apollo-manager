@@ -39,21 +39,23 @@ class _UserWidgetState extends State<UserWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: widget.onSelected,
-        child: Card(
-            elevation: 0,
-            color: _surfaceColor,
-            clipBehavior: Clip.hardEdge,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ListTile(
-                  leading: Text(widget.user.id.toString()),
-                  title: Text(widget.user.name.fullName),
-                  subtitle: Text("Klasse: ${widget.user.className}"),
-                ),
-              ],
-            )));
+      onTap: widget.onSelected,
+      child: Card(
+        elevation: 0,
+        color: _surfaceColor,
+        clipBehavior: Clip.hardEdge,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: Text(widget.user.id.toString()),
+              title: Text(widget.user.name.fullName),
+              subtitle: Text("Klasse: ${widget.user.className}"),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

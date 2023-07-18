@@ -17,7 +17,7 @@ class AdaptiveNavigationBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return NavigationBar(
       elevation: 0,
-      backgroundColor: Colors.white,
+      //backgroundColor: Colors.white,
       destinations: destinations.map<NavigationDestination>((d) {
         return NavigationDestination(
           icon: Icon(d.icon),

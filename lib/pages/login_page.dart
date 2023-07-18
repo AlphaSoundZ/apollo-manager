@@ -138,7 +138,6 @@ class _LoginPageState extends State<LoginPage> {
         await api.login(usernameController.text, passwordController.text);
 
     // log the response
-    debugPrint(response.toString());
 
     // show a snackbar
     scaffoldMessenger.showSnackBar(
@@ -153,7 +152,7 @@ class _LoginPageState extends State<LoginPage> {
       debugPrint('Token: ${response['jwt']}');
 
       // Push to the home page
-      Get.offNamed("/home");
+      Get.offNamed("/");
     } else {
       // Pop the dialog
       setState(() {

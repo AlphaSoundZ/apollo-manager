@@ -97,6 +97,10 @@ class Api {
   Future<List<User>?> fetchUsers() async {
     final token = await _storage.getString("token");
 
+    if (token == "") {
+      return null;
+    }
+
     try {
       final uri = _getUri("/user");
       final response = await http.get(
@@ -111,6 +115,7 @@ class Api {
       dynamic responseData = json.decode(response.body);
 
       if (responseData["code"] != 200) {
+        debugPrint('token: $token');
         debugPrint('Error fetching data: ${responseData["message"]}');
         return null;
       }

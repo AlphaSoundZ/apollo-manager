@@ -1,15 +1,22 @@
+import 'package:apollo_manager/widgets/navigation/adaptive_navigation_sub_drawer.dart';
 import 'package:apollo_manager/widgets/navigation/adaptive_navigation_bar.dart';
 import 'package:apollo_manager/widgets/navigation/adaptive_navigation_rail.dart';
+import '../widgets/app_bar_widget.dart' as search_bar;
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import '../classes/api.dart';
 import '../destinations.dart';
+import '../widgets/navigation/adaptive_navigation_sub_drawer.dart';
 
 // Views
-import '../views/data_list_view.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({
+    super.key,
+    required this.view,
+    this.subView = 0,
+  });
+
+  final int view;
+  final int subView;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -17,7 +24,15 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int selectedView = 0;
-  bool _isDarkMode = Get.isDarkMode;
+  int selectedSubView = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    selectedView = widget.view;
+    selectedSubView = widget.subView;
+  }
 
   List<Destination> destinations = Destinations().destinations;
 
@@ -26,6 +41,7 @@ class _HomePageState extends State<HomePage> {
       _colorScheme.primary.withOpacity(0.14), _colorScheme.surface);
 
   bool wideScreen = false;
+  bool showSubDrawer = true;
 
   @override
   void didChangeDependencies() {
@@ -41,26 +57,85 @@ class _HomePageState extends State<HomePage> {
       body: Row(
         children: [
           if (wideScreen)
-            AdaptiveNavigationRail(
-              selectedIndex: selectedView,
-              backgroundColor: _backgroundColor,
-              onDestinationSelected: (int index) {
-                setState(
-                  () {
-                    selectedView = index;
-                  },
-                );
-              },
+            Padding(
+              // NAVIGATION RAIL
+              padding: const EdgeInsets.only(right: 8.0),
+              child: AdaptiveNavigationRail(
+                selectedIndex: selectedView,
+                backgroundColor: _backgroundColor,
+                onDestinationSelected: (int index) {
+                  setState(
+                    () {
+                      selectedView = index;
+                      selectedSubView = 0;
+                    },
+                  );
+                },
+                onMenuButtonPressed: () {
+                  setState(() {
+                    showSubDrawer = !showSubDrawer;
+                  });
+                },
+              ),
             ),
           Expanded(
-            child: Container(
-              color: _backgroundColor,
-              child: IndexedStack(
-                index: selectedView,
-                children: destinations.map<Widget>((e) {
-                  return e.view;
-                }).toList(),
-              ),
+            child: Column(
+              children: [
+                Padding(
+                  // SEARCH BAR
+                  padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                  child: search_bar.AppBar(backgroundColor: _backgroundColor),
+                ),
+                Expanded(
+                  child: Row(
+                    children: [
+                      if (wideScreen &&
+                          destinations[selectedView]
+                              .subDestinations
+                              .isNotEmpty &&
+                          showSubDrawer == true)
+                        Container(
+                          // SUB-DRAWER
+                          padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                          child: SubDrawer(
+                            selectedView: selectedView,
+                            onViewSelected: (int index) {
+                              setState(() {
+                                selectedSubView = index;
+                              });
+                            },
+                            selectedSubView: selectedSubView,
+                          ),
+                        ),
+                      Expanded(
+                        child: Container(
+                          // MAIN VIEW
+                          padding: const EdgeInsets.all(8),
+                          //color: _backgroundColor,
+                          child: IndexedStack(
+                            index: selectedView,
+                            children: destinations.map<Widget>((e) {
+                              if (e.subDestinations.isEmpty) {
+                                return IndexedStack(
+                                  index: selectedSubView,
+                                  children: [e.view],
+                                );
+                              }
+
+                              return IndexedStack(
+                                index: selectedSubView,
+                                children: e.subDestinations
+                                    .map<Widget>((e) => e.view)
+                                    .toList(),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ],

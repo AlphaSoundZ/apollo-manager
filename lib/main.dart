@@ -4,6 +4,7 @@ import '/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
+import 'destinations.dart';
 
 Future main() async {
   await dotenv.load(fileName: ".env");
@@ -18,21 +19,15 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
+  List<Destination> destinations = Destinations().destinations;
+  List<GetPage> pages = [];
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      initialRoute: '/home',
-      getPages: [
-        GetPage(
-          name: '/login',
-          page: () => const LoginPage(),
-        ),
-        GetPage(
-          name: '/home',
-          page: () => const HomePage(),
-          transition: Transition.fadeIn,
-        ),
-      ],
+      initialRoute: '/',
+      home: const HomePage(view: 0),
+      getPages: pages,
       theme: ThemeData.light(useMaterial3: true),
       debugShowCheckedModeBanner: false,
     );
@@ -46,17 +41,55 @@ class _MainAppState extends State<MainApp> {
 
     Get.changeTheme(ThemeData.light(useMaterial3: true));
 
+    // Get Pages
+    pages = _getPagesFromDestinations();
+
     // check if user is logged in
     Api api = Api();
 
     api.isLoggedIn().then((isLoggedIn) {
-      if (isLoggedIn) {
+      if (isLoggedIn && Get.currentRoute != '/login') {
         debugPrint('User is logged in');
-        Get.offAllNamed("/home");
+        Get.offAllNamed("/");
       } else {
-        debugPrint('User is not logged in');
+        debugPrint('User is not logged in or is on login page');
         Get.offAllNamed("/login");
       }
     });
+  }
+
+  _getPagesFromDestinations() {
+    List<GetPage> pages = [];
+
+    for (var i = 0; i < destinations.length; i++) {
+      pages.add(
+        GetPage(
+          name: destinations[i].route,
+          page: () => HomePage(
+            view: i,
+          ),
+        ),
+      );
+
+      for (var j = 0; j < destinations[i].subDestinations.length; j++) {
+        pages.add(
+          GetPage(
+            name: destinations[i].subDestinations[j].route,
+            page: () => HomePage(
+              view: i,
+              subView: j,
+            ),
+          ),
+        );
+      }
+    }
+
+    // other destinations that are not in the navigation rail/bar
+    pages.add(GetPage(
+      name: '/login',
+      page: () => const LoginPage(),
+    ));
+
+    return pages;
   }
 }

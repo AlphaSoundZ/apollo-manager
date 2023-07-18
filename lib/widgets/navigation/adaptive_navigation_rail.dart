@@ -7,30 +7,40 @@ class AdaptiveNavigationRail extends StatelessWidget {
     required this.selectedIndex,
     required this.backgroundColor,
     this.onDestinationSelected,
+    this.onMenuButtonPressed,
   });
 
   final int selectedIndex;
   final Color backgroundColor;
   final ValueChanged<int>? onDestinationSelected;
+  final VoidCallback? onMenuButtonPressed;
 
   final List<Destination> destinations = Destinations().destinations;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final surfaceContainer = Color.alphaBlend(
+      colorScheme.primary.withOpacity(0.08),
+      colorScheme.surface,
+    );
     return NavigationRail(
       selectedIndex: selectedIndex,
-      backgroundColor: backgroundColor,
+      backgroundColor: surfaceContainer,
       onDestinationSelected: onDestinationSelected,
       labelType: NavigationRailLabelType.all,
       leading: Column(
         children: [
-          const SizedBox(height: 8),
+          const SizedBox(height: 4),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              if (onMenuButtonPressed != null) {
+                onMenuButtonPressed!();
+              }
+            },
             icon: const Icon(Icons.menu),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           FloatingActionButton(
             backgroundColor: colorScheme.tertiaryContainer,
             foregroundColor: colorScheme.onTertiaryContainer,
