@@ -61,41 +61,68 @@ class _AppBarState extends State<AppBar> {
               ),
             ),
           Expanded(
-            child: Container(
-              // Search bar
-              height: 48,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-                color: surfaceContainer,
-              ),
-              padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
-              child:
-                  Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+            child: Row(
+              children: [
                 Expanded(
-                  child: TextField(
-                    maxLines: 1,
-                    textAlignVertical: TextAlignVertical.center,
-                    decoration: InputDecoration(
-                      // Search icon
-                      prefixIcon: IconButton(
-                        icon: const Icon(Icons.search),
-                        iconSize: 25,
-                        onPressed: () {},
-                      ),
-                      prefixText: " ",
-                      isDense: true,
-                      border: InputBorder.none,
-                      hintText: "Suche",
-                      // filter button
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.tune),
-                        onPressed: () {},
-                        iconSize: 25,
-                      ),
+                  child: Container(
+                    // Search bar
+                    height: 48,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: surfaceContainer,
+                    ),
+                    padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            maxLines: 1,
+                            textAlignVertical: TextAlignVertical.center,
+                            decoration: InputDecoration(
+                              // Search icon
+                              prefixIcon: IconButton(
+                                icon: const Icon(Icons.search),
+                                iconSize: 25,
+                                onPressed: () {},
+                              ),
+                              prefixText: " ",
+                              isDense: true,
+                              border: InputBorder.none,
+                              hintText: "Search",
+                              // filter button
+                              suffixIcon: IconButton(
+                                icon: const Icon(Icons.tune),
+                                onPressed: () {},
+                                iconSize: 25,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              ]),
+                const SizedBox(width: 16),
+                CircleAvatar(
+                  radius: 24,
+                  backgroundColor:
+                      Theme.of(context).colorScheme.secondaryContainer,
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.person,
+                      color: Theme.of(context).colorScheme.onSecondaryContainer,
+                      size: 25,
+                    ),
+                    onPressed: () {
+                      Get.offAllNamed(
+                        "/settings",
+                      );
+                    },
+                    iconSize: 25,
+                  ),
+                ),
+              ],
             ),
           ),
         ],

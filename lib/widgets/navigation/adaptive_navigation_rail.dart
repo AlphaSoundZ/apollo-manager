@@ -40,21 +40,10 @@ class AdaptiveNavigationRail extends StatelessWidget {
             },
             icon: const Icon(Icons.menu),
           ),
-          const SizedBox(height: 12),
-          FloatingActionButton(
-            backgroundColor: colorScheme.tertiaryContainer,
-            foregroundColor: colorScheme.onTertiaryContainer,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(15),
-              ),
-            ),
-            onPressed: () {},
-            child: const Icon(Icons.add),
-          )
+          const SizedBox(height: 20),
         ],
       ),
-      groupAlignment: -0.85,
+      groupAlignment: -1,
       destinations: destinations.map((d) {
         return NavigationRailDestination(
           icon: Icon(d.icon),

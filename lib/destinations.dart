@@ -25,11 +25,15 @@ class SubDestination {
     required this.label,
     required this.route,
     required this.view,
+    required this.fabLabel,
+    required this.fabIcon,
   });
   final IconData icon;
   final String label;
   final String route;
   final dynamic view;
+  final String fabLabel;
+  final IconData fabIcon;
 }
 
 class Destinations {
@@ -40,22 +44,28 @@ class Destinations {
       route: '/data',
       subDestinations: [
         SubDestination(
-          icon: Icons.data_array,
+          icon: Icons.group_outlined,
           label: 'Users',
           route: '/data/users',
           view: const DataView(),
+          fabLabel: 'User',
+          fabIcon: Icons.person_add_outlined,
         ),
         SubDestination(
-          icon: Icons.data_array,
+          icon: Icons.devices_outlined,
           label: 'Devices',
           route: '/data/devices',
           view: const Center(child: Text('Devices')),
+          fabLabel: 'Device',
+          fabIcon: Icons.devices_outlined,
         ),
         SubDestination(
-          icon: Icons.data_array,
+          icon: Icons.class_outlined,
           label: 'Classes',
           route: '/data/classes',
           view: const Center(child: Text('Classes')),
+          fabLabel: 'Class',
+          fabIcon: Icons.class_outlined,
         ),
       ],
     ),

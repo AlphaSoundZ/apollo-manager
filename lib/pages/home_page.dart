@@ -4,7 +4,6 @@ import 'package:apollo_manager/widgets/navigation/adaptive_navigation_rail.dart'
 import '../widgets/app_bar_widget.dart' as search_bar;
 import 'package:flutter/material.dart';
 import '../destinations.dart';
-import '../widgets/navigation/adaptive_navigation_sub_drawer.dart';
 
 // Views
 
@@ -82,10 +81,11 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               children: [
                 Padding(
-                  // SEARCH BAR
-                  padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-                  child: search_bar.AppBar(backgroundColor: _backgroundColor),
-                ),
+                    // SEARCH BAR
+                    padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                    child: search_bar.AppBar(
+                      backgroundColor: _backgroundColor,
+                    )),
                 Expanded(
                   child: Row(
                     children: [

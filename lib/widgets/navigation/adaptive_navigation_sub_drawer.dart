@@ -28,33 +28,62 @@ class SubDrawerState extends State<SubDrawer> {
     selectedView = widget.selectedView;
     selectedSubView = widget.selectedSubView;
 
-    return SizedBox(
+    return Container(
       width: 250,
-      child: Drawer(
-        clipBehavior: Clip.hardEdge,
-        elevation: 0,
-        child: ListView(
-          children: destinations[selectedView]
-              .subDestinations
-              .map<Widget>(
-                (e) => ListTile(
-                  selected:
-                      destinations[selectedView].subDestinations.indexOf(e) ==
-                          selectedSubView,
-                  title: Text(e.label),
-                  onTap: () {
-                    setState(() {
-                      selectedSubView =
-                          destinations[selectedView].subDestinations.indexOf(e);
-                    });
-                    if (widget.onViewSelected != null) {
-                      widget.onViewSelected!(selectedSubView);
-                    }
-                  },
-                ),
-              )
-              .toList(),
-        ),
+      padding: const EdgeInsets.only(top: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          FloatingActionButton.extended(
+            heroTag: "Create New",
+            backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
+            foregroundColor: Theme.of(context).colorScheme.onTertiaryContainer,
+            label: Text(
+                "New ${destinations[selectedView].subDestinations[selectedSubView].fabLabel}"),
+            icon: Icon(destinations[selectedView]
+                .subDestinations[selectedSubView]
+                .fabIcon),
+            onPressed: () {},
+            elevation: 0,
+          ),
+          const SizedBox(height: 16),
+          Column(
+            children: destinations[selectedView]
+                .subDestinations
+                .map<Widget>(
+                  (e) => SizedBox(
+                    height: 32.0,
+                    width: double.infinity,
+                    child: FilledButton.tonalIcon(
+                      icon: Icon(e.icon),
+                      label: Text(e.label),
+                      style: ButtonStyle(
+                        alignment: Alignment.centerLeft,
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                          selectedSubView ==
+                                  destinations[selectedView]
+                                      .subDestinations
+                                      .indexOf(e)
+                              ? Theme.of(context).colorScheme.secondaryContainer
+                              : Theme.of(context).colorScheme.surface,
+                        ),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          selectedSubView = destinations[selectedView]
+                              .subDestinations
+                              .indexOf(e);
+                        });
+                        if (widget.onViewSelected != null) {
+                          widget.onViewSelected!(selectedSubView);
+                        }
+                      },
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+        ],
       ),
     );
   }

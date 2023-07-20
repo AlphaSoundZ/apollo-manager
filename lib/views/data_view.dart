@@ -24,13 +24,7 @@ class _DataViewState extends State<DataView> {
 
     // fetch data from api
     Api api = Api();
-    api.fetchUsers().then((response) {
-      debugPrint("Response: ${response?[0].id}");
-
-      setState(() {
-        data = response ?? [];
-      });
-    });
+    _updateData(api);
   }
 
   @override
@@ -59,5 +53,19 @@ class _DataViewState extends State<DataView> {
         ),
       ),
     );
+  }
+
+  Future<void> _updateData(Api api) async {
+    setState(() {
+      data = [];
+    });
+
+    api.fetchUsers().then((response) {
+      debugPrint("Response: ${response?[0].id}");
+
+      setState(() {
+        data = response ?? [];
+      });
+    });
   }
 }
