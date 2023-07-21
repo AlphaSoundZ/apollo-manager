@@ -90,10 +90,7 @@ class _HomePageState extends State<HomePage> {
                   child: Row(
                     children: [
                       if (wideScreen &&
-                          destinations[selectedView]
-                              .subDestinations
-                              .isNotEmpty &&
-                          showSubDrawer == true)
+                          destinations[selectedView].subDestinations.isNotEmpty)
                         Container(
                           // SUB-DRAWER
                           padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
@@ -104,6 +101,7 @@ class _HomePageState extends State<HomePage> {
                                 selectedSubView = index;
                               });
                             },
+                            isOpen: showSubDrawer,
                             selectedSubView: selectedSubView,
                           ),
                         ),
