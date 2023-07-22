@@ -7,6 +7,7 @@ import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import '../models/user_model.dart';
 import '../models/device_model.dart';
 import '../models/class_model.dart';
+import '../models/usercard_model.dart';
 
 class Api {
   final EncryptedSharedPreferences _storage = EncryptedSharedPreferences();
@@ -105,6 +106,8 @@ class Api {
         return await fetchDevices();
       case WhichData.classes:
         return await fetchClasses();
+      case WhichData.usercards:
+        return await fetchUsercards();
       default:
         return [];
     }
@@ -189,6 +192,47 @@ class Api {
       }
 
       return devices;
+    } catch (e) {
+      debugPrint("Error: $e");
+      return [];
+    }
+  }
+
+  Future<List<Usercard>> fetchUsercards() async {
+    final token = await _storage.getString("token");
+
+    if (token == "") {
+      return [];
+    }
+
+    try {
+      final uri = _getUri("/usercard");
+      final response = await http.get(
+        uri,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+      );
+
+      List<Usercard> usercards = [];
+      dynamic responseData = json.decode(response.body);
+
+      if (responseData["code"] != 200) {
+        debugPrint('token: $token');
+        debugPrint('Error fetching data: ${responseData["message"]}');
+        return [];
+      }
+
+      for (var usercard in responseData["data"]) {
+        usercards.add(Usercard(
+          id: usercard["id"],
+          uid: usercard["uid"].toString(),
+          usercardType: usercard["type"]["name"],
+        ));
+      }
+
+      return usercards;
     } catch (e) {
       debugPrint("Error: $e");
       return [];

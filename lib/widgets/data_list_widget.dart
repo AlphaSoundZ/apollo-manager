@@ -5,6 +5,7 @@ import '../enums/which_data.dart';
 import '../models/user_model.dart';
 import '../models/device_model.dart';
 import '../models/class_model.dart';
+import '../models/usercard_model.dart';
 
 class DataList extends StatefulWidget {
   const DataList({
@@ -71,6 +72,10 @@ class _DataListState extends State<DataList> {
         break;
       case WhichData.classes:
         rowData = data[index] as ClassModel;
+        break;
+      case WhichData.usercards:
+        rowData = data[index] as Usercard;
+        break;
     }
 
     return DataListTile(

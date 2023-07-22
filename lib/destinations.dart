@@ -65,6 +65,16 @@ class Destinations {
           fabIcon: Icons.devices_outlined,
         ),
         SubDestination(
+          icon: Icons.credit_card_outlined,
+          label: 'Usercards',
+          route: '/data/usercards',
+          view: const DataView(
+            whichData: WhichData.usercards,
+          ),
+          fabLabel: 'Usercard',
+          fabIcon: Icons.credit_card_outlined,
+        ),
+        SubDestination(
           icon: Icons.class_outlined,
           label: 'Classes',
           route: '/data/classes',
