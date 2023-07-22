@@ -55,6 +55,16 @@ class Destinations {
           fabIcon: Icons.person_add_outlined,
         ),
         SubDestination(
+          icon: Icons.credit_card_outlined,
+          label: 'Usercards',
+          route: '/data/usercards',
+          view: const DataView(
+            whichData: WhichData.usercards,
+          ),
+          fabLabel: 'Usercard',
+          fabIcon: Icons.credit_card_outlined,
+        ),
+        SubDestination(
           icon: Icons.devices_outlined,
           label: 'Devices',
           route: '/data/devices',
@@ -65,14 +75,14 @@ class Destinations {
           fabIcon: Icons.devices_outlined,
         ),
         SubDestination(
-          icon: Icons.credit_card_outlined,
-          label: 'Usercards',
-          route: '/data/usercards',
+          icon: Icons.token_outlined,
+          label: 'Token',
+          route: '/data/token',
           view: const DataView(
-            whichData: WhichData.usercards,
+            whichData: WhichData.tokens,
           ),
-          fabLabel: 'Usercard',
-          fabIcon: Icons.credit_card_outlined,
+          fabLabel: 'Token',
+          fabIcon: Icons.token_outlined,
         ),
         SubDestination(
           icon: Icons.class_outlined,

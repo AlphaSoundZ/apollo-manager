@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../models/token_model.dart';
 import 'list/list_tile_widget.dart';
 import '../classes/api.dart';
 import '../enums/which_data.dart';
@@ -75,6 +76,9 @@ class _DataListState extends State<DataList> {
         break;
       case WhichData.usercards:
         rowData = data[index] as Usercard;
+        break;
+      case WhichData.tokens:
+        rowData = data[index] as Token;
         break;
     }
 

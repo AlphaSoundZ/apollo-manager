@@ -8,6 +8,7 @@ import '../models/user_model.dart';
 import '../models/device_model.dart';
 import '../models/class_model.dart';
 import '../models/usercard_model.dart';
+import '../models/token_model.dart';
 
 class Api {
   final EncryptedSharedPreferences _storage = EncryptedSharedPreferences();
@@ -108,6 +109,8 @@ class Api {
         return await fetchClasses();
       case WhichData.usercards:
         return await fetchUsercards();
+      case WhichData.tokens:
+        return await fetchTokens();
       default:
         return [];
     }
@@ -274,6 +277,57 @@ class Api {
       }
 
       return classes;
+    } catch (e) {
+      debugPrint("Error: $e");
+      return [];
+    }
+  }
+
+  Future<List<Token>> fetchTokens() async {
+    final token = await _storage.getString("token");
+
+    if (token == "") {
+      return [];
+    }
+
+    try {
+      final uri = _getUri("/token");
+      final response = await http.get(
+        uri,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+      );
+
+      List<Token> tokens = [];
+      dynamic responseData = json.decode(response.body);
+
+      if (responseData["code"] != 200) {
+        debugPrint('token: $token');
+        debugPrint('Error fetching data: ${responseData["message"]}');
+        return [];
+      }
+
+      for (var token in responseData["data"]) {
+        tokens.add(Token(
+          id: token["token_id"] as int,
+          lastChange: token["last_change"],
+          permissionIds: token["permission_id"],
+          permissionTexts: token["permission_text"],
+          user: User(
+            id: token["user"]["id"],
+            name: Name(
+              firstname: token["user"]["firstname"],
+              lastname: token["user"]["lastname"],
+            ),
+            className: token["user"]["class"]["name"],
+          ),
+          username: token["username"],
+        ));
+      }
+
+      return tokens;
     } catch (e) {
       debugPrint("Error: $e");
       return [];
