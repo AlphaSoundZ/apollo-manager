@@ -1,30 +1,27 @@
 import 'package:flutter/material.dart';
-
-import '../classes/api.dart';
-import '../models/user_model.dart';
+import '../enums/which_data.dart';
 import '../widgets/data_list_widget.dart';
 
 class DataView extends StatefulWidget {
   const DataView({
     super.key,
+    required this.whichData,
   });
+
+  final WhichData whichData;
 
   @override
   State<DataView> createState() => _DataViewState();
 }
 
 class _DataViewState extends State<DataView> {
-  List<User> data = [];
+  List<dynamic> data = [];
 
   int selectedIndex = 0;
 
   @override
   void initState() {
     super.initState();
-
-    // fetch data from api
-    Api api = Api();
-    _updateData(api);
   }
 
   @override
@@ -43,7 +40,7 @@ class _DataViewState extends State<DataView> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8),
         child: DataList(
-          data: data,
+          whichData: widget.whichData,
           selectedIndex: selectedIndex,
           onSelected: (index) {
             setState(() {
@@ -53,19 +50,5 @@ class _DataViewState extends State<DataView> {
         ),
       ),
     );
-  }
-
-  Future<void> _updateData(Api api) async {
-    setState(() {
-      data = [];
-    });
-
-    api.fetchUsers().then((response) {
-      debugPrint("Response: ${response?[0].id}");
-
-      setState(() {
-        data = response ?? [];
-      });
-    });
   }
 }

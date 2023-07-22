@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
+import 'list/list_tile_widget.dart';
+import '../classes/api.dart';
+import '../enums/which_data.dart';
 import '../models/user_model.dart';
-import '../widgets/user_widget.dart';
+import '../models/device_model.dart';
+import '../models/class_model.dart';
 
 class DataList extends StatefulWidget {
   const DataList({
     super.key,
-    required this.data,
+    required this.whichData,
     this.selectedIndex,
     this.onSelected,
   });
 
-  final List<User> data;
+  final WhichData whichData;
   final int? selectedIndex;
   final ValueChanged<int>? onSelected;
 
@@ -19,28 +23,64 @@ class DataList extends StatefulWidget {
 }
 
 class _DataListState extends State<DataList> {
+  List<dynamic> data = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    // get data
+    Api api = Api();
+    api.fetchData(widget.whichData).then(
+          (body) => {
+            setState(
+              () {
+                data = body;
+              },
+            ),
+          },
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView(
       children: [
         const SizedBox(height: 8.0),
         ...List.generate(
-          widget.data.length,
+          data.length,
           (index) {
-            return UserWidget(
-              user: widget.data[index],
-              onSelected:
-                  widget.onSelected != null // check if callback is provided
-                      ? () {
-                          widget.onSelected!(index);
-                        }
-                      : null,
-              isSelected: widget.selectedIndex == index,
-            );
+            return _createWidget(index);
           },
         ),
         const SizedBox(height: 8.0),
       ],
+    );
+  }
+
+  Widget _createWidget(int index) {
+    dynamic rowData;
+    // create widget based on whichData type
+
+    switch (widget.whichData) {
+      case WhichData.users:
+        rowData = data[index] as User;
+        break;
+      case WhichData.devices:
+        rowData = data[index] as Device;
+        break;
+      case WhichData.classes:
+        rowData = data[index] as ClassModel;
+    }
+
+    return DataListTile(
+      content: rowData.content,
+      isSelected: widget.selectedIndex == index,
+      onSelected: widget.onSelected != null
+          ? () {
+              widget.onSelected!(index);
+            }
+          : null,
     );
   }
 }

@@ -1,3 +1,5 @@
+import 'list_tile_content_model.dart';
+
 class Bookings {
   const Bookings({
     required this.id,
@@ -24,7 +26,7 @@ class Name {
 }
 
 class User {
-  const User({
+  User({
     required this.id,
     required this.name,
     required this.className,
@@ -34,5 +36,10 @@ class User {
   final int id;
   final Name name;
   final String className;
+  late ListTileContent content = ListTileContent(
+    title: name.fullName,
+    leading: id.toString(),
+    subTitle: className,
+  );
   //final List<Bookings> bookings;
 }

@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'package:apollo_manager/enums/which_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import '../models/user_model.dart';
+import '../models/device_model.dart';
+import '../models/class_model.dart';
 
 class Api {
   final EncryptedSharedPreferences _storage = EncryptedSharedPreferences();
@@ -24,7 +27,7 @@ class Api {
 
       return json.decode(response.body);
     } catch (e) {
-      debugPrint("Error: $e");
+      debugPrint("Error at login: $e");
       return {
         "status": "unexpected_error",
         "code": 500,
@@ -73,6 +76,10 @@ class Api {
   Future<dynamic> get(String route) async {
     final token = await _storage.getString("token");
 
+    if (token == "") {
+      return [];
+    }
+
     try {
       final uri = _getUri(route);
       final response = await http.get(
@@ -85,20 +92,29 @@ class Api {
 
       return json.decode(response.body);
     } catch (e) {
-      debugPrint("Error: $e");
-      return {
-        "status": "unexpected_error",
-        "code": 500,
-        "message": "Error: $e",
-      };
+      debugPrint("Error at Api.get: $e");
+      return [];
     }
   }
 
-  Future<List<User>?> fetchUsers() async {
+  Future<List<dynamic>> fetchData(WhichData whichData) async {
+    switch (whichData) {
+      case WhichData.users:
+        return await fetchUsers();
+      case WhichData.devices:
+        return await fetchDevices();
+      case WhichData.classes:
+        return await fetchClasses();
+      default:
+        return [];
+    }
+  }
+
+  Future<List<User>> fetchUsers() async {
     final token = await _storage.getString("token");
 
     if (token == "") {
-      return null;
+      return [];
     }
 
     try {
@@ -117,7 +133,7 @@ class Api {
       if (responseData["code"] != 200) {
         debugPrint('token: $token');
         debugPrint('Error fetching data: ${responseData["message"]}');
-        return null;
+        return [];
       }
 
       for (var user in responseData["data"]) {
@@ -133,8 +149,90 @@ class Api {
 
       return users;
     } catch (e) {
+      debugPrint("Error at fetching users: $e");
+      return [];
+    }
+  }
+
+  Future<List<Device>> fetchDevices() async {
+    final token = await _storage.getString("token");
+
+    if (token == "") {
+      return [];
+    }
+
+    try {
+      final uri = _getUri("/device");
+      final response = await http.get(
+        uri,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+      );
+
+      List<Device> devices = [];
+      dynamic responseData = json.decode(response.body);
+
+      if (responseData["code"] != 200) {
+        debugPrint('token: $token');
+        debugPrint('Error fetching data: ${responseData["message"]}');
+        return [];
+      }
+
+      for (var device in responseData["data"]) {
+        devices.add(Device(
+          id: device["id"],
+          uid: device["uid"] as String,
+          deviceType: device["type"]["name"],
+        ));
+      }
+
+      return devices;
+    } catch (e) {
       debugPrint("Error: $e");
-      return null;
+      return [];
+    }
+  }
+
+  Future<List<ClassModel>> fetchClasses() async {
+    final token = await _storage.getString("token");
+
+    if (token == "") {
+      return [];
+    }
+
+    try {
+      final uri = _getUri("/user/class");
+      final response = await http.get(
+        uri,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+      );
+
+      List<ClassModel> classes = [];
+      dynamic responseData = json.decode(response.body);
+
+      if (responseData["code"] != 200) {
+        debugPrint('token: $token');
+        debugPrint('Error fetching data: ${responseData["message"]}');
+        return [];
+      }
+
+      for (var class_ in responseData["data"]) {
+        classes.add(ClassModel(
+          id: class_["id"] as int,
+          name: class_["name"] as String,
+          amount: class_["amount"] as int,
+        ));
+      }
+
+      return classes;
+    } catch (e) {
+      debugPrint("Error: $e");
+      return [];
     }
   }
 }

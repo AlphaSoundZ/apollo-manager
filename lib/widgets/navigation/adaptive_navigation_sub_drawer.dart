@@ -36,7 +36,8 @@ class SubDrawerState extends State<SubDrawer> {
       verticalAnimation: false,
       alignment: Alignment.topLeft,
       duration: const Duration(milliseconds: 500),
-      curve: Curves.easeInOutQuint,
+      curve: Curves.easeOutQuint,
+      reverseCurve: Curves.easeInOutQuint,
       child: Container(
         width: 250,
         padding: const EdgeInsets.only(top: 8),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'views/data_view.dart';
 import 'package:get/get.dart';
 import 'classes/api.dart';
+import '../enums/which_data.dart';
 
 /// [view] should be either a [Widget] or a [StatefulBuilder], use [StatefulBuilder] if you need to use [setState] inside the view
 class Destination {
@@ -47,7 +48,9 @@ class Destinations {
           icon: Icons.group_outlined,
           label: 'Users',
           route: '/data/users',
-          view: const DataView(),
+          view: const DataView(
+            whichData: WhichData.users,
+          ),
           fabLabel: 'User',
           fabIcon: Icons.person_add_outlined,
         ),
@@ -55,7 +58,9 @@ class Destinations {
           icon: Icons.devices_outlined,
           label: 'Devices',
           route: '/data/devices',
-          view: const Center(child: Text('Devices')),
+          view: const DataView(
+            whichData: WhichData.devices,
+          ),
           fabLabel: 'Device',
           fabIcon: Icons.devices_outlined,
         ),
@@ -63,7 +68,9 @@ class Destinations {
           icon: Icons.class_outlined,
           label: 'Classes',
           route: '/data/classes',
-          view: const Center(child: Text('Classes')),
+          view: const DataView(
+            whichData: WhichData.classes,
+          ),
           fabLabel: 'Class',
           fabIcon: Icons.class_outlined,
         ),
