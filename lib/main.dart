@@ -50,7 +50,7 @@ class _MainAppState extends State<MainApp> {
     api.isLoggedIn().then((isLoggedIn) {
       if (isLoggedIn && Get.currentRoute != '/login') {
         debugPrint('User is logged in');
-        Get.offAllNamed("/");
+        // do nothing, so the user can continue to the app
       } else {
         debugPrint('User is not logged in or is on login page');
         Get.offAllNamed("/login");
