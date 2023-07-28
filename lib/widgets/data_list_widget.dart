@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import '../models/token_model.dart';
+import 'package:provider/provider.dart';
+import '../models/data_model.dart';
 import 'list/list_tile_widget.dart';
-import '../classes/api.dart';
 import '../enums/which_data.dart';
-import '../models/user_model.dart';
-import '../models/device_model.dart';
-import '../models/class_model.dart';
-import '../models/usercard_model.dart';
 
 class DataList extends StatefulWidget {
   const DataList({
@@ -29,23 +25,18 @@ class _DataListState extends State<DataList> {
 
   @override
   void initState() {
-    super.initState();
+    Provider.of<DataModel>(context, listen: false)
+        .get(widget.whichData);
 
-    // get data
-    Api api = Api();
-    api.fetchData(widget.whichData).then(
-          (body) => {
-            setState(
-              () {
-                data = body;
-              },
-            ),
-          },
-        );
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    // get data from data model
+    data = Provider.of<DataModel>(context).data[widget.whichData];
+
+    // get consumer for data model
     return ListView(
       children: [
         const SizedBox(height: 8.0),
@@ -62,25 +53,8 @@ class _DataListState extends State<DataList> {
 
   Widget _createWidget(int index) {
     dynamic rowData;
+    rowData = data[index];
     // create widget based on whichData type
-
-    switch (widget.whichData) {
-      case WhichData.users:
-        rowData = data[index] as User;
-        break;
-      case WhichData.devices:
-        rowData = data[index] as Device;
-        break;
-      case WhichData.classes:
-        rowData = data[index] as ClassModel;
-        break;
-      case WhichData.usercards:
-        rowData = data[index] as Usercard;
-        break;
-      case WhichData.tokens:
-        rowData = data[index] as Token;
-        break;
-    }
 
     return DataListTile(
       content: rowData.content,

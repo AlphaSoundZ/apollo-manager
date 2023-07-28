@@ -1,8 +1,11 @@
+import 'package:apollo_manager/views/prebook_view.dart';
 import 'package:flutter/material.dart';
 import 'views/data_view.dart';
 import 'package:get/get.dart';
 import 'classes/api.dart';
 import '../enums/which_data.dart';
+import '../views/action_views/create_user_view.dart';
+import '../views/action_views/create_device_view.dart';
 
 /// [view] should be either a [Widget] or a [StatefulBuilder], use [StatefulBuilder] if you need to use [setState] inside the view
 class Destination {
@@ -28,6 +31,7 @@ class SubDestination {
     required this.view,
     required this.fabLabel,
     required this.fabIcon,
+    this.fabContent,
   });
   final IconData icon;
   final String label;
@@ -35,9 +39,15 @@ class SubDestination {
   final dynamic view;
   final String fabLabel;
   final IconData fabIcon;
+  final Widget? fabContent;
 }
 
 class Destinations {
+  Destinations({this.onFabCancel, this.onFabSubmit});
+
+  final void Function()? onFabCancel;
+  final void Function()? onFabSubmit;
+
   late List<Destination> destinations = <Destination>[
     Destination(
       icon: Icons.data_array,
@@ -53,6 +63,10 @@ class Destinations {
           ),
           fabLabel: 'User',
           fabIcon: Icons.person_add_outlined,
+          fabContent: CreateUserViewContent(
+            onCancel: onFabCancel,
+            onSubmit: onFabSubmit,
+          ),
         ),
         SubDestination(
           icon: Icons.credit_card_outlined,
@@ -63,6 +77,10 @@ class Destinations {
           ),
           fabLabel: 'Usercard',
           fabIcon: Icons.credit_card_outlined,
+          fabContent: CreateDeviceViewContent(
+            onCancel: onFabCancel,
+            onSubmit: onFabSubmit,
+          ),
         ),
         SubDestination(
           icon: Icons.devices_outlined,
@@ -106,7 +124,7 @@ class Destinations {
       icon: Icons.calendar_month,
       label: 'Prebook',
       route: '/prebook',
-      view: const Center(child: Text('Prebook')),
+      view: const PrebookView(),
     ),
     Destination(
       icon: Icons.bar_chart,

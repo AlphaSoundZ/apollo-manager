@@ -152,7 +152,7 @@ class _LoginPageState extends State<LoginPage> {
       debugPrint('Token: ${response['jwt']}');
 
       // Push to the home page
-      Get.offNamed("/");
+      Get.offNamed("/home");
     } else {
       // Pop the dialog
       setState(() {

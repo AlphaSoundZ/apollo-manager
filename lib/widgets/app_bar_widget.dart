@@ -38,7 +38,7 @@ class _AppBarState extends State<AppBar> {
           if (wideScreen)
             SizedBox(
               // Logo + Apollo title
-              width: 250,
+              width: 266,
               child: Row(
                 children: [
                   const SizedBox(width: 8),
@@ -103,7 +103,7 @@ class _AppBarState extends State<AppBar> {
                     ),
                   ),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: 298),
                 CircleAvatar(
                   radius: 24,
                   backgroundColor:

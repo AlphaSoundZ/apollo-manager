@@ -1,37 +1,25 @@
 import 'package:flutter/material.dart';
 import '../../destinations.dart';
 
-class SubDrawer extends StatefulWidget {
-  const SubDrawer({
+class SideSheet extends StatefulWidget {
+  const SideSheet({
     super.key,
-    required this.selectedView,
-    required this.selectedSubView,
     required this.isOpen,
-    this.onViewSelected,
-    this.onFABPressed,
+    required this.child,
   });
 
-  final int selectedView;
-  final int selectedSubView;
   final bool isOpen;
-  final ValueChanged<int>? onViewSelected;
-  final void Function()? onFABPressed;
+  final Widget child;
 
   @override
-  State<SubDrawer> createState() => SubDrawerState();
+  State<SideSheet> createState() => SideSheetState();
 }
 
-class SubDrawerState extends State<SubDrawer> {
-  int selectedView = 0;
-  int selectedSubView = 0;
-
+class SideSheetState extends State<SideSheet> {
   List<Destination> destinations = Destinations().destinations;
 
   @override
   Widget build(BuildContext context) {
-    selectedView = widget.selectedView;
-    selectedSubView = widget.selectedSubView;
-
     final colorScheme = Theme.of(context).colorScheme;
     final surfaceContainer = Color.alphaBlend(
       colorScheme.primary.withOpacity(0.08),
@@ -50,7 +38,7 @@ class SubDrawerState extends State<SubDrawer> {
           animateSize: true,
           horizontalAnimation: true,
           verticalAnimation: false,
-          alignment: Alignment.topRight,
+          alignment: Alignment.topLeft,
           duration: const Duration(milliseconds: 700),
           sizeCurve: Curves.easeInOutCubicEmphasized,
           reverseSizeCurve: Curves.easeInOutCubicEmphasized.flipped,
@@ -58,77 +46,17 @@ class SubDrawerState extends State<SubDrawer> {
             decoration: (BoxDecoration(
               color: surfaceContainer,
             )),
-            width: 250,
+            width: 330,
+            height: double.infinity,
             child: AnimatedClipRect(
               open: widget.isOpen,
               animateOpacity: true,
               animateSize: false,
               duration: const Duration(milliseconds: 700),
               opacityCurve: Curves.easeInOutQuad,
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    FloatingActionButton.extended(
-                      clipBehavior: Clip.antiAlias,
-                      heroTag: "Create New",
-                      backgroundColor:
-                          Theme.of(context).colorScheme.tertiaryContainer,
-                      foregroundColor:
-                          Theme.of(context).colorScheme.onTertiaryContainer,
-                      label: Text(
-                          "New ${destinations[selectedView].subDestinations[selectedSubView].fabLabel}"),
-                      icon: Icon(destinations[selectedView]
-                          .subDestinations[selectedSubView]
-                          .fabIcon),
-                      onPressed: widget.onFABPressed,
-                      elevation: 0,
-                    ),
-                    const SizedBox(height: 32),
-                    Column(
-                      children: destinations[selectedView]
-                          .subDestinations
-                          .map<Widget>(
-                            (e) => SizedBox(
-                              height: 32.0, // alternative: 40.0
-                              width: double.infinity,
-                              child: FilledButton.tonalIcon(
-                                icon: Icon(e.icon),
-                                label: Text(
-                                  e.label,
-                                  overflow: TextOverflow.fade,
-                                  maxLines: 1,
-                                ),
-                                style: ButtonStyle(
-                                  alignment: Alignment.centerLeft,
-                                  backgroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                    selectedSubView ==
-                                            destinations[selectedView]
-                                                .subDestinations
-                                                .indexOf(e)
-                                        ? colorScheme.secondaryContainer
-                                        : surfaceContainer,
-                                  ),
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    selectedSubView = destinations[selectedView]
-                                        .subDestinations
-                                        .indexOf(e);
-                                  });
-                                  if (widget.onViewSelected != null) {
-                                    widget.onViewSelected!(selectedSubView);
-                                  }
-                                },
-                              ),
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  ],
-                ),
+              child: Container(
+                padding: const EdgeInsets.all(24.0),
+                child: widget.child,
               ),
             ),
           ),

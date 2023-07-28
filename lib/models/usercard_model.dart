@@ -11,4 +11,12 @@ class Usercard {
     leading: id.toString(),
     subTitle: usercardType,
   );
+
+  static Usercard fromJson(Map<String, dynamic> json) {
+    return Usercard(
+      id: json['id'] as int,
+      uid: json['uid'].toString(),
+      usercardType: json['type']['name'].toString(),
+    );
+  }
 }

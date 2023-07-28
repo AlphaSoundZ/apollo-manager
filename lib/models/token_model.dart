@@ -23,4 +23,15 @@ class Token {
     leading: id.toString(),
     subTitle: permissionTexts.join(", "),
   );
+
+  static Token fromJson(Map<String, dynamic> json) {
+    return Token(
+      id: json['token_id'] as int,
+      username: json['username'].toString(),
+      permissionIds: json['permission_id'] as List<dynamic>,
+      permissionTexts: json['permission_text'] as List<dynamic>,
+      lastChange: json['last_change'].toString(),
+      user: User.fromJson(json['user']),
+    );
+  }
 }

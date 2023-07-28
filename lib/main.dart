@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'destinations.dart';
+import 'pages/loading_page.dart';
 
 Future main() async {
   await dotenv.load(fileName: ".env");
@@ -26,7 +27,7 @@ class _MainAppState extends State<MainApp> {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       initialRoute: '/',
-      home: const HomePage(view: 0),
+      home: const LoadingPage(),
       getPages: pages,
       theme: ThemeData.light(useMaterial3: true),
       debugShowCheckedModeBanner: false,
@@ -50,7 +51,8 @@ class _MainAppState extends State<MainApp> {
     api.isLoggedIn().then((isLoggedIn) {
       if (isLoggedIn && Get.currentRoute != '/login') {
         debugPrint('User is logged in');
-        // do nothing, so the user can continue to the app
+
+        Get.offAllNamed("/home");
       } else {
         debugPrint('User is not logged in or is on login page');
         Get.offAllNamed("/login");
@@ -88,6 +90,11 @@ class _MainAppState extends State<MainApp> {
     pages.add(GetPage(
       name: '/login',
       page: () => const LoginPage(),
+    ));
+
+    pages.add(GetPage(
+      name: '/home',
+      page: () => const HomePage(),
     ));
 
     return pages;

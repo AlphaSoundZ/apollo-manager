@@ -42,4 +42,16 @@ class User {
     subTitle: className,
   );
   //final List<Bookings> bookings;
+
+  static User fromJson(Map<String, dynamic> json) {
+    return User(
+      id: json['id'] as int,
+      name: Name(
+        firstname: json['firstname'].toString(),
+        lastname: json['lastname'].toString(),
+      ),
+      className: json['class']['name'].toString(),
+      //bookings: json['bookings'] as List<Bookings>,
+    );
+  }
 }

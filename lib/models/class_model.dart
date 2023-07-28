@@ -15,4 +15,12 @@ class ClassModel {
     leading: id.toString(),
     subTitle: "Amount: $amount",
   );
+
+  static ClassModel fromJson(Map<String, dynamic> json) {
+    return ClassModel(
+      id: json['id'] as int,
+      name: json['name'].toString(),
+      amount: json['amount'] as int,
+    );
+  }
 }

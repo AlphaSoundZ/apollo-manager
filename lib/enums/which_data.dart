@@ -6,19 +6,34 @@ import '../models/token_model.dart';
 
 enum WhichData { users, devices, classes, usercards, tokens }
 
-extension WhichDataExtionsion on WhichData {
-  dynamic get model {
+extension WhichDataExtension on WhichData {
+  dynamic fromJson(Map<String, dynamic> json) {
     switch (this) {
       case WhichData.users:
-        return User;
+        return User.fromJson(json);
       case WhichData.devices:
-        return Device;
+        return Device.fromJson(json);
       case WhichData.classes:
-        return ClassModel;
+        return ClassModel.fromJson(json);
       case WhichData.usercards:
-        return Usercard;
+        return Usercard.fromJson(json);
       case WhichData.tokens:
-        return Token;
+        return Token.fromJson(json);
+    }
+  }
+
+  dynamic get endpoint {
+    switch (this) {
+      case WhichData.users:
+        return "/user";
+      case WhichData.devices:
+        return "/device";
+      case WhichData.classes:
+        return "/user/class";
+      case WhichData.usercards:
+        return "/usercard";
+      case WhichData.tokens:
+        return "/token";
     }
   }
 }

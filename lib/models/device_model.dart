@@ -15,4 +15,12 @@ class Device {
     leading: id.toString(),
     subTitle: deviceType,
   );
+
+  static Device fromJson(Map<String, dynamic> json) {
+    return Device(
+      id: json['id'] as int,
+      uid: json['uid'].toString(),
+      deviceType: json['type']['name'].toString(),
+    );
+  }
 }
