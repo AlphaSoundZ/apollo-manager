@@ -25,8 +25,7 @@ class _DataListState extends State<DataList> {
 
   @override
   void initState() {
-    Provider.of<DataModel>(context, listen: false)
-        .get(widget.whichData);
+    Provider.of<DataModel>(context, listen: false).get(widget.whichData);
 
     super.initState();
   }

@@ -52,7 +52,9 @@ class _MainAppState extends State<MainApp> {
       if (isLoggedIn && Get.currentRoute != '/login') {
         debugPrint('User is logged in');
 
-        Get.offAllNamed("/home");
+        if (Get.currentRoute != '/home') {
+          Get.offAllNamed("/home");
+        }
       } else {
         debugPrint('User is not logged in or is on login page');
         Get.offAllNamed("/login");

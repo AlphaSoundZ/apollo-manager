@@ -77,10 +77,6 @@ class Destinations {
           ),
           fabLabel: 'Usercard',
           fabIcon: Icons.credit_card_outlined,
-          fabContent: CreateDeviceViewContent(
-            onCancel: onFabCancel,
-            onSubmit: onFabSubmit,
-          ),
         ),
         SubDestination(
           icon: Icons.devices_outlined,
@@ -91,6 +87,10 @@ class Destinations {
           ),
           fabLabel: 'Device',
           fabIcon: Icons.devices_outlined,
+          fabContent: CreateDeviceViewContent(
+            onCancel: onFabCancel,
+            onSubmit: onFabSubmit,
+          ),
         ),
         SubDestination(
           icon: Icons.token_outlined,

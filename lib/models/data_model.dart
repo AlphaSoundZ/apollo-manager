@@ -32,11 +32,9 @@ class DataModel extends ChangeNotifier {
     required WhichData dataType,
     bool draw = true,
   }) async {
-    debugPrint("Updating data for $dataType");
     data[dataType] = await Api().fetchData(dataType);
 
     if (draw) {
-      debugPrint("Notifying listeners");
       notifyListeners();
     }
   }
@@ -44,7 +42,6 @@ class DataModel extends ChangeNotifier {
   void updateAll() async {
     await updateData(dataType: WhichData.users, draw: false);
 
-    debugPrint("Notifying listeners");
     notifyListeners();
   }
 }

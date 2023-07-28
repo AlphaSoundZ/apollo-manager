@@ -3,8 +3,9 @@ import '../models/device_model.dart';
 import '../models/user_model.dart';
 import '../models/usercard_model.dart';
 import '../models/token_model.dart';
+import '../models/devicetype_model.dart';
 
-enum WhichData { users, devices, classes, usercards, tokens }
+enum WhichData { users, devices, deviceTypes, classes, usercards, tokens }
 
 extension WhichDataExtension on WhichData {
   dynamic fromJson(Map<String, dynamic> json) {
@@ -13,6 +14,8 @@ extension WhichDataExtension on WhichData {
         return User.fromJson(json);
       case WhichData.devices:
         return Device.fromJson(json);
+      case WhichData.deviceTypes:
+        return DeviceType.fromJson(json);
       case WhichData.classes:
         return ClassModel.fromJson(json);
       case WhichData.usercards:
@@ -28,6 +31,8 @@ extension WhichDataExtension on WhichData {
         return "/user";
       case WhichData.devices:
         return "/device";
+      case WhichData.deviceTypes:
+        return "/device/type";
       case WhichData.classes:
         return "/user/class";
       case WhichData.usercards:

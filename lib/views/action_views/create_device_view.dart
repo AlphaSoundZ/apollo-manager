@@ -20,15 +20,25 @@ class CreateDeviceViewContent extends StatefulWidget {
 class _CreateDeviceViewContentState extends State<CreateDeviceViewContent> {
   final Api api = Api();
 
-  final TextEditingController firstnameController = TextEditingController();
-  final TextEditingController lastnameController = TextEditingController();
-  final TextEditingController classController = TextEditingController();
-  final EncryptedSharedPreferences _storage = EncryptedSharedPreferences();
+  final TextEditingController uidController = TextEditingController();
+  final TextEditingController deviceTypeController = TextEditingController();
 
   bool _loading = false;
-  int selectedClass = 0;
+  int selectedDeviceType = 0;
 
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    Provider.of<DataModel>(context).get(WhichData.deviceTypes);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +55,7 @@ class _CreateDeviceViewContentState extends State<CreateDeviceViewContent> {
             _handleCreateUser(scaffoldMessenger);
           }
         },
-        title: "Create User",
+        title: "Create Device",
         children: [
           Center(
             child: Stack(
@@ -59,17 +69,17 @@ class _CreateDeviceViewContentState extends State<CreateDeviceViewContent> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         TextFormField(
-                          controller: firstnameController,
+                          controller: uidController,
                           decoration: const InputDecoration(
                             border: UnderlineInputBorder(),
-                            labelText: 'First name',
+                            labelText: 'UID',
                             filled: true,
                           ),
                           validator: (value) {
                             if (value == null ||
                                 value.isEmpty ||
                                 value.trim() == "") {
-                              return 'Please enter a name';
+                              return 'Please enter a UID';
                             }
                             return null;
                           },
@@ -83,60 +93,44 @@ class _CreateDeviceViewContentState extends State<CreateDeviceViewContent> {
                           },
                         ),
                         const SizedBox(height: 20),
-                        TextFormField(
-                          controller: lastnameController,
-                          decoration: const InputDecoration(
-                            border: UnderlineInputBorder(),
-                            labelText: 'Surname',
-                            filled: true,
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter a Surname';
-                            }
-                            return null;
-                          },
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          onFieldSubmitted: (value) {
-                            if (_formKey.currentState!.validate()) {
-                              _formKey.currentState!.save();
+                        Consumer<DataModel>(
+                          builder: (context, data, child) {
+                            List<dynamic> deviceTypeData =
+                                data.data[WhichData.deviceTypes];
 
-                              _handleCreateUser(scaffoldMessenger);
-                            }
+                            if (deviceTypeData.isEmpty) return Container();
+
+                            return DropdownMenu(
+                              controller: deviceTypeController,
+                              label: const Text("Device Type"),
+                              inputDecorationTheme: const InputDecorationTheme(
+                                filled: true,
+                              ),
+                              initialSelection: 0,
+                              width: 282,
+                              dropdownMenuEntries:
+                                  (data.data[WhichData.deviceTypes].isEmpty)
+                                      ? []
+                                      : deviceTypeData
+                                          .map(
+                                            (e) => DropdownMenuEntry(
+                                              value: e.id,
+                                              label: e.name,
+                                            ),
+                                          )
+                                          .toList(),
+                              onSelected: (value) {
+                                selectedDeviceType = value ??
+                                    data.data[WhichData.deviceTypes][0].id ??
+                                    0;
+                              },
+                            );
                           },
-                        ),
-                        const SizedBox(height: 20),
-                        DropdownMenu(
-                          controller: classController,
-                          label: const Text("Class"),
-                          inputDecorationTheme: const InputDecorationTheme(
-                            filled: true,
-                          ),
-                          initialSelection: 0,
-                          width: 282,
-                          dropdownMenuEntries: const [
-                            DropdownMenuEntry(
-                              value: 1,
-                              label: "Lehrer",
-                            ),
-                            DropdownMenuEntry(
-                              value: 2,
-                              label: "Schüler",
-                            ),
-                          ],
-                          onSelected: (value) {
-                            selectedClass = value ?? 0;
-                          },
-                        ),
+                        )
                       ],
                     ),
                   ),
                 ),
-                //  if (_loading)
-                //     const Align(
-                //       alignment: Alignment.topCenter,
-                //       child: LinearProgressIndicator(),
-                //     ),
               ],
             ),
           ),
@@ -156,13 +150,12 @@ class _CreateDeviceViewContentState extends State<CreateDeviceViewContent> {
     });
 
     Object body = {
-      "firstname": firstnameController.text,
-      "lastname": lastnameController.text,
-      "class_id": selectedClass,
+      "uid": uidController.text,
+      "type": selectedDeviceType,
     };
 
     // call the api
-    final response = await api.post("/user/create", body);
+    final response = await api.post("/device/create", body);
 
     // log the response
     debugPrint(response.toString());
@@ -175,16 +168,16 @@ class _CreateDeviceViewContentState extends State<CreateDeviceViewContent> {
     );
 
     if (response['code'] == 200) {
-      firstnameController.text = "";
-      lastnameController.text = "";
-
       // Close Side Sheet
-      widget.onCancel!();
+      widget.onSubmit!();
+
+      uidController.text = "";
+
+      _loading = false;
 
       // Update Provider Data
       Provider.of<DataModel>(context, listen: false)
-          .updateData(dataType: WhichData.users)
-          .then((_) => _loading = false);
+          .updateData(dataType: WhichData.devices);
     } else {
       // Pop the dialog
       setState(() {
