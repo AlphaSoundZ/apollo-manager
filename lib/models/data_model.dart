@@ -22,6 +22,7 @@ class DataModel extends ChangeNotifier {
       return [];
     }
 
+    // notifyListeners();
     object = data[whichData];
 
     return object;
@@ -35,6 +36,7 @@ class DataModel extends ChangeNotifier {
     data[dataType] = await Api().fetchData(dataType);
 
     if (draw) {
+      debugPrint("Notifying listeners");
       notifyListeners();
     }
   }
@@ -42,6 +44,7 @@ class DataModel extends ChangeNotifier {
   void updateAll() async {
     await updateData(dataType: WhichData.users, draw: false);
 
+    debugPrint("Notifying listeners");
     notifyListeners();
   }
 }

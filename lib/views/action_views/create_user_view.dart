@@ -32,12 +32,20 @@ class _CreateUserViewContentState extends State<CreateUserViewContent> {
   final _formKey = GlobalKey<FormState>();
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    Provider.of<DataModel>(context).get(WhichData.classes);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
-
-    // class data
-    final List<dynamic> classes =
-        Provider.of<DataModel>(context).get(WhichData.classes);
 
     return FocusTraversalGroup(
       policy: OrderedTraversalPolicy(),
@@ -111,35 +119,44 @@ class _CreateUserViewContentState extends State<CreateUserViewContent> {
                           },
                         ),
                         const SizedBox(height: 20),
-                        DropdownMenu(
-                          controller: classController,
-                          label: const Text("Class"),
-                          inputDecorationTheme: const InputDecorationTheme(
-                            filled: true,
-                          ),
-                          initialSelection: 0,
-                          width: 282,
-                          dropdownMenuEntries: classes
-                              .map(
-                                (e) => DropdownMenuEntry(
-                                  value: e.id,
-                                  label: e.name,
-                                ),
-                              )
-                              .toList(),
-                          onSelected: (value) {
-                            selectedClass = value ?? 0;
+                        Consumer<DataModel>(
+                          builder: (context, data, child) {
+                            List<dynamic> classData =
+                                data.data[WhichData.classes];
+
+                            if (classData.isEmpty) return Container();
+
+                            return DropdownMenu(
+                              controller: classController,
+                              label: const Text("Class"),
+                              inputDecorationTheme: const InputDecorationTheme(
+                                filled: true,
+                              ),
+                              initialSelection: 0,
+                              width: 282,
+                              dropdownMenuEntries:
+                                  (data.data[WhichData.classes].isEmpty)
+                                      ? []
+                                      : classData
+                                          .map(
+                                            (e) => DropdownMenuEntry(
+                                              value: e.id,
+                                              label: e.name,
+                                            ),
+                                          )
+                                          .toList(),
+                              onSelected: (value) {
+                                selectedClass = value ??
+                                    data.data[WhichData.classes][0].id ??
+                                    0;
+                              },
+                            );
                           },
-                        ),
+                        )
                       ],
                     ),
                   ),
                 ),
-                //  if (_loading)
-                //     const Align(
-                //       alignment: Alignment.topCenter,
-                //       child: LinearProgressIndicator(),
-                //     ),
               ],
             ),
           ),
@@ -178,16 +195,17 @@ class _CreateUserViewContentState extends State<CreateUserViewContent> {
     );
 
     if (response['code'] == 200) {
+      // Close Side Sheet
+      widget.onSubmit!();
+
       firstnameController.text = "";
       lastnameController.text = "";
 
-      // Close Side Sheet
-      widget.onCancel!();
+      _loading = false;
 
       // Update Provider Data
       Provider.of<DataModel>(context, listen: false)
-          .updateData(dataType: WhichData.users)
-          .then((_) => _loading = false);
+          .updateData(dataType: WhichData.users);
     } else {
       // Pop the dialog
       setState(() {

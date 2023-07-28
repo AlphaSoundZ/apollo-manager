@@ -60,9 +60,7 @@ class _HomePageState extends State<HomePage> {
       });
     }, onFabSubmit: () {
       setState(() {
-        // showSideSheet = false;
-
-        // update content
+        showSideSheet = false;
       });
     });
     List<Destination> destinations = destinationsInstance.destinations;
@@ -136,24 +134,20 @@ class _HomePageState extends State<HomePage> {
                           child: Container(
                             // MAIN VIEW
                             padding: const EdgeInsets.all(8),
-                            child: IndexedStack(
-                              index: selectedView,
-                              children: destinations.map<Widget>((e) {
-                                if (e.subDestinations.isEmpty) {
-                                  return IndexedStack(
+                            child: (destinations[selectedView]
+                                    .subDestinations
+                                    .isEmpty)
+                                ? IndexedStack(
                                     index: selectedSubView,
-                                    children: [e.view],
-                                  );
-                                }
-
-                                return IndexedStack(
-                                  index: selectedSubView,
-                                  children: e.subDestinations
-                                      .map<Widget>((e) => e.view)
-                                      .toList(),
-                                );
-                              }).toList(),
-                            ),
+                                    children: [destinations[selectedView].view],
+                                  )
+                                : IndexedStack(
+                                    index: selectedSubView,
+                                    children: destinations[selectedView]
+                                        .subDestinations
+                                        .map<Widget>((e) => e.view)
+                                        .toList(),
+                                  ),
                           ),
                         ),
                         if (wideScreen &&
