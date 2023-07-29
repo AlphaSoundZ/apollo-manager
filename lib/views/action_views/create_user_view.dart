@@ -2,11 +2,8 @@ import 'package:apollo_manager/classes/api.dart';
 import 'package:apollo_manager/enums/which_data.dart';
 import 'package:apollo_manager/models/data_model.dart';
 import 'package:flutter/material.dart';
-import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'create_template_view.dart';
-import '../../models/class_model.dart';
 
 class CreateUserViewContent extends StatefulWidget {
   const CreateUserViewContent({super.key, this.onCancel, this.onSubmit});
@@ -24,7 +21,6 @@ class _CreateUserViewContentState extends State<CreateUserViewContent> {
   final TextEditingController firstnameController = TextEditingController();
   final TextEditingController lastnameController = TextEditingController();
   final TextEditingController classController = TextEditingController();
-  final EncryptedSharedPreferences _storage = EncryptedSharedPreferences();
 
   bool _loading = false;
   int selectedClass = 0;

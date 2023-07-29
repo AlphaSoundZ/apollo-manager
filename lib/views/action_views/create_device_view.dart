@@ -2,7 +2,6 @@ import 'package:apollo_manager/classes/api.dart';
 import 'package:apollo_manager/enums/which_data.dart';
 import 'package:apollo_manager/models/data_model.dart';
 import 'package:flutter/material.dart';
-import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'create_template_view.dart';
 
