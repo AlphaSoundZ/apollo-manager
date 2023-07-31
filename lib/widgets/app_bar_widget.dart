@@ -117,7 +117,6 @@ class _SearchAnchorsState extends State<SearchAnchors> {
   @override
   void didUpdateWidget(SearchAnchors oldWidget) {
     if (widget.whichData != oldWidget.whichData) {
-      // Wenn sich der Datentyp geändert hat, setzen Sie die Filter zurück.
       setState(() {
         selectedFilters.clear();
       });
