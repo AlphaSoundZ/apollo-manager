@@ -119,6 +119,7 @@ class _SearchAnchorsState extends State<SearchAnchors> {
     if (widget.whichData != oldWidget.whichData) {
       setState(() {
         selectedFilters.clear();
+        searchController.text = "";
       });
     }
     super.didUpdateWidget(oldWidget);
