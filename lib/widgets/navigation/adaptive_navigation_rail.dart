@@ -31,7 +31,7 @@ class AdaptiveNavigationRail extends StatelessWidget {
       labelType: NavigationRailLabelType.all,
       leading: Column(
         children: [
-          const SizedBox(height: 4),
+          const SizedBox(height: 8),
           IconButton(
             onPressed: () {
               if (onMenuButtonPressed != null) {

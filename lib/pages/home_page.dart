@@ -1,3 +1,4 @@
+import 'package:apollo_manager/enums/which_data.dart';
 import 'package:apollo_manager/widgets/navigation/adaptive_navigation_sub_drawer.dart';
 import 'package:apollo_manager/widgets/navigation/adaptive_navigation_bar.dart';
 import 'package:apollo_manager/widgets/navigation/adaptive_navigation_rail.dart';
@@ -102,6 +103,13 @@ class _HomePageState extends State<HomePage> {
                       padding: const EdgeInsets.fromLTRB(8, 8, 16, 0),
                       child: search_bar.AppBar(
                         backgroundColor: _backgroundColor,
+                        whichData: destinations[selectedView]
+                                .subDestinations
+                                .isNotEmpty
+                            ? destinations[selectedView]
+                                .subDestinations[selectedSubView]
+                                .whichData
+                            : WhichData.users,
                       )),
                   Expanded(
                     child: Row(
@@ -118,7 +126,8 @@ class _HomePageState extends State<HomePage> {
                               onViewSelected: (int index) {
                                 setState(() {
                                   selectedSubView = index;
-                                  showSideSheet = false;
+                                  showSideSheet =
+                                      false; // TODO: When View Changes, the SideSheet changes instantly, so it changes first and then animates out (need to fix)
                                 });
                               },
                               isOpen: showSubDrawer,

@@ -29,6 +29,7 @@ class SubDestination {
     required this.label,
     required this.route,
     required this.view,
+    required this.whichData,
     required this.fabLabel,
     required this.fabIcon,
     this.fabContent,
@@ -37,6 +38,7 @@ class SubDestination {
   final String label;
   final String route;
   final dynamic view;
+  final WhichData whichData;
   final String fabLabel;
   final IconData fabIcon;
   final Widget? fabContent;
@@ -61,6 +63,7 @@ class Destinations {
           view: const DataView(
             whichData: WhichData.users,
           ),
+          whichData: WhichData.users,
           fabLabel: 'User',
           fabIcon: Icons.person_add_outlined,
           fabContent: CreateUserViewContent(
@@ -75,6 +78,7 @@ class Destinations {
           view: const DataView(
             whichData: WhichData.usercards,
           ),
+          whichData: WhichData.usercards,
           fabLabel: 'Usercard',
           fabIcon: Icons.credit_card_outlined,
         ),
@@ -85,6 +89,7 @@ class Destinations {
           view: const DataView(
             whichData: WhichData.devices,
           ),
+          whichData: WhichData.devices,
           fabLabel: 'Device',
           fabIcon: Icons.devices_outlined,
           fabContent: CreateDeviceViewContent(
@@ -99,6 +104,7 @@ class Destinations {
           view: const DataView(
             whichData: WhichData.tokens,
           ),
+          whichData: WhichData.tokens,
           fabLabel: 'Token',
           fabIcon: Icons.token_outlined,
         ),
@@ -109,6 +115,7 @@ class Destinations {
           view: const DataView(
             whichData: WhichData.classes,
           ),
+          whichData: WhichData.classes,
           fabLabel: 'Class',
           fabIcon: Icons.class_outlined,
         ),

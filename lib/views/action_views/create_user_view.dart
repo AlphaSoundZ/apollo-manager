@@ -194,9 +194,6 @@ class _CreateUserViewContentState extends State<CreateUserViewContent> {
       // Close Side Sheet
       widget.onSubmit!();
 
-      firstnameController.text = "";
-      lastnameController.text = "";
-
       _loading = false;
 
       // Update Provider Data

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
+import 'dart:core';
 
 class Api {
   final EncryptedSharedPreferences _storage = EncryptedSharedPreferences();
@@ -85,8 +86,12 @@ class Api {
     }
   }
 
-  dynamic _getUri(String uri) {
-    return Uri.parse("${dotenv.env['API_URL']}$uri");
+  dynamic _getUri(String uri, [Map<String, dynamic>? params]) {
+    // Uri uri = Uri.http("${dotenv.env['API_URL']}$uri");
+    Uri url = Uri.http(dotenv.env['API_BASE_URL']!,
+        "/api/${dotenv.env['API_VERSION']!}$uri", params);
+
+    return url;
   }
 
   Future<dynamic> get(String route) async {
@@ -113,7 +118,11 @@ class Api {
     }
   }
 
-  Future<List<dynamic>> fetchData(WhichData whichData) async {
+  Future<List<dynamic>> fetchData({
+    required WhichData whichData,
+    String? query,
+    Map<String, dynamic>? params,
+  }) async {
     final token = await _storage.getString("token");
 
     if (token == "") {
@@ -121,9 +130,9 @@ class Api {
     }
 
     try {
-      final uri = _getUri(whichData.endpoint);
+      final url = _getUri(whichData.endpoint, params);
       final response = await http.get(
-        uri,
+        url,
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer $token",

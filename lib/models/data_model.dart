@@ -32,7 +32,7 @@ class DataModel extends ChangeNotifier {
     required WhichData dataType,
     bool draw = true,
   }) async {
-    data[dataType] = await Api().fetchData(dataType);
+    data[dataType] = await Api().fetchData(whichData: dataType);
 
     if (draw) {
       notifyListeners();

@@ -25,7 +25,7 @@ extension WhichDataExtension on WhichData {
     }
   }
 
-  dynamic get endpoint {
+  String get endpoint {
     switch (this) {
       case WhichData.users:
         return "/user";
