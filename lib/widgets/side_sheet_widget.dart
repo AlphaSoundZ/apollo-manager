@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../destinations.dart';
+import '../destinations.dart';
 
 class SideSheet extends StatefulWidget {
   const SideSheet({

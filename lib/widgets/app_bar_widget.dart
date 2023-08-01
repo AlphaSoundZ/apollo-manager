@@ -8,10 +8,15 @@ class AppBar extends StatefulWidget {
     super.key,
     required this.backgroundColor,
     required this.whichData,
+    required this.onSearchSubmit,
   });
 
   final Color backgroundColor;
   final WhichData whichData;
+  final Function({
+    required String query,
+    required List<int> filters,
+  }) onSearchSubmit;
 
   @override
   State<AppBar> createState() => _AppBarState();
@@ -67,6 +72,11 @@ class _AppBarState extends State<AppBar> {
                 Expanded(
                   child: SearchAnchors(
                     whichData: widget.whichData,
+                    onSearchSubmit: ({required query, required filters}) =>
+                        widget.onSearchSubmit(
+                      query: query,
+                      filters: filters,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 298),
@@ -101,9 +111,14 @@ class SearchAnchors extends StatefulWidget {
   const SearchAnchors({
     super.key,
     required this.whichData,
+    required this.onSearchSubmit,
   });
 
   final WhichData whichData;
+  final Function({
+    required String query,
+    required List<int> filters,
+  }) onSearchSubmit;
 
   @override
   State<SearchAnchors> createState() => _SearchAnchorsState();
@@ -154,7 +169,13 @@ class _SearchAnchorsState extends State<SearchAnchors> {
           Icons.search_rounded,
           color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
         ),
-        onPressed: () {},
+        onPressed: () {
+          // run on search submit
+          if (searchController.text.isNotEmpty) {
+            widget.onSearchSubmit(
+                query: searchController.text, filters: selectedFilters);
+          }
+        },
       ),
       barShape: MaterialStateProperty.all(
         RoundedRectangleBorder(
@@ -170,6 +191,7 @@ class _SearchAnchorsState extends State<SearchAnchors> {
       ],
       dividerColor: Theme.of(context).colorScheme.onSurface,
       suggestionsBuilder: (context, controller) {
+        // TODO: add tabs for each search category; add async to this function when it's available;
         quickSearch.search(searchController.text).then((value) {
           debugPrint("rebuilding suggestions: ${value.length}");
           setState(() {

@@ -1,4 +1,5 @@
 import 'package:apollo_manager/enums/which_data.dart';
+import 'package:apollo_manager/views/data_view.dart';
 import 'package:apollo_manager/widgets/navigation/adaptive_navigation_sub_drawer.dart';
 import 'package:apollo_manager/widgets/navigation/adaptive_navigation_bar.dart';
 import 'package:apollo_manager/widgets/navigation/adaptive_navigation_rail.dart';
@@ -8,6 +9,7 @@ import '../widgets/app_bar_widget.dart' as search_bar;
 import '../destinations.dart';
 import '../widgets/side_sheet_widget.dart';
 import '../models/data_model.dart';
+import '../views/stack_template_view.dart';
 
 // Views
 
@@ -28,6 +30,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int selectedView = 0;
   int selectedSubView = 0;
+  List<dynamic> stack = [];
 
   @override
   void initState() {
@@ -54,6 +57,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void didUpdateWidget(HomePage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.view != oldWidget.view || widget.subView != oldWidget.subView) {
+      setState(() {
+        stack.clear();
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     Destinations destinationsInstance = Destinations(onFabCancel: () {
       setState(() {
@@ -65,6 +79,11 @@ class _HomePageState extends State<HomePage> {
       });
     });
     List<Destination> destinations = destinationsInstance.destinations;
+
+    final surfaceContainer = Color.alphaBlend(
+      Theme.of(context).colorScheme.primary.withOpacity(0.08),
+      Theme.of(context).colorScheme.surface,
+    );
 
     return MultiProvider(
       providers: [
@@ -83,6 +102,7 @@ class _HomePageState extends State<HomePage> {
                   onDestinationSelected: (int index) {
                     setState(
                       () {
+                        stack.clear();
                         selectedView = index;
                         selectedSubView = 0;
                       },
@@ -110,6 +130,26 @@ class _HomePageState extends State<HomePage> {
                                 .subDestinations[selectedSubView]
                                 .whichData
                             : WhichData.users,
+                        onSearchSubmit: ({required query, required filters}) {
+                          // show results
+                          debugPrint(
+                              "Search Results (query: $query) - stack len: ${stack.length}");
+                          setState(() {
+                            stack.clear();
+                            stack.add(StackView(
+                              title: "Search Results",
+                              onPop: () {
+                                setState(() {
+                                  stack.removeLast();
+                                });
+                              },
+                              child: const DataView(
+                                  whichData: WhichData
+                                      .users), // TODO: (search results)
+                              // const Center(child: Text("Search results")),
+                            ));
+                          });
+                        },
                       )),
                   Expanded(
                     child: Row(
@@ -125,6 +165,7 @@ class _HomePageState extends State<HomePage> {
                               selectedView: selectedView,
                               onViewSelected: (int index) {
                                 setState(() {
+                                  stack.clear();
                                   selectedSubView = index;
                                   showSideSheet =
                                       false; // TODO: When View Changes, the SideSheet changes instantly, so it changes first and then animates out (need to fix)
@@ -140,23 +181,38 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         Expanded(
+                          // MAIN VIEW
                           child: Container(
-                            // MAIN VIEW
-                            padding: const EdgeInsets.all(8),
-                            child: (destinations[selectedView]
-                                    .subDestinations
-                                    .isEmpty)
-                                ? IndexedStack(
-                                    index: selectedSubView,
-                                    children: [destinations[selectedView].view],
-                                  )
-                                : IndexedStack(
-                                    index: selectedSubView,
-                                    children: destinations[selectedView]
+                            margin: const EdgeInsets.all(8.0),
+                            clipBehavior: Clip.hardEdge,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(56.0 / 2),
+                              color: surfaceContainer,
+                            ),
+                            child: IndexedStack(
+                              index: stack.length,
+                              children: [
+                                // MAIN
+                                (destinations[selectedView]
                                         .subDestinations
-                                        .map<Widget>((e) => e.view)
-                                        .toList(),
-                                  ),
+                                        .isEmpty)
+                                    ? IndexedStack(
+                                        index: selectedSubView,
+                                        children: [
+                                          destinations[selectedView].view
+                                        ],
+                                      )
+                                    : IndexedStack(
+                                        index: selectedSubView,
+                                        children: destinations[selectedView]
+                                            .subDestinations
+                                            .map<Widget>((e) => e.view)
+                                            .toList(),
+                                      ),
+                                // STACKED VIEW (like search results, user details etc.)
+                                ...stack,
+                              ],
+                            ),
                           ),
                         ),
                         if (wideScreen &&
@@ -204,6 +260,7 @@ class _HomePageState extends State<HomePage> {
                 selectedView: selectedView,
                 onDestinationSelected: (index) {
                   setState(() {
+                    stack.clear();
                     selectedView = index;
                   });
                 },

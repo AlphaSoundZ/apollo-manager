@@ -122,12 +122,6 @@ class Destinations {
       ],
     ),
     Destination(
-      icon: Icons.search,
-      label: 'Search',
-      route: '/search',
-      view: const Center(child: Text('Search')),
-    ),
-    Destination(
       icon: Icons.calendar_month,
       label: 'Prebook',
       route: '/prebook',
