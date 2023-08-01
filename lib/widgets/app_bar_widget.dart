@@ -16,6 +16,7 @@ class AppBar extends StatefulWidget {
   final Function({
     required String query,
     required List<int> filters,
+    required WhichData whichData,
   }) onSearchSubmit;
 
   @override
@@ -76,6 +77,7 @@ class _AppBarState extends State<AppBar> {
                         widget.onSearchSubmit(
                       query: query,
                       filters: filters,
+                      whichData: widget.whichData,
                     ),
                   ),
                 ),
@@ -139,7 +141,7 @@ class _SearchAnchorsState extends State<SearchAnchors> {
       setState(() {
         selectedFilters.clear();
         quickSearchResults.clear();
-        searchController.text = "";
+        searchController.clear();
         quickSearch = QuickSearch(
           whichData: widget.whichData,
         );
@@ -160,6 +162,24 @@ class _SearchAnchorsState extends State<SearchAnchors> {
     return SearchAnchor.bar(
       searchController: searchController,
       viewHintText: "Search ${widget.whichData.name}",
+      viewTrailing: [
+        IconButton(
+          onPressed: () {
+            searchController.closeView(searchController.text);
+          },
+          icon: const Icon(Icons.arrow_drop_up),
+        )
+      ],
+      viewLeading: IconButton(
+        icon: const Icon(Icons.search_rounded),
+        onPressed: () {
+          if (searchController.text.isNotEmpty || selectedFilters.isNotEmpty) {
+            widget.onSearchSubmit(
+                query: searchController.text, filters: selectedFilters);
+            searchController.closeView(searchController.text);
+          }
+        },
+      ),
       barBackgroundColor: MaterialStateColor.resolveWith(
         (states) => surfaceContainer,
       ),
@@ -167,11 +187,11 @@ class _SearchAnchorsState extends State<SearchAnchors> {
       barLeading: IconButton(
         icon: Icon(
           Icons.search_rounded,
-          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+          color: Theme.of(context).colorScheme.onSurface,
         ),
         onPressed: () {
           // run on search submit
-          if (searchController.text.isNotEmpty) {
+          if (searchController.text.isNotEmpty || selectedFilters.isNotEmpty) {
             widget.onSearchSubmit(
                 query: searchController.text, filters: selectedFilters);
           }

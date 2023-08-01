@@ -87,7 +87,9 @@ class _HomePageState extends State<HomePage> {
 
     return MultiProvider(
       providers: [
-        ListenableProvider<DataModel>(create: (context) => DataModel()),
+        ListenableProvider<DataModel>(
+            create: (context) =>
+                DataModel()), // TODO: separate providers for each data type, else it will rebuild everything
       ],
       child: Scaffold(
         body: Row(
@@ -130,24 +132,27 @@ class _HomePageState extends State<HomePage> {
                                 .subDestinations[selectedSubView]
                                 .whichData
                             : WhichData.users,
-                        onSearchSubmit: ({required query, required filters}) {
+                        onSearchSubmit: (
+                            {required query,
+                            required filters,
+                            required WhichData whichData}) {
                           // show results
-                          debugPrint(
-                              "Search Results (query: $query) - stack len: ${stack.length}");
                           setState(() {
                             stack.clear();
-                            stack.add(StackView(
-                              title: "Search Results",
-                              onPop: () {
-                                setState(() {
-                                  stack.removeLast();
-                                });
-                              },
-                              child: const DataView(
-                                  whichData: WhichData
-                                      .users), // TODO: (search results)
-                              // const Center(child: Text("Search results")),
-                            ));
+                            stack.add(
+                              StackView(
+                                title: "Search Results",
+                                onPop: () {
+                                  setState(() {
+                                    stack.removeLast();
+                                  });
+                                },
+                                child: DataView(
+                                  whichData: whichData,
+                                  params: {"query": query},
+                                ),
+                              ),
+                            );
                           });
                         },
                       )),

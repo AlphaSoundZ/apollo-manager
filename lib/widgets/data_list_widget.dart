@@ -7,12 +7,12 @@ import '../enums/which_data.dart';
 class DataList extends StatefulWidget {
   const DataList({
     super.key,
-    required this.whichData,
+    this.data = const [],
     this.selectedIndex,
     this.onSelected,
   });
 
-  final WhichData whichData;
+  final List<dynamic> data;
   final int? selectedIndex;
   final ValueChanged<int>? onSelected;
 
@@ -21,26 +21,19 @@ class DataList extends StatefulWidget {
 }
 
 class _DataListState extends State<DataList> {
-  List<dynamic> data = [];
-
   @override
   void initState() {
-    Provider.of<DataModel>(context, listen: false).get(widget.whichData);
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // get data from data model
-    data = Provider.of<DataModel>(context).get(widget.whichData);
-
     // get consumer for data model
     return ListView(
       children: [
         const SizedBox(height: 8.0),
         ...List.generate(
-          data.length,
+          widget.data.length,
           (index) {
             return _createWidget(index);
           },
@@ -52,7 +45,7 @@ class _DataListState extends State<DataList> {
 
   Widget _createWidget(int index) {
     dynamic rowData;
-    rowData = data[index];
+    rowData = widget.data[index];
     // create widget based on whichData type
 
     return DataListTile(
