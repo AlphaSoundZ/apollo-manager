@@ -5,6 +5,8 @@ import '../models/usercard_model.dart';
 import '../models/token_model.dart';
 import '../models/devicetype_model.dart';
 
+import 'package:flutter/material.dart';
+
 enum WhichData { users, devices, deviceTypes, classes, usercards, tokens }
 
 extension WhichDataExtension on WhichData {
@@ -41,4 +43,47 @@ extension WhichDataExtension on WhichData {
         return "/token";
     }
   }
+
+  WhichDataIcons get icons {
+    // TODO: option between outlined and filled; maybe add a third option for the fab; different icons for different devices
+    switch (this) {
+      case WhichData.users:
+        return WhichDataIcons(
+          single: Icons.person,
+          multiple: Icons.group_outlined,
+        );
+      case WhichData.devices:
+        return WhichDataIcons(
+          single: Icons.devices_outlined,
+          multiple: Icons.devices_outlined,
+        );
+      case WhichData.deviceTypes:
+        return WhichDataIcons(
+          single: Icons.devices_outlined,
+          multiple: Icons.devices_outlined,
+        );
+      case WhichData.classes:
+        return WhichDataIcons(
+          single: Icons.class_outlined,
+          multiple: Icons.class_outlined,
+        );
+      case WhichData.usercards:
+        return WhichDataIcons(
+          single: Icons.credit_card_outlined,
+          multiple: Icons.credit_card_outlined,
+        );
+      case WhichData.tokens:
+        return WhichDataIcons(
+          single: Icons.token_outlined,
+          multiple: Icons.token_outlined,
+        );
+    }
+  }
+}
+
+class WhichDataIcons {
+  WhichDataIcons({required this.single, required this.multiple});
+
+  final IconData single;
+  final IconData multiple;
 }

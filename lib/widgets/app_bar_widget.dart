@@ -113,22 +113,30 @@ class _SearchAnchorsState extends State<SearchAnchors> {
   SearchController searchController = SearchController();
 
   List<int> selectedFilters = [];
+  List<dynamic> quickSearchResults = [];
+  late QuickSearch quickSearch = QuickSearch(
+    whichData: widget.whichData,
+  );
 
   @override
   void didUpdateWidget(SearchAnchors oldWidget) {
     if (widget.whichData != oldWidget.whichData) {
       setState(() {
         selectedFilters.clear();
+        quickSearchResults.clear();
         searchController.text = "";
+        quickSearch = QuickSearch(
+          whichData: widget.whichData,
+        );
       });
     }
+
     super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("rebuilt for ${widget.whichData.name}");
-
+    debugPrint("rebuilding search anchors: ${quickSearchResults.length}");
     final surfaceContainer = Color.alphaBlend(
       Theme.of(context).colorScheme.primary.withOpacity(0.08),
       Theme.of(context).colorScheme.surface,
@@ -137,9 +145,6 @@ class _SearchAnchorsState extends State<SearchAnchors> {
     return SearchAnchor.bar(
       searchController: searchController,
       viewHintText: "Search ${widget.whichData.name}",
-      viewTrailing: [
-        IconButton(onPressed: () {}, icon: const Icon(Icons.close)),
-      ],
       barBackgroundColor: MaterialStateColor.resolveWith(
         (states) => surfaceContainer,
       ),
@@ -165,6 +170,13 @@ class _SearchAnchorsState extends State<SearchAnchors> {
       ],
       dividerColor: Theme.of(context).colorScheme.onSurface,
       suggestionsBuilder: (context, controller) {
+        quickSearch.search(searchController.text).then((value) {
+          debugPrint("rebuilding suggestions: ${value.length}");
+          setState(() {
+            quickSearchResults = value;
+          });
+          // force rebuild
+        });
         return [
           // Filter title
           Padding(
@@ -173,7 +185,7 @@ class _SearchAnchorsState extends State<SearchAnchors> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text("Filters", style: TextStyle(fontSize: 18)),
-                const SizedBox(height: 8),
+                const SizedBox(height: 7),
                 Filters(
                   whichData: widget.whichData,
                   onSelected: (value) {
@@ -189,101 +201,65 @@ class _SearchAnchorsState extends State<SearchAnchors> {
               ],
             ),
           ),
-          // Filter chips
           const Divider(),
-          QuickSearch(
-            whichData: widget.whichData,
-            query: controller.text,
-          ),
-          ListTile(
-            leading: CircleAvatar(
-              radius: 16,
-              backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-              child: Icon(
-                Icons.person,
-                color: Theme.of(context).colorScheme.onSecondaryContainer,
-                size: 16,
-              ),
-            ),
-            title: const Text("User 1"),
-            onTap: () {},
-          ),
-          ListTile(
-            leading: CircleAvatar(
-              radius: 16,
-              backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-              child: Icon(
-                Icons.person,
-                color: Theme.of(context).colorScheme.onSecondaryContainer,
-                size: 16,
-              ),
-            ),
-            title: const Text("User 2"),
-            onTap: () {},
-          ),
-          ListTile(
-            leading: CircleAvatar(
-              radius: 16,
-              backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-              child: Icon(
-                Icons.person,
-                color: Theme.of(context).colorScheme.onSecondaryContainer,
-                size: 16,
-              ),
-            ),
-            title: const Text("User 3"),
-            onTap: () {},
-          ),
+          ...List.generate(
+            quickSearchResults.length,
+            (index) {
+              return ListTile(
+                leading: CircleAvatar(
+                  radius: 16,
+                  backgroundColor:
+                      Theme.of(context).colorScheme.secondaryContainer,
+                  child: Icon(
+                    widget.whichData.icons.single,
+                    color: Theme.of(context).colorScheme.onSecondaryContainer,
+                    size: 16,
+                  ),
+                ),
+                title: Text(quickSearchResults[index].content.title),
+                subtitle: Row(
+                  children: [
+                    Text(quickSearchResults[index].content.subTitle),
+                    Spacer(),
+                    Text(quickSearchResults[index].content.leading),
+                  ],
+                ),
+                onTap: () {},
+              );
+            },
+          ).toList(),
         ];
       },
     );
   }
 }
 
-class QuickSearch extends StatefulWidget {
-  const QuickSearch({super.key, required this.whichData, required this.query});
+class QuickSearch {
+  QuickSearch({required this.whichData});
 
   final WhichData whichData;
-  final String query;
 
-  @override
-  State<QuickSearch> createState() => _QuickSearchState();
-}
-
-class _QuickSearchState extends State<QuickSearch> {
   List<dynamic> responseData = [];
 
-  @override
-  void initState() {
-    super.initState();
-
-    quickSearch(widget.query);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-
-  Future<void> quickSearch(String query) async {
+  Future<List<dynamic>> search(String query) async {
     debugPrint("search for: $query");
+    query = query.trim();
     if (query.isEmpty) {
-      return;
+      responseData.clear();
+    } else {
+      List<dynamic> response = await Api().fetchData(
+        whichData: whichData,
+        params: {
+          "query": query,
+          "size": 7,
+        },
+      );
+
+      responseData = response;
     }
 
-    List<dynamic> response = await Api().fetchData(
-      whichData: widget.whichData,
-      params: {
-        "query": query,
-        "size": 5,
-      },
-    );
-
-    debugPrint(response.toString());
-
-    setState(() {
-      responseData = response;
-    });
+    debugPrint(responseData.toString());
+    return responseData;
   }
 }
 

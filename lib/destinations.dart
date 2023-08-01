@@ -25,7 +25,7 @@ class Destination {
 
 class SubDestination {
   SubDestination({
-    required this.icon,
+    required this.icons,
     required this.label,
     required this.route,
     required this.view,
@@ -34,7 +34,7 @@ class SubDestination {
     required this.fabIcon,
     this.fabContent,
   });
-  final IconData icon;
+  final IconData icons;
   final String label;
   final String route;
   final dynamic view;
@@ -57,7 +57,7 @@ class Destinations {
       route: '/data',
       subDestinations: [
         SubDestination(
-          icon: Icons.group_outlined,
+          icons: Icons.group_outlined,
           label: 'Users',
           route: '/data/users',
           view: const DataView(
@@ -72,7 +72,7 @@ class Destinations {
           ),
         ),
         SubDestination(
-          icon: Icons.credit_card_outlined,
+          icons: Icons.credit_card_outlined,
           label: 'Usercards',
           route: '/data/usercards',
           view: const DataView(
@@ -83,7 +83,7 @@ class Destinations {
           fabIcon: Icons.credit_card_outlined,
         ),
         SubDestination(
-          icon: Icons.devices_outlined,
+          icons: Icons.devices_outlined,
           label: 'Devices',
           route: '/data/devices',
           view: const DataView(
@@ -98,7 +98,7 @@ class Destinations {
           ),
         ),
         SubDestination(
-          icon: Icons.token_outlined,
+          icons: Icons.token_outlined,
           label: 'Token',
           route: '/data/token',
           view: const DataView(
@@ -109,7 +109,7 @@ class Destinations {
           fabIcon: Icons.token_outlined,
         ),
         SubDestination(
-          icon: Icons.class_outlined,
+          icons: Icons.class_outlined,
           label: 'Classes',
           route: '/data/classes',
           view: const DataView(

@@ -1,29 +1,29 @@
 import 'dart:convert';
 import 'package:apollo_manager/enums/which_data.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
+import 'package:dio/dio.dart';
 import 'dart:core';
 
 class Api {
   final EncryptedSharedPreferences _storage = EncryptedSharedPreferences();
+  final dio = Dio(BaseOptions(
+    baseUrl: dotenv.env["API_BASE_URL"]!,
+    contentType: "application/json",
+  ));
 
   Future<dynamic> login(String username, String password) async {
     try {
-      final uri = _getUri("/token/authorize");
-      final response = await http.post(
-        uri,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: json.encode({
+      final response = await dio.post(
+        "/token/authorize",
+        data: {
           "username": username,
           "password": password,
-        }),
+        },
       );
 
-      return json.decode(response.body);
+      return response.data;
     } catch (e) {
       debugPrint("Error at login: $e");
       return {
@@ -43,13 +43,13 @@ class Api {
     }
 
     try {
-      final uri = _getUri("/token/validate");
-      final response = await http.post(
-        uri,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer $token",
-        },
+      final response = await dio.post(
+        "/token/validate",
+        options: Options(
+          headers: {
+            "Authorization": "Bearer $token",
+          },
+        ),
       );
 
       if (response.statusCode == 200) {
@@ -71,27 +71,21 @@ class Api {
     final token = await _storage.getString("token");
 
     try {
-      final uri = _getUri(route);
-      final response = await http.post(uri,
+      final response = await dio.post(
+        route,
+        options: Options(
           headers: {
-            "Content-Type": "application/json",
             "Authorization": "Bearer $token",
           },
-          body: jsonEncode(body));
+        ),
+        data: body,
+      );
 
-      return json.decode(response.body);
+      return response.data;
     } catch (e) {
       debugPrint("Error (at post request): $e");
       return [];
     }
-  }
-
-  dynamic _getUri(String uri, [Map<String, dynamic>? params]) {
-    // Uri uri = Uri.http("${dotenv.env['API_URL']}$uri");
-    Uri url = Uri.http(dotenv.env['API_BASE_URL']!,
-        "/api/${dotenv.env['API_VERSION']!}$uri", params);
-
-    return url;
   }
 
   Future<dynamic> get(String route) async {
@@ -102,16 +96,16 @@ class Api {
     }
 
     try {
-      final uri = _getUri(route);
-      final response = await http.get(
-        uri,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer $token",
-        },
+      final response = await dio.get(
+        route,
+        options: Options(
+          headers: {
+            "Authorization": "Bearer $token",
+          },
+        ),
       );
 
-      return json.decode(response.body);
+      return response.data;
     } catch (e) {
       debugPrint("Error at Api.get: $e");
       return [];
@@ -120,7 +114,6 @@ class Api {
 
   Future<List<dynamic>> fetchData({
     required WhichData whichData,
-    String? query,
     Map<String, dynamic>? params,
   }) async {
     final token = await _storage.getString("token");
@@ -129,25 +122,28 @@ class Api {
       return [];
     }
 
+    debugPrint(params.toString());
+
     try {
-      final url = _getUri(whichData.endpoint, params);
-      final response = await http.get(
-        url,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer $token",
-        },
+      final response = await dio.get(
+        whichData.endpoint,
+        options: Options(
+          headers: {
+            "Authorization": "Bearer $token",
+          },
+        ),
+        queryParameters: params,
       );
 
-      dynamic responseData = json.decode(response.body);
-
-      if (responseData["code"] != 200) {
-        debugPrint('Error fetching data: ${responseData["message"]}');
+      if (response.statusCode != 200) {
+        debugPrint('Error fetching data: ${response.data["message"]}');
         return [];
       }
 
-      List<dynamic> data =
-          responseData["data"].map((json) => whichData.fromJson(json)).toList();
+      List<dynamic> data = response.data["data"]
+          .map((json) => whichData
+              .fromJson(json.containsKey("accordance") ? json["data"] : json))
+          .toList();
 
       return data;
     } catch (e) {

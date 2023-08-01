@@ -1,5 +1,8 @@
+import 'package:apollo_manager/enums/which_data.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../destinations.dart';
+import '../../models/data_model.dart';
 
 class SubDrawer extends StatefulWidget {
   const SubDrawer({
@@ -79,9 +82,13 @@ class SubDrawerState extends State<SubDrawer> {
                           Theme.of(context).colorScheme.onTertiaryContainer,
                       label: Text(
                           "New ${destinations[selectedView].subDestinations[selectedSubView].fabLabel}"),
-                      icon: Icon(destinations[selectedView]
-                          .subDestinations[selectedSubView]
-                          .fabIcon),
+                      icon: Icon(
+                        destinations[selectedView]
+                            .subDestinations[selectedSubView]
+                            .whichData
+                            .icons
+                            .multiple,
+                      ),
                       onPressed: widget.onFABPressed,
                       elevation: 0,
                     ),
@@ -94,11 +101,45 @@ class SubDrawerState extends State<SubDrawer> {
                               height: 32.0, // alternative: 40.0
                               width: double.infinity,
                               child: FilledButton.tonalIcon(
-                                icon: Icon(e.icon),
-                                label: Text(
-                                  e.label,
-                                  overflow: TextOverflow.fade,
-                                  maxLines: 1,
+                                icon: Icon(e.icons),
+                                label: Row(
+                                  children: [
+                                    Text(
+                                      e.label,
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                        fontWeight: selectedSubView ==
+                                                destinations[selectedView]
+                                                    .subDestinations
+                                                    .indexOf(e)
+                                            ? FontWeight.bold
+                                            : FontWeight.normal,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    Text(
+                                      // get Text from provider by counting amount of data
+                                      Provider.of<DataModel>(context)
+                                          .get(e.whichData)
+                                          .length
+                                          .toString(),
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                        fontWeight: selectedSubView ==
+                                                destinations[selectedView]
+                                                    .subDestinations
+                                                    .indexOf(e)
+                                            ? FontWeight.bold
+                                            : FontWeight.normal,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
+                                      ),
+                                    )
+                                  ],
                                 ),
                                 style: ButtonStyle(
                                   alignment: Alignment.centerLeft,

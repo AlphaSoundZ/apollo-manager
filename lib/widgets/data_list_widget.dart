@@ -33,7 +33,7 @@ class _DataListState extends State<DataList> {
   @override
   Widget build(BuildContext context) {
     // get data from data model
-    data = Provider.of<DataModel>(context).data[widget.whichData];
+    data = Provider.of<DataModel>(context).get(widget.whichData);
 
     // get consumer for data model
     return ListView(
