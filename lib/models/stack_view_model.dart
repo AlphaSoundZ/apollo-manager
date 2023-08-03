@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class StackViewModel {
   StackViewModel({required this.title, this.subTitle, required this.content});
 

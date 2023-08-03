@@ -1,4 +1,8 @@
+import 'package:apollo_manager/views/stack_views/stack_details_views/user_details_view.dart';
+import 'package:provider/provider.dart';
+
 import '../models/class_model.dart';
+import '../models/data_model.dart';
 import '../models/device_model.dart';
 import '../models/stack_view_model.dart';
 import '../models/user_model.dart';
@@ -81,8 +85,14 @@ extension WhichDataExtension on WhichData {
     }
   }
 
-  StackViewModel detailsView(int itemId) {
+  StackViewModel detailsView(context, int itemId) {
     switch (this) {
+      case WhichData.users:
+        return userDetailsStackView(
+          context,
+          id: itemId,
+          whichData: this,
+        );
       default:
         return StackViewModel(
           title: "Details for id $itemId",

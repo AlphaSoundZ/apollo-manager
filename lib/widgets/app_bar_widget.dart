@@ -98,9 +98,13 @@ class _AppBarState extends State<AppBar> {
                   backgroundColor:
                       Theme.of(context).colorScheme.secondaryContainer,
                   child: IconButton(
-                    icon: Icon(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                        Theme.of(context).colorScheme.secondaryContainer,
+                      ),
+                    ),
+                    icon: const Icon(
                       Icons.person,
-                      color: Theme.of(context).colorScheme.onSecondaryContainer,
                       size: 25,
                     ),
                     onPressed: () {

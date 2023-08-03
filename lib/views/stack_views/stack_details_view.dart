@@ -21,7 +21,7 @@ class _DetailsViewState extends State<DetailsView> {
   @override
   Widget build(BuildContext context) {
     return StackView(
-      stackViewModel: widget.whichData.detailsView(widget.id),
+      stackViewModel: widget.whichData.detailsView(context, widget.id),
       onPop: () {
         if (widget.onPop != null) {
           widget.onPop!();

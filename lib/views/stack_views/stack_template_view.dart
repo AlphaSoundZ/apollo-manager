@@ -18,7 +18,7 @@ class StackViewState extends State<StackView> {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.fromLTRB(16, 24, 24, 16),
           decoration: BoxDecoration(
             border: Border(
               bottom: BorderSide(
@@ -26,28 +26,42 @@ class StackViewState extends State<StackView> {
               ),
             ),
           ),
-          child: Column(
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
+              IconButton(
+                onPressed: widget.onPop,
+                icon: const Icon(Icons.arrow_back),
+                iconSize: 25,
+              ),
+              const SizedBox(
+                width: 12,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     widget.stackViewModel.title,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
-                  const Spacer(),
-                  IconButton(
-                    onPressed: widget.onPop,
-                    icon: const Icon(Icons.close),
-                    iconSize: 25,
+                  Text(
+                    widget.stackViewModel.subTitle ?? "",
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ],
               ),
-              // subtitle
-              Text(
-                widget.stackViewModel.subTitle ?? "",
-                style: Theme.of(context).textTheme.titleMedium,
+              const Spacer(),
+              IconButton.filledTonal(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.edit,
+                ),
               ),
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.more_vert),
+              ),
+              // subtitle
             ],
           ),
         ),
