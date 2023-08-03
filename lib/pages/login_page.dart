@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
-import '../classes/api.dart';
+import '../services/api.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

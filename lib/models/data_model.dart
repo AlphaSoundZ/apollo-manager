@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../enums/which_data.dart';
-import '../classes/api.dart';
+import '../services/api.dart';
 
 class DataModel extends ChangeNotifier {
   Map<WhichData, dynamic> data = <WhichData, dynamic>{};

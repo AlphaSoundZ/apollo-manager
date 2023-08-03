@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../classes/api.dart';
+import '../services/api.dart';
 
 class SettingsView extends StatefulWidget {
   const SettingsView({super.key});

@@ -1,7 +1,7 @@
 import 'package:apollo_manager/enums/which_data.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../classes/api.dart';
+import '../services/api.dart';
 
 class AppBar extends StatefulWidget {
   const AppBar({

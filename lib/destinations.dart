@@ -2,7 +2,7 @@ import 'package:apollo_manager/views/prebook_view.dart';
 import 'package:flutter/material.dart';
 import 'views/data_view.dart';
 import 'package:get/get.dart';
-import 'classes/api.dart';
+import 'services/api.dart';
 import '../enums/which_data.dart';
 import '../views/action_views/create_user_view.dart';
 import '../views/action_views/create_device_view.dart';

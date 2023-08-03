@@ -1,4 +1,4 @@
-import 'package:apollo_manager/classes/api.dart';
+import 'package:apollo_manager/services/api.dart';
 import 'package:apollo_manager/enums/which_data.dart';
 import 'package:apollo_manager/models/data_model.dart';
 import 'package:flutter/material.dart';
