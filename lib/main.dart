@@ -29,7 +29,16 @@ class _MainAppState extends State<MainApp> {
       initialRoute: '/',
       home: const LoadingPage(),
       getPages: pages,
-      theme: ThemeData.light(useMaterial3: true),
+      theme: ThemeData(
+        useMaterial3: true,
+        brightness: Brightness.light,
+        colorSchemeSeed: Colors.orange,
+      ),
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        brightness: Brightness.dark,
+        colorSchemeSeed: Colors.orange,
+      ),
       debugShowCheckedModeBanner: false,
     );
   }
@@ -40,7 +49,8 @@ class _MainAppState extends State<MainApp> {
 
     debugPrint('Initializing app');
 
-    Get.changeTheme(ThemeData.light(useMaterial3: true));
+    // Set default theme
+    Get.changeThemeMode(ThemeMode.light);
 
     // Get Pages
     pages = _getPagesFromDestinations();

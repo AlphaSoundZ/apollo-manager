@@ -29,6 +29,22 @@ class DataModel extends ChangeNotifier {
     return object;
   }
 
+  dynamic getById(WhichData whichData, int id) {
+    List<dynamic> object = data[whichData];
+
+    debugPrint("Get data for $whichData");
+
+    if (object.isEmpty) {
+      updateData(dataType: whichData);
+      return [];
+    }
+
+    // notifyListeners();
+    object = data[whichData];
+
+    return object.firstWhere((element) => element.id == id);
+  }
+
   Future<void> updateData({
     required WhichData dataType,
     Map<String, dynamic>? params,
@@ -49,20 +65,12 @@ class DataModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool _searchRunning = false;
-
   List<dynamic> search({
     required WhichData whichData,
     required Map<String, dynamic> params,
     bool draw = true,
   }) {
-    if (!_searchRunning) {
-      searchResults.clear();
-    }
-
-    if (!_searchRunning) {
-      searchResults.clear();
-
+    if (searchResults.isEmpty) {
       Api()
           .fetchData(
         whichData: whichData,
@@ -71,21 +79,17 @@ class DataModel extends ChangeNotifier {
           .then(
         (value) {
           searchResults = value;
-          _searchRunning = true;
           if (draw) {
             notifyListeners();
           }
         },
       );
-
-      return [];
-    } else {
-      _searchRunning = false;
-      return searchResults;
     }
+
+    return searchResults;
   }
 
-  void clearSearch({bool draw = true}) {
+  void clearSearch({bool draw = false}) {
     searchResults.clear();
 
     if (draw) {

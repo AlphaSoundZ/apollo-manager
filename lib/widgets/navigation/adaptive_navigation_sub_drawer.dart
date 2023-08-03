@@ -76,10 +76,8 @@ class SubDrawerState extends State<SubDrawer> {
                     FloatingActionButton.extended(
                       clipBehavior: Clip.antiAlias,
                       heroTag: "Create New",
-                      backgroundColor:
-                          Theme.of(context).colorScheme.tertiaryContainer,
-                      foregroundColor:
-                          Theme.of(context).colorScheme.onTertiaryContainer,
+                      // backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
+                      // foregroundColor: Theme.of(context).colorScheme.onTertiaryContainer,
                       label: Text(
                           "New ${destinations[selectedView].subDestinations[selectedSubView].fabLabel}"),
                       icon: Icon(
@@ -119,7 +117,7 @@ class SubDrawerState extends State<SubDrawer> {
                                             .onSurface,
                                       ),
                                     ),
-                                    Spacer(),
+                                    const Spacer(),
                                     Text(
                                       // get Text from provider by counting amount of data
                                       Provider.of<DataModel>(context)

@@ -1,5 +1,6 @@
 import '../models/class_model.dart';
 import '../models/device_model.dart';
+import '../models/stack_view_model.dart';
 import '../models/user_model.dart';
 import '../models/usercard_model.dart';
 import '../models/token_model.dart';
@@ -77,6 +78,31 @@ extension WhichDataExtension on WhichData {
           single: Icons.token_outlined,
           multiple: Icons.token_outlined,
         );
+    }
+  }
+
+  StackViewModel detailsView(int itemId) {
+    switch (this) {
+      default:
+        return StackViewModel(
+          title: "Details for id $itemId",
+          subTitle: endpoint,
+          content: Center(
+            child: Text(name),
+          ),
+        );
+      // case WhichData.users:
+      //   return UserDetailsViewContent();
+      // case WhichData.devices:
+      //   return DeviceDetailsViewContent();
+      // case WhichData.deviceTypes:
+      //   return DeviceTypeDetailsViewContent();
+      // case WhichData.classes:
+      //   return ClassDetailsViewContent();
+      // case WhichData.usercards:
+      //   return UsercardDetailsViewContent();
+      // case WhichData.tokens:
+      //   return TokenDetailsViewContent();
     }
   }
 }

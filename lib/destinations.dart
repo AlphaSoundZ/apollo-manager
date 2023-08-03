@@ -6,6 +6,7 @@ import 'classes/api.dart';
 import '../enums/which_data.dart';
 import '../views/action_views/create_user_view.dart';
 import '../views/action_views/create_device_view.dart';
+import '../views/settings_view.dart';
 
 /// [view] should be either a [Widget] or a [StatefulBuilder], use [StatefulBuilder] if you need to use [setState] inside the view
 class Destination {
@@ -45,10 +46,11 @@ class SubDestination {
 }
 
 class Destinations {
-  Destinations({this.onFabCancel, this.onFabSubmit});
+  Destinations({this.onFabCancel, this.onFabSubmit, this.onShowDetails});
 
   final void Function()? onFabCancel;
   final void Function()? onFabSubmit;
+  final void Function(WhichData whichData, int id)? onShowDetails;
 
   late List<Destination> destinations = <Destination>[
     Destination(
@@ -60,8 +62,11 @@ class Destinations {
           icons: Icons.group_outlined,
           label: 'Users',
           route: '/data/users',
-          view: const DataView(
+          view: DataView(
             whichData: WhichData.users,
+            onShowDetails: (id) => onShowDetails != null
+                ? onShowDetails!(WhichData.users, id)
+                : null,
           ),
           whichData: WhichData.users,
           fabLabel: 'User',
@@ -75,8 +80,11 @@ class Destinations {
           icons: Icons.credit_card_outlined,
           label: 'Usercards',
           route: '/data/usercards',
-          view: const DataView(
+          view: DataView(
             whichData: WhichData.usercards,
+            onShowDetails: (id) => onShowDetails != null
+                ? onShowDetails!(WhichData.usercards, id)
+                : null,
           ),
           whichData: WhichData.usercards,
           fabLabel: 'Usercard',
@@ -86,8 +94,11 @@ class Destinations {
           icons: Icons.devices_outlined,
           label: 'Devices',
           route: '/data/devices',
-          view: const DataView(
+          view: DataView(
             whichData: WhichData.devices,
+            onShowDetails: (id) => onShowDetails != null
+                ? onShowDetails!(WhichData.devices, id)
+                : null,
           ),
           whichData: WhichData.devices,
           fabLabel: 'Device',
@@ -101,8 +112,11 @@ class Destinations {
           icons: Icons.token_outlined,
           label: 'Token',
           route: '/data/token',
-          view: const DataView(
+          view: DataView(
             whichData: WhichData.tokens,
+            onShowDetails: (id) => onShowDetails != null
+                ? onShowDetails!(WhichData.tokens, id)
+                : null,
           ),
           whichData: WhichData.tokens,
           fabLabel: 'Token',
@@ -112,8 +126,11 @@ class Destinations {
           icons: Icons.class_outlined,
           label: 'Classes',
           route: '/data/classes',
-          view: const DataView(
+          view: DataView(
             whichData: WhichData.classes,
+            onShowDetails: (id) => onShowDetails != null
+                ? onShowDetails!(WhichData.classes, id)
+                : null,
           ),
           whichData: WhichData.classes,
           fabLabel: 'Class',
@@ -141,24 +158,7 @@ class Destinations {
       icon: Icons.settings,
       label: 'Settings',
       route: '/settings',
-      view: Center(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: 10),
-              FilledButton(
-                onPressed: () {
-                  Api api = Api();
-                  api.logout();
-                  Get.offAllNamed("/login");
-                },
-                child: const Text('Logout'),
-              ),
-            ],
-          ),
-        ),
-      ),
+      view: const SettingsView(),
     ),
   ];
 }

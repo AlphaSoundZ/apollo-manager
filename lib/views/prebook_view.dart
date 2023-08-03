@@ -10,7 +10,7 @@ class PrebookView extends StatefulWidget {
 class _PrebookViewState extends State<PrebookView> {
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return const Center(
       child: Text("Prebook"),
     );
   }

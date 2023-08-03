@@ -5,11 +5,13 @@ import 'package:apollo_manager/widgets/navigation/adaptive_navigation_bar.dart';
 import 'package:apollo_manager/widgets/navigation/adaptive_navigation_rail.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../models/stack_view_model.dart';
 import '../widgets/app_bar_widget.dart' as search_bar;
 import '../destinations.dart';
 import '../widgets/side_sheet_widget.dart';
 import '../models/data_model.dart';
-import '../views/stack_template_view.dart';
+import '../views/stack_views/stack_template_view.dart';
+import '../views/stack_views/stack_details_view.dart';
 
 // Views
 
@@ -67,17 +69,42 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  bool isDetailsOnTop() {
+    if (stack.isNotEmpty) {
+      if (stack.last is DetailsView) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    Destinations destinationsInstance = Destinations(onFabCancel: () {
-      setState(() {
-        showSideSheet = false;
-      });
-    }, onFabSubmit: () {
-      setState(() {
-        showSideSheet = false;
-      });
-    });
+    Destinations destinationsInstance = Destinations(
+      onFabCancel: () {
+        setState(() {
+          showSideSheet = false;
+        });
+      },
+      onFabSubmit: () {
+        setState(() {
+          showSideSheet = false;
+        });
+      },
+      onShowDetails: (WhichData whichData, int id) {
+        setState(() {
+          stack.add(DetailsView(
+            id: id,
+            whichData: whichData,
+            onPop: () {
+              setState(() {
+                stack.removeLast();
+              });
+            },
+          ));
+        });
+      },
+    );
     List<Destination> destinations = destinationsInstance.destinations;
 
     final surfaceContainer = Color.alphaBlend(
@@ -132,6 +159,28 @@ class _HomePageState extends State<HomePage> {
                                 .subDestinations[selectedSubView]
                                 .whichData
                             : WhichData.users,
+                        onQuickSearchSelected: ({
+                          required id,
+                          required WhichData whichData,
+                        }) {
+                          // show details
+                          setState(() {
+                            if (isDetailsOnTop()) {
+                              stack.removeLast();
+                            }
+                            stack.add(
+                              DetailsView(
+                                id: id,
+                                whichData: whichData,
+                                onPop: () {
+                                  setState(() {
+                                    stack.removeLast();
+                                  });
+                                },
+                              ),
+                            );
+                          });
+                        },
                         onSearchSubmit: (
                             {required query,
                             required filters,
@@ -141,16 +190,36 @@ class _HomePageState extends State<HomePage> {
                             stack.clear();
                             stack.add(
                               StackView(
-                                title: "Search Results",
+                                stackViewModel: StackViewModel(
+                                  title: "Search Results",
+                                  content: DataView(
+                                    whichData: whichData,
+                                    params: {"query": query.trim()},
+                                    onShowDetails: (id) {
+                                      setState(() {
+                                        if (isDetailsOnTop()) {
+                                          stack.removeLast();
+                                        }
+                                        stack.add(
+                                          DetailsView(
+                                            id: id,
+                                            whichData: whichData,
+                                            onPop: () {
+                                              setState(() {
+                                                stack.removeLast();
+                                              });
+                                            },
+                                          ),
+                                        );
+                                      });
+                                    },
+                                  ),
+                                ),
                                 onPop: () {
                                   setState(() {
                                     stack.removeLast();
                                   });
                                 },
-                                child: DataView(
-                                  whichData: whichData,
-                                  params: {"query": query},
-                                ),
                               ),
                             );
                           });
@@ -187,36 +256,37 @@ class _HomePageState extends State<HomePage> {
                           ),
                         Expanded(
                           // MAIN VIEW
-                          child: Container(
-                            margin: const EdgeInsets.all(8.0),
-                            clipBehavior: Clip.hardEdge,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(56.0 / 2),
-                              color: surfaceContainer,
-                            ),
-                            child: IndexedStack(
-                              index: stack.length,
-                              children: [
-                                // MAIN
-                                (destinations[selectedView]
-                                        .subDestinations
-                                        .isEmpty)
-                                    ? IndexedStack(
-                                        index: selectedSubView,
-                                        children: [
-                                          destinations[selectedView].view
-                                        ],
-                                      )
-                                    : IndexedStack(
-                                        index: selectedSubView,
-                                        children: destinations[selectedView]
-                                            .subDestinations
-                                            .map<Widget>((e) => e.view)
-                                            .toList(),
-                                      ),
-                                // STACKED VIEW (like search results, user details etc.)
-                                ...stack,
-                              ],
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Ink(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(56.0 / 2),
+                                color: surfaceContainer,
+                              ),
+                              child: IndexedStack(
+                                index: stack.length,
+                                children: [
+                                  // MAIN
+                                  (destinations[selectedView]
+                                          .subDestinations
+                                          .isEmpty)
+                                      ? IndexedStack(
+                                          index: selectedSubView,
+                                          children: [
+                                            destinations[selectedView].view
+                                          ],
+                                        )
+                                      : IndexedStack(
+                                          index: selectedSubView,
+                                          children: destinations[selectedView]
+                                              .subDestinations
+                                              .map<Widget>((e) => e.view)
+                                              .toList(),
+                                        ),
+                                  // STACKED VIEW (like search results, user details etc.)
+                                  ...stack,
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -250,8 +320,8 @@ class _HomePageState extends State<HomePage> {
         floatingActionButton: wideScreen
             ? null
             : FloatingActionButton(
-                backgroundColor: _colorScheme.tertiaryContainer,
-                foregroundColor: _colorScheme.onTertiaryContainer,
+                // backgroundColor: _colorScheme.tertiaryContainer,
+                // foregroundColor: _colorScheme.onTertiaryContainer,
                 onPressed: () {
                   setState(() {
                     showSideSheet = true;

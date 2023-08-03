@@ -9,10 +9,12 @@ class DataView extends StatefulWidget {
     super.key,
     required this.whichData,
     this.params,
+    this.onShowDetails,
   });
 
   final WhichData whichData;
   final Map<String, dynamic>? params;
+  final void Function(int id)? onShowDetails;
 
   @override
   State<DataView> createState() => _DataViewState();
@@ -26,6 +28,7 @@ class _DataViewState extends State<DataView> {
   @override
   void initState() {
     if (widget.params != null) {
+      Provider.of<DataModel>(context, listen: false).clearSearch();
       data = Provider.of<DataModel>(context, listen: false)
           .search(whichData: widget.whichData, params: widget.params!);
     } else {
@@ -34,6 +37,21 @@ class _DataViewState extends State<DataView> {
     }
 
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant DataView oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.params != null) {
+      Provider.of<DataModel>(context, listen: false).clearSearch();
+      data = Provider.of<DataModel>(context, listen: false)
+          .search(whichData: widget.whichData, params: widget.params!);
+    } else {
+      data =
+          Provider.of<DataModel>(context, listen: false).get(widget.whichData);
+    }
   }
 
   @override
@@ -55,6 +73,12 @@ class _DataViewState extends State<DataView> {
           setState(() {
             selectedIndex = index;
           });
+        },
+        onShowDetails: (index) {
+          int id = data[index].id;
+          if (widget.onShowDetails != null) {
+            widget.onShowDetails!(id);
+          }
         },
       ),
     );

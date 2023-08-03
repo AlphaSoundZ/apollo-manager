@@ -9,6 +9,7 @@ class AppBar extends StatefulWidget {
     required this.backgroundColor,
     required this.whichData,
     required this.onSearchSubmit,
+    required this.onQuickSearchSelected,
   });
 
   final Color backgroundColor;
@@ -18,6 +19,10 @@ class AppBar extends StatefulWidget {
     required List<int> filters,
     required WhichData whichData,
   }) onSearchSubmit;
+  final Function({
+    required WhichData whichData,
+    required int id,
+  }) onQuickSearchSelected;
 
   @override
   State<AppBar> createState() => _AppBarState();
@@ -79,6 +84,12 @@ class _AppBarState extends State<AppBar> {
                       filters: filters,
                       whichData: widget.whichData,
                     ),
+                    onQuickSearchSelected: (
+                            {required id, required whichData}) =>
+                        widget.onQuickSearchSelected(
+                      id: id,
+                      whichData: whichData,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 298),
@@ -114,6 +125,7 @@ class SearchAnchors extends StatefulWidget {
     super.key,
     required this.whichData,
     required this.onSearchSubmit,
+    required this.onQuickSearchSelected,
   });
 
   final WhichData whichData;
@@ -121,6 +133,10 @@ class SearchAnchors extends StatefulWidget {
     required String query,
     required List<int> filters,
   }) onSearchSubmit;
+  final Function({
+    required WhichData whichData,
+    required int id,
+  }) onQuickSearchSelected;
 
   @override
   State<SearchAnchors> createState() => _SearchAnchorsState();
@@ -248,6 +264,16 @@ class _SearchAnchorsState extends State<SearchAnchors> {
             quickSearchResults.length,
             (index) {
               return ListTile(
+                onTap: () {
+                  searchController.closeView(
+                    quickSearchResults[index].content.title,
+                  );
+                  // call onQuickSearchSubmit
+                  widget.onQuickSearchSelected(
+                    whichData: widget.whichData,
+                    id: quickSearchResults[index].id,
+                  );
+                },
                 leading: CircleAvatar(
                   radius: 16,
                   backgroundColor:
@@ -262,11 +288,10 @@ class _SearchAnchorsState extends State<SearchAnchors> {
                 subtitle: Row(
                   children: [
                     Text(quickSearchResults[index].content.subTitle),
-                    Spacer(),
+                    const Spacer(),
                     Text(quickSearchResults[index].content.leading),
                   ],
                 ),
-                onTap: () {},
               );
             },
           ).toList(),
