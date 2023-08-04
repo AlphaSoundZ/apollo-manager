@@ -5,11 +5,13 @@ import '../services/api.dart';
 class DataModel extends ChangeNotifier {
   Map<WhichData, dynamic> data = <WhichData, dynamic>{};
   List<dynamic> searchResults = [];
+  Map<WhichData, bool> isLoaded = {};
 
   DataModel() {
     // iterate through all data types and add them to the data list
     for (WhichData type in WhichData.values) {
       data[type] = [];
+      isLoaded[type] = false;
     }
   }
 
@@ -19,7 +21,10 @@ class DataModel extends ChangeNotifier {
     debugPrint("Get data for $whichData");
 
     if (object.isEmpty) {
-      updateData(dataType: whichData);
+      if (isLoaded[whichData] == false) {
+        updateData(dataType: whichData);
+        isLoaded[whichData] = true;
+      }
       return [];
     }
 

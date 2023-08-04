@@ -39,6 +39,7 @@ class _SplineChartCardState extends State<SplineChartCard> {
           SplineSeries<Coordinate, int>(
             color: Theme.of(context).colorScheme.onSecondaryContainer,
             dataSource: widget.data,
+            splineType: SplineType.clamped,
             xValueMapper: (Coordinate data, _) => data.x,
             yValueMapper: (Coordinate data, _) => data.y,
           ),

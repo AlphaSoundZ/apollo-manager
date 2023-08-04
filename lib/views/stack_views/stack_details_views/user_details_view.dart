@@ -16,6 +16,9 @@ StackViewModel userDetailsStackView(BuildContext context,
     id,
   );
 
+  int amountCurr = Random().nextInt(20);
+  int amountMax = amountCurr + Random().nextInt(5);
+
   return StackViewModel(
     title: user.name.fullName,
     subTitle: user.className,
@@ -49,8 +52,8 @@ StackViewModel userDetailsStackView(BuildContext context,
                   subTitle: "Last two weeks",
                   max: 10,
                 ),
-                const NumberCard(
-                  number: "10/15",
+                NumberCard(
+                  number: "$amountCurr/$amountMax",
                   title: "Amount",
                   subTitle: "Devices currently in use",
                 ),
