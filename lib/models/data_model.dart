@@ -40,7 +40,7 @@ class DataModel extends ChangeNotifier {
       return [];
     }
 
-    return object.firstWhere((element) => element.id == id);
+    return object.firstWhere((element) => element.id == id, orElse: () => []);
   }
 
   Future<void> updateData({
