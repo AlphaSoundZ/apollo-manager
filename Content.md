@@ -36,3 +36,13 @@
   - Or a device could be missing because it was not lent out for a long time
 - Prebook
 - Settings
+
+## Stats
+
+- Amount of currently lent out devices
+- Amount of users that currently have devices lent out
+- Amount of devices lent out per class
+- Amount of devices lent out per user
+- Amount of currently reserved devices
+- Amount of dead devices (devices that are not lent out for a long time)
+- Average amount of devices lent out per user
