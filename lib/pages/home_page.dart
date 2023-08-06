@@ -194,6 +194,22 @@ class _HomePageState extends State<HomePage> {
                                     stack.removeLast();
                                   });
                                 },
+                                onEdit: () {
+                                  setState(() {
+                                    sideSheetContent = whichData.editSideSheet(
+                                      context,
+                                      id,
+                                      onCancel: () {
+                                        setState(() {
+                                          showSideSheet = false;
+                                        });
+                                      },
+                                      onSave: () {},
+                                      onDelete: () {},
+                                    );
+                                    showSideSheet = true;
+                                  });
+                                },
                               ),
                             );
                           });

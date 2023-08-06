@@ -173,7 +173,6 @@ class _SearchAnchorsState extends State<SearchAnchors> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("rebuilding search anchors: ${quickSearchResults.length}");
     final surfaceContainer = Color.alphaBlend(
       Theme.of(context).colorScheme.primary.withOpacity(0.08),
       Theme.of(context).colorScheme.surface,
@@ -233,7 +232,6 @@ class _SearchAnchorsState extends State<SearchAnchors> {
       suggestionsBuilder: (context, controller) {
         // TODO: add tabs for each search category; add async to this function when it's available;
         quickSearch.search(searchController.text).then((value) {
-          debugPrint("rebuilding suggestions: ${value.length}");
           setState(() {
             quickSearchResults = value;
           });
