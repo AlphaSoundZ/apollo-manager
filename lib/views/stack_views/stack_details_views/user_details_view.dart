@@ -26,7 +26,7 @@ StackViewModel userDetailsStackView(BuildContext context,
     );
   }
 
-  int amountCurr = Random().nextInt(20);
+  int amountCurr = Random().nextInt(20) + 1;
   int amountMax = amountCurr + Random().nextInt(5);
 
   return StackViewModel(
@@ -62,33 +62,41 @@ StackViewModel userDetailsStackView(BuildContext context,
                   subTitle: "Last two weeks",
                   max: 10,
                 ),
-                NumberCard(
-                  number: "$amountCurr/$amountMax",
-                  title: "Amount",
-                  subTitle: "Devices currently in use",
-                ),
-                SplineChartCard(
-                  data: [
-                    Coordinate(0, Random().nextInt(5) + 10),
-                    Coordinate(1, Random().nextInt(5) + 10),
-                    Coordinate(2, Random().nextInt(5) + 10),
-                    Coordinate(3, Random().nextInt(5) + 10),
-                    Coordinate(4, Random().nextInt(5) + 10),
-                    Coordinate(5, Random().nextInt(5) + 10),
-                    Coordinate(6, Random().nextInt(5) + 10),
-                    Coordinate(7, Random().nextInt(5) + 10),
-                    Coordinate(8, Random().nextInt(5) + 10),
-                    Coordinate(9, Random().nextInt(5) + 10),
-                    Coordinate(10, Random().nextInt(5) + 10),
-                    Coordinate(11, Random().nextInt(5) + 10),
-                    Coordinate(12, Random().nextInt(5) + 10),
-                    Coordinate(13, Random().nextInt(5) + 10),
-                    Coordinate(14, Random().nextInt(5) + 10),
-                  ],
-                  max: 15,
-                  title: "Average Amount",
-                  subTitle: "Last two weeks",
-                ),
+                if (user.multiBooking) ...[
+                  NumberCard(
+                    number: "$amountCurr/$amountMax",
+                    title: "Amount",
+                    subTitle: "Devices currently in use",
+                  ),
+                  SplineChartCard(
+                    data: [
+                      Coordinate(0, Random().nextInt(5) + 10),
+                      Coordinate(1, Random().nextInt(5) + 10),
+                      Coordinate(2, Random().nextInt(5) + 10),
+                      Coordinate(3, Random().nextInt(5) + 10),
+                      Coordinate(4, Random().nextInt(5) + 10),
+                      Coordinate(5, Random().nextInt(5) + 10),
+                      Coordinate(6, Random().nextInt(5) + 10),
+                      Coordinate(7, Random().nextInt(5) + 10),
+                      Coordinate(8, Random().nextInt(5) + 10),
+                      Coordinate(9, Random().nextInt(5) + 10),
+                      Coordinate(10, Random().nextInt(5) + 10),
+                      Coordinate(11, Random().nextInt(5) + 10),
+                      Coordinate(12, Random().nextInt(5) + 10),
+                      Coordinate(13, Random().nextInt(5) + 10),
+                      Coordinate(14, Random().nextInt(5) + 10),
+                    ],
+                    max: 15,
+                    title: "Average Amount",
+                    subTitle: "Last two weeks",
+                  ),
+                ],
+                if (!user.multiBooking)
+                  NumberCard(
+                    number: Random().nextBool() ? "Yes" : "No",
+                    title: "Booking",
+                    subTitle: "Current booking activity",
+                  ),
               ],
             ),
           )
