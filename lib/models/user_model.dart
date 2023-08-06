@@ -31,11 +31,13 @@ class User {
     required this.id,
     required this.name,
     required this.class_,
+    required this.multiBooking,
     //required this.bookings,
   });
 
   final int id;
   final Name name;
+  final bool multiBooking;
   late ClassModel class_;
   late ListTileContent content = ListTileContent(
     title: name.fullName,
@@ -51,6 +53,7 @@ class User {
         firstname: json['firstname'].toString(),
         lastname: json['lastname'].toString(),
       ),
+      multiBooking: json['multi_booking'] == 1 ? true : false,
       class_: ClassModel.fromJson(json['class']),
       //bookings: json['bookings'] as List<Bookings>,
     );
