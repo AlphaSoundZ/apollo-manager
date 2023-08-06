@@ -116,6 +116,7 @@ extension WhichDataExtension on WhichData {
           id: itemId,
           onCancel: onCancel,
           onSubmit: onSave,
+          onDelete: onDelete,
           // context,
           // id: itemId,
         );

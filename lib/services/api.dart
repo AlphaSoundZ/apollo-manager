@@ -75,6 +75,27 @@ class Api {
     _storage.setString("token", "");
   }
 
+  Future<dynamic> delete(String route, Object body) async {
+    final token = await _storage.getString("token");
+
+    try {
+      final response = await dio.delete(
+        route,
+        options: Options(
+          headers: {
+            "Authorization": "Bearer $token",
+          },
+        ),
+        data: body,
+      );
+
+      return response.data;
+    } catch (e) {
+      debugPrint("Error (at delete request): $e");
+      return [];
+    }
+  }
+
   Future<dynamic> patch(String route, Object body) async {
     final token = await _storage.getString("token");
 
@@ -91,7 +112,7 @@ class Api {
 
       return response.data;
     } catch (e) {
-      debugPrint("Error (at post request): $e");
+      debugPrint("Error (at delete request): $e");
       return [];
     }
   }

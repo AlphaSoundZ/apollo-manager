@@ -117,7 +117,11 @@ class _HomePageState extends State<HomePage> {
                       showSideSheet = false;
                     });
                   },
-                  onDelete: () {},
+                  onDelete: () {
+                    setState(() {
+                      showSideSheet = false;
+                    });
+                  },
                 );
                 showSideSheet = true;
               });
@@ -213,7 +217,11 @@ class _HomePageState extends State<HomePage> {
                                           showSideSheet = false;
                                         });
                                       },
-                                      onDelete: () {},
+                                      onDelete: () {
+                                        setState(() {
+                                          showSideSheet = false;
+                                        });
+                                      },
                                     );
                                     showSideSheet = true;
                                   });
@@ -261,7 +269,11 @@ class _HomePageState extends State<HomePage> {
                                                       showSideSheet = false;
                                                     });
                                                   },
-                                                  onDelete: () {},
+                                                  onDelete: () {
+                                                    setState(() {
+                                                      showSideSheet = false;
+                                                    });
+                                                  },
                                                 );
                                                 showSideSheet = true;
                                               });

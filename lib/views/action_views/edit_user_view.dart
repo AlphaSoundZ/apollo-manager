@@ -9,11 +9,16 @@ import '../../models/user_model.dart';
 
 class EditUserViewContent extends StatefulWidget {
   const EditUserViewContent(
-      {super.key, required this.id, this.onCancel, this.onSubmit});
+      {super.key,
+      required this.id,
+      this.onCancel,
+      this.onSubmit,
+      this.onDelete});
 
   final int id;
   final void Function()? onCancel;
   final void Function()? onSubmit;
+  final void Function()? onDelete;
 
   @override
   State<EditUserViewContent> createState() => _EditUserViewContentState();
@@ -45,15 +50,19 @@ class _EditUserViewContentState extends State<EditUserViewContent> {
 
   @override
   Widget build(BuildContext context) {
-    User user =
+    User? user =
         Provider.of<DataModel>(context).getById(WhichData.users, widget.id);
 
-    // set values
-    firstnameController.text = user.name.firstname;
-    lastnameController.text = user.name.lastname;
-    // set class id and text
-    classController.text = user.class_.name;
-    selectedClass = user.class_.id ?? 0;
+    if (user != null) {
+      // if user is null, then the user doesn't exist, if its [] or not null, then the user exists
+
+      // set values
+      firstnameController.text = user.name.firstname;
+      lastnameController.text = user.name.lastname;
+      // set class id and text
+      classController.text = user.class_.name;
+      selectedClass = user.class_.id;
+    }
 
     final scaffoldMessenger = ScaffoldMessenger.of(context);
 
@@ -68,7 +77,9 @@ class _EditUserViewContentState extends State<EditUserViewContent> {
             _handleUpdateUser(scaffoldMessenger);
           }
         },
-        onDelete: () {},
+        onDelete: () {
+          _handleDeleteUser(scaffoldMessenger);
+        },
         title: "Edit User",
         children: [
           Center(
@@ -174,6 +185,45 @@ class _EditUserViewContentState extends State<EditUserViewContent> {
         ],
       ),
     );
+  }
+
+  void _handleDeleteUser(ScaffoldMessengerState scaffoldMessenger) async {
+    // Show the loading indicator
+    setState(() {
+      _loading = true;
+    });
+
+    // call the api
+    final response = await api.delete("/user/delete", {"id": widget.id});
+
+    // log the response
+    debugPrint(response.toString());
+
+    // show a snackbar
+    scaffoldMessenger.showSnackBar(
+      SnackBar(
+        content: Text(response['message']),
+      ),
+    );
+
+    if (response['code'] == 200) {
+      // Close Side Sheet
+      widget.onDelete!();
+
+      _loading = false;
+
+      // prevent usage of context if widget is not mounted
+      if (!mounted) return;
+
+      // Update Provider Data
+      Provider.of<DataModel>(context, listen: false)
+          .updateData(dataType: WhichData.users);
+    } else {
+      // Pop the dialog
+      setState(() {
+        _loading = false;
+      });
+    }
   }
 
   void _handleUpdateUser(ScaffoldMessengerState scaffoldMessenger) async {

@@ -13,10 +13,18 @@ import '../../../models/user_model.dart';
 // creates the details view for a user (this only contains the actual content of the details view)
 StackViewModel userDetailsStackView(BuildContext context,
     {required int id, required WhichData whichData}) {
-  User user = Provider.of<DataModel>(context, listen: true).getById(
+  User? user = Provider.of<DataModel>(context, listen: true).getById(
     whichData,
     id,
   );
+
+  if (user == null) {
+    return StackViewModel(
+      title: "User not found",
+      subTitle: "User not found",
+      content: Container(),
+    );
+  }
 
   int amountCurr = Random().nextInt(20);
   int amountMax = amountCurr + Random().nextInt(5);
