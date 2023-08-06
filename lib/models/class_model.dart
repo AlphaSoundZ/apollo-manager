@@ -4,7 +4,7 @@ class ClassModel {
   ClassModel({
     required this.id,
     required this.name,
-    required this.amount,
+    this.amount = -1,
   });
 
   final int id;
@@ -20,7 +20,7 @@ class ClassModel {
     return ClassModel(
       id: json['id'] as int,
       name: json['name'].toString(),
-      amount: json['amount'] as int,
+      amount: (json['amount'] ?? -1) as int,
     );
   }
 }

@@ -3,7 +3,7 @@ import 'package:apollo_manager/enums/which_data.dart';
 import 'package:apollo_manager/models/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'create_template_view.dart';
+import 'create_sidesheet_view.dart';
 
 class CreateDeviceViewContent extends StatefulWidget {
   const CreateDeviceViewContent({super.key, this.onCancel, this.onSubmit});
@@ -45,7 +45,7 @@ class _CreateDeviceViewContentState extends State<CreateDeviceViewContent> {
 
     return FocusTraversalGroup(
       policy: OrderedTraversalPolicy(),
-      child: SideSheetContent(
+      child: CreateSideSheet(
         onCancel: widget.onCancel,
         onSubmit: () {
           if (_formKey.currentState!.validate()) {

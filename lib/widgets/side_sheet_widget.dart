@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../destinations.dart';
 
+// Creates a side sheet that can be opened and closed
 class SideSheet extends StatefulWidget {
   const SideSheet({
     super.key,

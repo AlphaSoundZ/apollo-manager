@@ -1,21 +1,25 @@
 import 'package:apollo_manager/services/api.dart';
 import 'package:apollo_manager/enums/which_data.dart';
 import 'package:apollo_manager/models/data_model.dart';
+import 'package:apollo_manager/views/action_views/edit_sidesheet_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'create_sidesheet_view.dart';
 
-class CreateUserViewContent extends StatefulWidget {
-  const CreateUserViewContent({super.key, this.onCancel, this.onSubmit});
+import '../../models/user_model.dart';
 
+class EditUserViewContent extends StatefulWidget {
+  const EditUserViewContent(
+      {super.key, required this.id, this.onCancel, this.onSubmit});
+
+  final int id;
   final void Function()? onCancel;
   final void Function()? onSubmit;
 
   @override
-  State<CreateUserViewContent> createState() => _CreateUserViewContentState();
+  State<EditUserViewContent> createState() => _EditUserViewContentState();
 }
 
-class _CreateUserViewContentState extends State<CreateUserViewContent> {
+class _EditUserViewContentState extends State<EditUserViewContent> {
   final Api api = Api();
 
   final TextEditingController firstnameController = TextEditingController();
@@ -41,20 +45,31 @@ class _CreateUserViewContentState extends State<CreateUserViewContent> {
 
   @override
   Widget build(BuildContext context) {
+    User user =
+        Provider.of<DataModel>(context).getById(WhichData.users, widget.id);
+
+    // set values
+    firstnameController.text = user.name.firstname;
+    lastnameController.text = user.name.lastname;
+    // set class id and text
+    classController.text = user.class_.name;
+    selectedClass = user.class_.id ?? 0;
+
     final scaffoldMessenger = ScaffoldMessenger.of(context);
 
     return FocusTraversalGroup(
       policy: OrderedTraversalPolicy(),
-      child: CreateSideSheet(
+      child: EditSideSheet(
         onCancel: widget.onCancel,
-        onSubmit: () {
+        onSave: () {
           if (_formKey.currentState!.validate()) {
             _formKey.currentState!.save();
 
-            _handleCreateUser(scaffoldMessenger);
+            _handleUpdateUser(scaffoldMessenger);
           }
         },
-        title: "Create User",
+        onDelete: () {},
+        title: "Edit User",
         children: [
           Center(
             child: Stack(
@@ -87,7 +102,7 @@ class _CreateUserViewContentState extends State<CreateUserViewContent> {
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState!.save();
 
-                              _handleCreateUser(scaffoldMessenger);
+                              _handleUpdateUser(scaffoldMessenger);
                             }
                           },
                         ),
@@ -110,7 +125,7 @@ class _CreateUserViewContentState extends State<CreateUserViewContent> {
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState!.save();
 
-                              _handleCreateUser(scaffoldMessenger);
+                              _handleUpdateUser(scaffoldMessenger);
                             }
                           },
                         ),
@@ -161,7 +176,7 @@ class _CreateUserViewContentState extends State<CreateUserViewContent> {
     );
   }
 
-  void _handleCreateUser(ScaffoldMessengerState scaffoldMessenger) async {
+  void _handleUpdateUser(ScaffoldMessengerState scaffoldMessenger) async {
     // Show the loading indicator
     if (!_formKey.currentState!.validate()) {
       return;
@@ -172,13 +187,16 @@ class _CreateUserViewContentState extends State<CreateUserViewContent> {
     });
 
     Object body = {
-      "firstname": firstnameController.text,
-      "lastname": lastnameController.text,
-      "class_id": selectedClass,
+      "values": {
+        "firstname": firstnameController.text,
+        "lastname": lastnameController.text,
+        "class_id": selectedClass,
+      },
+      "id": widget.id,
     };
 
     // call the api
-    final response = await api.post("/user/create", body);
+    final response = await api.patch("/user/change", body);
 
     // log the response
     debugPrint(response.toString());

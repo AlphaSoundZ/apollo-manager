@@ -10,7 +10,7 @@ import '../widgets/app_bar_widget.dart' as search_bar;
 import '../destinations.dart';
 import '../widgets/side_sheet_widget.dart';
 import '../models/data_model.dart';
-import '../views/stack_views/stack_template_view.dart';
+import '../views/stack_views/stack_view.dart';
 import '../views/stack_views/stack_details_view.dart';
 
 // Views
@@ -49,6 +49,7 @@ class _HomePageState extends State<HomePage> {
   bool wideScreen = false;
   bool showSubDrawer = true;
   bool showSideSheet = false;
+  Widget sideSheetContent = Container();
 
   @override
   void didChangeDependencies() {
@@ -99,6 +100,22 @@ class _HomePageState extends State<HomePage> {
             onPop: () {
               setState(() {
                 stack.removeLast();
+              });
+            },
+            onEdit: () {
+              setState(() {
+                sideSheetContent = whichData.editSideSheet(
+                  context,
+                  id,
+                  onCancel: () {
+                    setState(() {
+                      showSideSheet = false;
+                    });
+                  },
+                  onSave: () {},
+                  onDelete: () {},
+                );
+                showSideSheet = true;
               });
             },
           ));
@@ -204,6 +221,23 @@ class _HomePageState extends State<HomePage> {
                                           DetailsView(
                                             id: id,
                                             whichData: whichData,
+                                            onEdit: () {
+                                              setState(() {
+                                                sideSheetContent =
+                                                    whichData.editSideSheet(
+                                                  context,
+                                                  id,
+                                                  onCancel: () {
+                                                    setState(() {
+                                                      showSideSheet = false;
+                                                    });
+                                                  },
+                                                  onSave: () {},
+                                                  onDelete: () {},
+                                                );
+                                                showSideSheet = true;
+                                              });
+                                            },
                                             onPop: () {
                                               setState(() {
                                                 stack.removeLast();
@@ -241,14 +275,21 @@ class _HomePageState extends State<HomePage> {
                                 setState(() {
                                   stack.clear();
                                   selectedSubView = index;
-                                  showSideSheet =
-                                      false; // TODO: When View Changes, the SideSheet changes instantly, so it changes first and then animates out (need to fix)
                                 });
                               },
                               isOpen: showSubDrawer,
                               selectedSubView: selectedSubView,
                               onFABPressed: () {
+                                if (destinations[selectedView]
+                                        .subDestinations[selectedSubView]
+                                        .fabContent ==
+                                    null) {
+                                  return;
+                                }
                                 setState(() {
+                                  sideSheetContent = destinations[selectedView]
+                                      .subDestinations[selectedSubView]
+                                      .fabContent!;
                                   showSideSheet = true;
                                 });
                               },
@@ -293,19 +334,13 @@ class _HomePageState extends State<HomePage> {
                         if (wideScreen &&
                             destinations[selectedView]
                                 .subDestinations
-                                .isNotEmpty &&
-                            destinations[selectedView]
-                                    .subDestinations[selectedSubView]
-                                    .fabContent !=
-                                null)
+                                .isNotEmpty)
                           Container(
                             // SIDE SHEET
                             padding: const EdgeInsets.symmetric(vertical: 8),
                             child: SideSheet(
                               isOpen: showSideSheet,
-                              child: destinations[selectedView]
-                                  .subDestinations[selectedSubView]
-                                  .fabContent!,
+                              child: sideSheetContent,
                             ),
                           ),
                         const SizedBox(width: 8.0),
@@ -324,6 +359,9 @@ class _HomePageState extends State<HomePage> {
                 // foregroundColor: _colorScheme.onTertiaryContainer,
                 onPressed: () {
                   setState(() {
+                    sideSheetContent = destinations[selectedView]
+                        .subDestinations[selectedSubView]
+                        .fabContent!;
                     showSideSheet = true;
                   });
                 },

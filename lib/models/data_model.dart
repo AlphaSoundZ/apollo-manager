@@ -18,8 +18,6 @@ class DataModel extends ChangeNotifier {
   List<dynamic> get(WhichData whichData) {
     List<dynamic> object = data[whichData];
 
-    debugPrint("Get data for $whichData");
-
     if (object.isEmpty) {
       if (isLoaded[whichData] == false) {
         updateData(dataType: whichData);
@@ -37,15 +35,10 @@ class DataModel extends ChangeNotifier {
   dynamic getById(WhichData whichData, int id) {
     List<dynamic> object = data[whichData];
 
-    debugPrint("Get data for $whichData");
-
     if (object.isEmpty) {
       updateData(dataType: whichData);
       return [];
     }
-
-    // notifyListeners();
-    object = data[whichData];
 
     return object.firstWhere((element) => element.id == id);
   }

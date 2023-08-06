@@ -1,8 +1,6 @@
 import 'package:apollo_manager/views/stack_views/stack_details_views/user_details_view.dart';
-import 'package:provider/provider.dart';
 
 import '../models/class_model.dart';
-import '../models/data_model.dart';
 import '../models/device_model.dart';
 import '../models/stack_view_model.dart';
 import '../models/user_model.dart';
@@ -11,6 +9,9 @@ import '../models/token_model.dart';
 import '../models/devicetype_model.dart';
 
 import 'package:flutter/material.dart';
+
+import '../views/action_views/create_user_view.dart';
+import '../views/action_views/edit_user_view.dart';
 
 enum WhichData { users, devices, deviceTypes, classes, usercards, tokens }
 
@@ -101,18 +102,23 @@ extension WhichDataExtension on WhichData {
             child: Text(name),
           ),
         );
-      // case WhichData.users:
-      //   return UserDetailsViewContent();
-      // case WhichData.devices:
-      //   return DeviceDetailsViewContent();
-      // case WhichData.deviceTypes:
-      //   return DeviceTypeDetailsViewContent();
-      // case WhichData.classes:
-      //   return ClassDetailsViewContent();
-      // case WhichData.usercards:
-      //   return UsercardDetailsViewContent();
-      // case WhichData.tokens:
-      //   return TokenDetailsViewContent();
+    }
+  }
+
+  Widget editSideSheet(context, int itemId,
+      {required Function() onCancel,
+      required Function() onSave,
+      required Function() onDelete}) {
+    switch (this) {
+      default:
+        return EditUserViewContent(
+          key: UniqueKey(),
+          id: itemId,
+          onCancel: onCancel,
+          onSubmit: onSave,
+          // context,
+          // id: itemId,
+        );
     }
   }
 }

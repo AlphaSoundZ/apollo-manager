@@ -149,8 +149,6 @@ class _LoginPageState extends State<LoginPage> {
     if (response['code'] == 200) {
       await _storage.setString('token', response['jwt']);
 
-      debugPrint('Token: ${response['jwt']}');
-
       // Push to the home page
       Get.offNamed("/home");
     } else {

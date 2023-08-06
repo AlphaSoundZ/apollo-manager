@@ -29,7 +29,7 @@ class _SplineChartCardState extends State<SplineChartCard> {
         // hide grid lines
         primaryXAxis: CategoryAxis(isVisible: false),
         primaryYAxis:
-            NumericAxis(isVisible: false, maximum: widget.max + 1, minimum: -1),
+            NumericAxis(isVisible: false, maximum: widget.max + 2, minimum: -2),
 
         // hide border
         plotAreaBorderWidth: 0,

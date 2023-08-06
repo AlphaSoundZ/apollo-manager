@@ -8,10 +8,12 @@ import 'package:provider/provider.dart';
 import '../../../enums/which_data.dart';
 import '../../../models/coordinate_model.dart';
 import '../../../models/data_model.dart';
+import '../../../models/user_model.dart';
 
+// creates the details view for a user (this only contains the actual content of the details view)
 StackViewModel userDetailsStackView(BuildContext context,
     {required int id, required WhichData whichData}) {
-  dynamic user = Provider.of<DataModel>(context, listen: true).getById(
+  User user = Provider.of<DataModel>(context, listen: true).getById(
     whichData,
     id,
   );
@@ -21,7 +23,7 @@ StackViewModel userDetailsStackView(BuildContext context,
 
   return StackViewModel(
     title: user.name.fullName,
-    subTitle: user.className,
+    subTitle: user.class_.name,
     content: Container(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -79,7 +81,6 @@ StackViewModel userDetailsStackView(BuildContext context,
                   title: "Average Amount",
                   subTitle: "Last two weeks",
                 ),
-                const Spacer(),
               ],
             ),
           )

@@ -270,7 +270,7 @@ class _SearchAnchorsState extends State<SearchAnchors> {
               return ListTile(
                 onTap: () {
                   searchController.closeView(
-                    quickSearchResults[index].content.title,
+                    searchController.text,
                   );
                   // call onQuickSearchSubmit
                   widget.onQuickSearchSelected(

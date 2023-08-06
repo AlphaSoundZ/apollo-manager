@@ -1,4 +1,5 @@
 import 'list_tile_content_model.dart';
+import 'class_model.dart';
 
 class Bookings {
   const Bookings({
@@ -29,17 +30,17 @@ class User {
   User({
     required this.id,
     required this.name,
-    required this.className,
+    required this.class_,
     //required this.bookings,
   });
 
   final int id;
   final Name name;
-  final String className;
+  late ClassModel class_;
   late ListTileContent content = ListTileContent(
     title: name.fullName,
     leading: id.toString(),
-    subTitle: className,
+    subTitle: class_.name,
   );
   //final List<Bookings> bookings;
 
@@ -50,7 +51,7 @@ class User {
         firstname: json['firstname'].toString(),
         lastname: json['lastname'].toString(),
       ),
-      className: json['class']['name'].toString(),
+      class_: ClassModel.fromJson(json['class']),
       //bookings: json['bookings'] as List<Bookings>,
     );
   }

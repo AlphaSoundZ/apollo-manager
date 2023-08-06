@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../models/stack_view_model.dart';
 
+// Creates a stack view for the view-stack, only needed if you want to use the view-stack (the main view (for example: /data) is not a stack view, because it is on the bottom of the stack, and it is not a sub-view of another view, so it can't be popped)
 class StackView extends StatefulWidget {
   const StackView(
-      {super.key, required this.onPop, required this.stackViewModel});
+      {super.key, this.onPop, this.onEdit, required this.stackViewModel});
 
-  final Function() onPop;
+  final Function()? onPop;
+  final Function()? onEdit;
   final StackViewModel stackViewModel;
 
   @override
@@ -29,14 +31,22 @@ class StackViewState extends State<StackView> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              IconButton(
-                onPressed: widget.onPop,
-                icon: const Icon(Icons.arrow_back),
-                iconSize: 25,
-              ),
-              const SizedBox(
-                width: 12,
-              ),
+              if (widget.onPop != null) ...[
+                IconButton(
+                  onPressed: () {
+                    widget.onPop!();
+                  },
+                  icon: const Icon(Icons.arrow_back),
+                  iconSize: 25,
+                ),
+                const SizedBox(
+                  width: 12,
+                ),
+              ],
+              if (widget.onPop == null)
+                const SizedBox(
+                  width: 8,
+                ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -51,12 +61,15 @@ class StackViewState extends State<StackView> {
                 ],
               ),
               const Spacer(),
-              IconButton.filledTonal(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.edit,
+              if (widget.onEdit != null)
+                IconButton.filledTonal(
+                  onPressed: () {
+                    widget.onEdit!();
+                  },
+                  icon: const Icon(
+                    Icons.edit,
+                  ),
                 ),
-              ),
               IconButton(
                 onPressed: () {},
                 icon: const Icon(Icons.more_vert),
