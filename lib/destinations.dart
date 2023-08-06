@@ -103,6 +103,7 @@ class Destinations {
           fabLabel: 'Device',
           fabIcon: Icons.devices_outlined,
           fabContent: CreateDeviceViewContent(
+            key: UniqueKey(),
             onCancel: onFabCancel,
             onSubmit: onFabSubmit,
           ),

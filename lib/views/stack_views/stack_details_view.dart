@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../models/data_model.dart';
+import '../../services/api.dart';
 import 'stack_view.dart';
 import '../../enums/which_data.dart';
 
@@ -25,17 +28,33 @@ class _DetailsViewState extends State<DetailsView> {
   @override
   Widget build(BuildContext context) {
     return StackView(
-      stackViewModel: widget.whichData.detailsView(context, widget.id),
-      onEdit: widget.onEdit != null
-          ? () {
-              widget.onEdit!();
-            }
-          : null,
-      onPop: widget.onPop != null
-          ? () {
-              widget.onPop!();
-            }
-          : null,
-    );
+        stackViewModel: widget.whichData.detailsView(context, widget.id),
+        onEdit: widget.onEdit != null
+            ? () {
+                widget.onEdit!();
+              }
+            : null,
+        onPop: widget.onPop != null
+            ? () {
+                widget.onPop!();
+              }
+            : null,
+        onMenuItemSelected: (String item) {
+          switch (item) {
+            case "delete":
+              Api().delete(
+                "${widget.whichData.endpoint}/delete",
+                {"id": widget.id},
+              ).then((value) {
+                Provider.of<DataModel>(context, listen: false)
+                    .updateData(dataType: widget.whichData);
+
+                widget.onPop!();
+              });
+              break;
+            default:
+              break;
+          }
+        });
   }
 }
