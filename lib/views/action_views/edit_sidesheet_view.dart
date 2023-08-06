@@ -52,7 +52,7 @@ class EditSideSheetState extends State<EditSideSheet> {
                   minimumSize: const Size(0, 50),
                 ),
                 onPressed: widget.onSave,
-                icon: const Icon(Icons.add),
+                icon: const Icon(Icons.save),
                 label: const Text('Save'),
               ),
             ),
