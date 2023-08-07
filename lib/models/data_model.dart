@@ -71,7 +71,7 @@ class DataModel extends ChangeNotifier {
     }
   }
 
-  void updateAll() async {
+  Future<void> updateAll() async {
     final List<Future<void>> futures = [];
     
     for (WhichData type in WhichData.values) {

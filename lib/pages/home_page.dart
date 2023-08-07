@@ -191,9 +191,7 @@ class _HomePageState extends State<HomePage> {
                         }) {
                           // show details
                           setState(() {
-                            if (isDetailsOnTop()) {
-                              stack.removeLast();
-                            }
+                            stack.clear();
                             stack.add(
                               DetailsView(
                                 id: id,

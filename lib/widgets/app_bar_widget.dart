@@ -2,6 +2,8 @@ import 'package:apollo_manager/enums/which_data.dart';
 import 'package:apollo_manager/models/get_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+import '../models/data_model.dart';
 import '../services/api.dart';
 
 class AppBar extends StatefulWidget {
@@ -43,6 +45,8 @@ class _AppBarState extends State<AppBar> {
 
   @override
   Widget build(BuildContext context) {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
     return SizedBox(
       // height: 48,
       child: Row(
@@ -93,27 +97,70 @@ class _AppBarState extends State<AppBar> {
                     ),
                   ),
                 ),
-                const SizedBox(width: 298),
-                CircleAvatar(
-                  radius: 24,
-                  backgroundColor:
-                      Theme.of(context).colorScheme.secondaryContainer,
-                  child: IconButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                        Theme.of(context).colorScheme.secondaryContainer,
+                SizedBox(
+                  width: 346,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      // Refresh button
+                      CircleAvatar(
+                        radius: 24,
+                        backgroundColor:
+                            Theme.of(context).colorScheme.secondaryContainer,
+                        child: IconButton(
+                          tooltip: "Refresh data",
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                              Theme.of(context).colorScheme.secondaryContainer,
+                            ),
+                          ),
+                          icon: const Icon(
+                            Icons.sync_rounded,
+                            size: 25,
+                          ),
+                          onPressed: () {
+                            Provider.of<DataModel>(context, listen: false)
+                                .updateAll()
+                                .then((value) {
+                              scaffoldMessenger.hideCurrentSnackBar();
+                              scaffoldMessenger.showSnackBar(
+                                const SnackBar(
+                                  showCloseIcon: true,
+                                  behavior: SnackBarBehavior.floating,
+                                  content: Text("Data refreshed"),
+                                  width: 280.0, // Width of the SnackBar.
+                                ),
+                              );
+                            });
+                          },
+                          iconSize: 25,
+                        ),
                       ),
-                    ),
-                    icon: const Icon(
-                      Icons.person,
-                      size: 25,
-                    ),
-                    onPressed: () {
-                      Get.offAllNamed(
-                        "/settings",
-                      );
-                    },
-                    iconSize: 25,
+                      const SizedBox(width: 8),
+
+                      CircleAvatar(
+                        radius: 24,
+                        backgroundColor:
+                            Theme.of(context).colorScheme.secondaryContainer,
+                        child: IconButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                              Theme.of(context).colorScheme.secondaryContainer,
+                            ),
+                          ),
+                          icon: const Icon(
+                            Icons.person,
+                            size: 25,
+                          ),
+                          onPressed: () {
+                            Get.offAllNamed(
+                              "/settings",
+                            );
+                          },
+                          iconSize: 25,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -250,7 +297,6 @@ class _SearchAnchorsState extends State<SearchAnchors> {
                 Filters(
                   whichData: widget.whichData,
                   onSelected: (value) {
-                    debugPrint("selected: $value");
                     if (selectedFilters.contains(value)) {
                       selectedFilters.remove(value);
                     } else {

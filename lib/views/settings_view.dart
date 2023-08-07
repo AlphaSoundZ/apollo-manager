@@ -35,6 +35,7 @@ class _SettingsViewState extends State<SettingsView> {
                 Get.changeThemeMode(
                   Get.isDarkMode ? ThemeMode.light : ThemeMode.dark,
                 );
+                scaffoldMessenger.hideCurrentSnackBar();
                 scaffoldMessenger.showSnackBar(
                   SnackBar(
                     showCloseIcon: true,

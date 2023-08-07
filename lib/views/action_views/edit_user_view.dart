@@ -80,7 +80,7 @@ class _EditUserViewContentState extends State<EditUserViewContent> {
         onDelete: () {
           _handleDeleteUser(scaffoldMessenger);
         },
-        title: "Edit User",
+        title: "${user?.name.firstname} ${user?.name.lastname}",
         children: [
           Center(
             child: Stack(
@@ -156,21 +156,18 @@ class _EditUserViewContentState extends State<EditUserViewContent> {
                               ),
                               initialSelection: 0,
                               width: 282,
-                              dropdownMenuEntries:
-                                  (classData.isEmpty)
-                                      ? []
-                                      : classData
-                                          .map(
-                                            (e) => DropdownMenuEntry(
-                                              value: e.id,
-                                              label: e.name,
-                                            ),
-                                          )
-                                          .toList(),
+                              dropdownMenuEntries: (classData.isEmpty)
+                                  ? []
+                                  : classData
+                                      .map(
+                                        (e) => DropdownMenuEntry(
+                                          value: e.id,
+                                          label: e.name,
+                                        ),
+                                      )
+                                      .toList(),
                               onSelected: (value) {
-                                selectedClass = value ??
-                                    classData[0].id ??
-                                    0;
+                                selectedClass = value ?? classData[0].id ?? 0;
                               },
                             );
                           },
