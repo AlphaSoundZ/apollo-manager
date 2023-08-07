@@ -1,3 +1,4 @@
+import 'package:apollo_manager/models/get_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../enums/which_data.dart';
@@ -21,7 +22,7 @@ class DataView extends StatefulWidget {
 }
 
 class _DataViewState extends State<DataView> {
-  List<dynamic> data = [];
+  GetResponseBody responseBody = GetResponseBody.empty();
 
   int selectedIndex = 0;
 
@@ -29,10 +30,10 @@ class _DataViewState extends State<DataView> {
   void initState() {
     if (widget.params != null) {
       Provider.of<DataModel>(context, listen: false).clearSearch();
-      data = Provider.of<DataModel>(context, listen: false)
+      responseBody = Provider.of<DataModel>(context, listen: false)
           .search(whichData: widget.whichData, params: widget.params!);
     } else {
-      data =
+      responseBody =
           Provider.of<DataModel>(context, listen: false).get(widget.whichData);
     }
 
@@ -46,10 +47,10 @@ class _DataViewState extends State<DataView> {
 
     if (widget.params != null) {
       Provider.of<DataModel>(context, listen: false).clearSearch();
-      data = Provider.of<DataModel>(context, listen: false)
+      responseBody = Provider.of<DataModel>(context, listen: false)
           .search(whichData: widget.whichData, params: widget.params!);
     } else {
-      data =
+      responseBody =
           Provider.of<DataModel>(context, listen: false).get(widget.whichData);
     }
   }
@@ -58,16 +59,16 @@ class _DataViewState extends State<DataView> {
   Widget build(BuildContext context) {
     // get data from data model
     if (widget.params != null) {
-      data = Provider.of<DataModel>(context)
+      responseBody = Provider.of<DataModel>(context)
           .search(whichData: widget.whichData, params: widget.params!);
     } else {
-      data = Provider.of<DataModel>(context).get(widget.whichData);
+      responseBody = Provider.of<DataModel>(context).get(widget.whichData);
     }
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: DataList(
-        data: data,
+        data: responseBody.data,
         selectedIndex: selectedIndex,
         onSelected: (index) {
           setState(() {
@@ -75,7 +76,7 @@ class _DataViewState extends State<DataView> {
           });
         },
         onShowDetails: (index) {
-          int id = data[index].id;
+          int id = responseBody.data[index].id;
           if (widget.onShowDetails != null) {
             widget.onShowDetails!(id);
           }

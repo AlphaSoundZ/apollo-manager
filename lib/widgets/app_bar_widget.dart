@@ -1,4 +1,5 @@
 import 'package:apollo_manager/enums/which_data.dart';
+import 'package:apollo_manager/models/get_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../services/api.dart';
@@ -311,12 +312,12 @@ class QuickSearch {
   List<dynamic> responseData = [];
 
   Future<List<dynamic>> search(String query) async {
-    debugPrint("search for: $query");
     query = query.trim();
     if (query.isEmpty) {
       responseData.clear();
     } else {
-      List<dynamic> response = await Api().fetchData(
+      GetResponseBody response = await Api().get(
+        route: whichData.route,
         whichData: whichData,
         params: {
           "query": query,
@@ -324,10 +325,9 @@ class QuickSearch {
         },
       );
 
-      responseData = response;
+      responseData = response.data;
     }
 
-    debugPrint(responseData.toString());
     return responseData;
   }
 }

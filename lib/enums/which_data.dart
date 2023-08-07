@@ -33,7 +33,7 @@ extension WhichDataExtension on WhichData {
     }
   }
 
-  String get endpoint {
+  String get route {
     switch (this) {
       case WhichData.users:
         return "/user";
@@ -97,7 +97,7 @@ extension WhichDataExtension on WhichData {
       default:
         return StackViewModel(
           title: "Details for id $itemId",
-          subTitle: endpoint,
+          subTitle: route,
           content: Center(
             child: Text(name),
           ),

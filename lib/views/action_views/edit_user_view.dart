@@ -144,7 +144,7 @@ class _EditUserViewContentState extends State<EditUserViewContent> {
                         Consumer<DataModel>(
                           builder: (context, data, child) {
                             List<dynamic> classData =
-                                data.data[WhichData.classes];
+                                data.data[WhichData.classes]!.data;
 
                             if (classData.isEmpty) return Container();
 
@@ -157,7 +157,7 @@ class _EditUserViewContentState extends State<EditUserViewContent> {
                               initialSelection: 0,
                               width: 282,
                               dropdownMenuEntries:
-                                  (data.data[WhichData.classes].isEmpty)
+                                  (classData.isEmpty)
                                       ? []
                                       : classData
                                           .map(
@@ -169,7 +169,7 @@ class _EditUserViewContentState extends State<EditUserViewContent> {
                                           .toList(),
                               onSelected: (value) {
                                 selectedClass = value ??
-                                    data.data[WhichData.classes][0].id ??
+                                    classData[0].id ??
                                     0;
                               },
                             );
@@ -217,7 +217,7 @@ class _EditUserViewContentState extends State<EditUserViewContent> {
 
       // Update Provider Data
       Provider.of<DataModel>(context, listen: false)
-          .updateData(dataType: WhichData.users);
+          .updateData(whichData: WhichData.users);
     } else {
       // Pop the dialog
       setState(() {
@@ -269,7 +269,7 @@ class _EditUserViewContentState extends State<EditUserViewContent> {
 
       // Update Provider Data
       Provider.of<DataModel>(context, listen: false)
-          .updateData(dataType: WhichData.users);
+          .updateData(whichData: WhichData.users);
     } else {
       // Pop the dialog
       setState(() {

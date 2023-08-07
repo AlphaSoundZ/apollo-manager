@@ -122,6 +122,7 @@ class SubDrawerState extends State<SubDrawer> {
                                       // get Text from provider by counting amount of data
                                       Provider.of<DataModel>(context)
                                           .get(e.whichData)
+                                          .data
                                           .length
                                           .toString(),
                                       maxLines: 1,

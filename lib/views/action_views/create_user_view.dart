@@ -118,7 +118,7 @@ class _CreateUserViewContentState extends State<CreateUserViewContent> {
                         Consumer<DataModel>(
                           builder: (context, data, child) {
                             List<dynamic> classData =
-                                data.data[WhichData.classes];
+                                data.data[WhichData.classes]!.data;
 
                             if (classData.isEmpty) return Container();
 
@@ -130,21 +130,18 @@ class _CreateUserViewContentState extends State<CreateUserViewContent> {
                               ),
                               initialSelection: 0,
                               width: 282,
-                              dropdownMenuEntries:
-                                  (data.data[WhichData.classes].isEmpty)
-                                      ? []
-                                      : classData
-                                          .map(
-                                            (e) => DropdownMenuEntry(
-                                              value: e.id,
-                                              label: e.name,
-                                            ),
-                                          )
-                                          .toList(),
+                              dropdownMenuEntries: (classData.isEmpty)
+                                  ? []
+                                  : classData
+                                      .map(
+                                        (e) => DropdownMenuEntry(
+                                          value: e.id,
+                                          label: e.name,
+                                        ),
+                                      )
+                                      .toList(),
                               onSelected: (value) {
-                                selectedClass = value ??
-                                    data.data[WhichData.classes][0].id ??
-                                    0;
+                                selectedClass = value ?? classData[0].id ?? 0;
                               },
                             );
                           },
@@ -201,7 +198,7 @@ class _CreateUserViewContentState extends State<CreateUserViewContent> {
 
       // Update Provider Data
       Provider.of<DataModel>(context, listen: false)
-          .updateData(dataType: WhichData.users);
+          .updateData(whichData: WhichData.users);
     } else {
       // Pop the dialog
       setState(() {

@@ -95,7 +95,7 @@ class _CreateDeviceViewContentState extends State<CreateDeviceViewContent> {
                         Consumer<DataModel>(
                           builder: (context, data, child) {
                             List<dynamic> deviceTypeData =
-                                data.data[WhichData.deviceTypes];
+                                data.data[WhichData.deviceTypes]!.data ?? [];
 
                             if (deviceTypeData.isEmpty) return Container();
 
@@ -107,20 +107,19 @@ class _CreateDeviceViewContentState extends State<CreateDeviceViewContent> {
                               ),
                               initialSelection: 0,
                               width: 282,
-                              dropdownMenuEntries:
-                                  (data.data[WhichData.deviceTypes].isEmpty)
-                                      ? []
-                                      : deviceTypeData
-                                          .map(
-                                            (e) => DropdownMenuEntry(
-                                              value: e.id,
-                                              label: e.name,
-                                            ),
-                                          )
-                                          .toList(),
+                              dropdownMenuEntries: (deviceTypeData.isEmpty)
+                                  ? []
+                                  : deviceTypeData
+                                      .map(
+                                        (e) => DropdownMenuEntry(
+                                          value: e.id,
+                                          label: e.name,
+                                        ),
+                                      )
+                                      .toList(),
                               onSelected: (value) {
                                 selectedDeviceType = value ??
-                                    data.data[WhichData.deviceTypes][0].id ??
+                                    deviceTypeData[0].id ??
                                     0;
                               },
                             );
@@ -176,7 +175,7 @@ class _CreateDeviceViewContentState extends State<CreateDeviceViewContent> {
 
       // Update Provider Data
       Provider.of<DataModel>(context, listen: false)
-          .updateData(dataType: WhichData.devices);
+          .updateData(whichData: WhichData.devices);
     } else {
       // Pop the dialog
       setState(() {

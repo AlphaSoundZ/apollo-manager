@@ -5,6 +5,7 @@ import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:dio/dio.dart';
 import 'dart:core';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import '../models/get_response_model.dart';
 
 class Api {
   final EncryptedSharedPreferences _storage = EncryptedSharedPreferences();
@@ -22,24 +23,15 @@ class Api {
     ));
 
   Future<dynamic> login(String username, String password) async {
-    try {
-      final response = await dio.post(
-        "/token/authorize",
-        data: {
-          "username": username,
-          "password": password,
-        },
-      );
+    final response = await dio.post(
+      "/token/authorize",
+      data: {
+        "username": username,
+        "password": password,
+      },
+    );
 
-      return response.data;
-    } catch (e) {
-      debugPrint("Error at login: $e");
-      return {
-        "status": "unexpected_error",
-        "code": 500,
-        "message": "Error: $e",
-      };
-    }
+    return response.data;
   }
 
   Future<bool> isLoggedIn() async {
@@ -138,67 +130,43 @@ class Api {
     }
   }
 
-  Future<dynamic> get(String route) async {
-    final token = await _storage.getString("token");
-
-    if (token == "") {
-      return [];
-    }
-
-    try {
-      final response = await dio.get(
-        route,
-        options: Options(
-          headers: {
-            "Authorization": "Bearer $token",
-          },
-        ),
-      );
-
-      return response.data;
-    } catch (e) {
-      debugPrint("Error at Api.get: $e");
-      return [];
-    }
-  }
-
-  Future<List<dynamic>> fetchData({
-    required WhichData whichData,
+  Future<GetResponseBody> get({
+    required route,
+    WhichData? whichData,
     Map<String, dynamic>? params,
   }) async {
     final token = await _storage.getString("token");
 
     if (token == "") {
-      return [];
+      return GetResponseBody.empty();
     }
 
-    debugPrint(params.toString());
+    final response = await dio.get(
+      route,
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $token",
+        },
+      ),
+      queryParameters: params,
+    );
 
-    try {
-      final response = await dio.get(
-        whichData.endpoint,
-        options: Options(
-          headers: {
-            "Authorization": "Bearer $token",
-          },
-        ),
-        queryParameters: params,
-      );
+    List<dynamic> data = [];
 
-      if (response.statusCode != 200) {
-        debugPrint('Error fetching data: ${response.data["message"]}');
-        return [];
-      }
-
-      List<dynamic> data = response.data["data"]
+    // if whichData is not null, then we need to map the data to the model
+    if (whichData != null) {
+      data = response.data["data"]
           .map((json) => whichData
               .fromJson(json.containsKey("accordance") ? json["data"] : json))
           .toList();
-
-      return data;
-    } catch (e) {
-      debugPrint("Error at fetching $whichData: $e");
-      return [];
+    } else {
+      data = response.data["data"];
     }
+
+    // create response body model
+    GetResponseBody responseBody = GetResponseBody.fromJson(
+        {...response.data, "data": data, "params": params});
+
+    return responseBody;
   }
 }
