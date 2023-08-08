@@ -10,10 +10,16 @@ import '../models/devicetype_model.dart';
 
 import 'package:flutter/material.dart';
 
-import '../views/action_views/create_user_view.dart';
 import '../views/action_views/edit_user_view.dart';
 
-enum WhichData { users, devices, deviceTypes, classes, usercards, tokens }
+enum WhichData {
+  users,
+  devices,
+  deviceTypes,
+  classes,
+  usercards,
+  tokens,
+}
 
 extension WhichDataExtension on WhichData {
   dynamic fromJson(Map<String, dynamic> json) {
@@ -30,6 +36,7 @@ extension WhichDataExtension on WhichData {
         return Usercard.fromJson(json);
       case WhichData.tokens:
         return Token.fromJson(json);
+        break;
     }
   }
 

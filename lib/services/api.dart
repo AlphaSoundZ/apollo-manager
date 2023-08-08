@@ -12,6 +12,9 @@ class Api {
   final dio = Dio(BaseOptions(
     baseUrl: dotenv.env["API_BASE_URL"]!,
     contentType: "application/json",
+    validateStatus: (status) {
+      return status! < 500;
+    },
   ))
     // customization
     ..interceptors.add(PrettyDioLogger(

@@ -180,10 +180,10 @@ class _HomePageState extends State<HomePage> {
                         backgroundColor: _backgroundColor,
                         whichData: destinations[selectedView]
                                 .subDestinations
-                                .isNotEmpty
+                                .isNotEmpty && destinations[selectedView].subDestinations[selectedSubView].whichData != null
                             ? destinations[selectedView]
                                 .subDestinations[selectedSubView]
-                                .whichData
+                                .whichData!
                             : WhichData.users,
                         onQuickSearchSelected: ({
                           required id,

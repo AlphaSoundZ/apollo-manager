@@ -81,18 +81,24 @@ class SubDrawerState extends State<SubDrawer> {
                       label: Text(
                           "New ${destinations[selectedView].subDestinations[selectedSubView].fabLabel}"),
                       icon: Icon(
-                        destinations[selectedView]
-                            .subDestinations[selectedSubView]
-                            .whichData
-                            .icons
-                            .multiple,
+                        (destinations[selectedView]
+                                    .subDestinations[selectedSubView]
+                                    .whichData !=
+                                null)
+                            ? destinations[selectedView]
+                                .subDestinations[selectedSubView]
+                                .whichData!
+                                .icons
+                                .multiple
+                            : Icons.add,
                       ),
                       onPressed: widget.onFABPressed,
                       elevation: 0,
                     ),
                     const SizedBox(height: 32),
                     Column(
-                      children: destinations[selectedView]
+                      verticalDirection: VerticalDirection.up,
+                      children: List.from(destinations[selectedView]
                           .subDestinations
                           .map<Widget>(
                             (e) => SizedBox(
@@ -118,26 +124,27 @@ class SubDrawerState extends State<SubDrawer> {
                                       ),
                                     ),
                                     const Spacer(),
-                                    Text(
-                                      // get Text from provider by counting amount of data
-                                      Provider.of<DataModel>(context)
-                                          .get(e.whichData)
-                                          .data
-                                          .length
-                                          .toString(),
-                                      maxLines: 1,
-                                      style: TextStyle(
-                                        fontWeight: selectedSubView ==
-                                                destinations[selectedView]
-                                                    .subDestinations
-                                                    .indexOf(e)
-                                            ? FontWeight.bold
-                                            : FontWeight.normal,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onSurface,
-                                      ),
-                                    )
+                                    if (e.whichData != null)
+                                      Text(
+                                        // get Text from provider by counting amount of data
+                                        Provider.of<DataModel>(context)
+                                            .get(e.whichData!)
+                                            .data
+                                            .length
+                                            .toString(),
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                          fontWeight: selectedSubView ==
+                                                  destinations[selectedView]
+                                                      .subDestinations
+                                                      .indexOf(e)
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                        ),
+                                      )
                                   ],
                                 ),
                                 style: ButtonStyle(
@@ -165,7 +172,8 @@ class SubDrawerState extends State<SubDrawer> {
                               ),
                             ),
                           )
-                          .toList(),
+                          .toList()
+                          .reversed), // reversed + verticalDirection.up = changes the z-order of the buttons
                     ),
                   ],
                 ),

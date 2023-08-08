@@ -28,7 +28,7 @@ class SubDestination {
     required this.label,
     required this.route,
     required this.view,
-    required this.whichData,
+    this.whichData,
     required this.fabLabel,
     required this.fabIcon,
     this.fabContent,
@@ -37,7 +37,7 @@ class SubDestination {
   final String label;
   final String route;
   final dynamic view;
-  final WhichData whichData;
+  final WhichData? whichData;
   final String fabLabel;
   final IconData fabIcon;
   final Widget? fabContent;
@@ -139,11 +139,24 @@ class Destinations {
       ],
     ),
     Destination(
-      icon: Icons.calendar_month,
-      label: 'Prebook',
-      route: '/prebook',
-      view: const PrebookView(),
-    ),
+        icon: Icons.calendar_month,
+        label: 'Prebook',
+        route: '/prebook',
+        view: const PrebookView(),
+        subDestinations: [
+          SubDestination(
+            icons: Icons.calendar_today_outlined,
+            label: 'Bookings',
+            route: '/prebook/bookings',
+            view: const Center(
+              child: Center(
+                child: Text('Bookings'),
+              ),
+            ),
+            fabLabel: 'Booking',
+            fabIcon: Icons.calendar_today_outlined,
+          ),
+        ]),
     Destination(
       icon: Icons.bar_chart,
       label: 'Stats',
