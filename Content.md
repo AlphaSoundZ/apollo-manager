@@ -46,3 +46,9 @@
 - Amount of currently reserved devices
 - Amount of dead devices (devices that are not lent out for a long time)
 - Average amount of devices lent out per user
+
+### Stats about yourself
+
+- Amount of devices lent out
+- Average amount of devices lent out per multilend
+- Average amount of reserved devices and average amount of actual lent out devices of reserved devices

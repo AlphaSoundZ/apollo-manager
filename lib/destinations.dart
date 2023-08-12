@@ -1,5 +1,6 @@
 import 'package:apollo_manager/views/prebook_view.dart';
 import 'package:flutter/material.dart';
+import 'views/action_views/create_prebook_view.dart';
 import 'views/data_view.dart';
 import '../enums/which_data.dart';
 import '../views/action_views/create_user_view.dart';
@@ -24,23 +25,25 @@ class Destination {
 
 class SubDestination {
   SubDestination({
-    required this.icons,
+    required this.icon,
     required this.label,
     required this.route,
     required this.view,
     this.whichData,
     required this.fabLabel,
-    required this.fabIcon,
+    this.fabIcon,
     this.fabContent,
+    this.showAmount = true,
   });
-  final IconData icons;
+  final IconData icon;
   final String label;
   final String route;
   final dynamic view;
   final WhichData? whichData;
   final String fabLabel;
-  final IconData fabIcon;
+  final IconData? fabIcon;
   final Widget? fabContent;
+  final bool showAmount;
 }
 
 class Destinations {
@@ -57,7 +60,7 @@ class Destinations {
       route: '/data',
       subDestinations: [
         SubDestination(
-          icons: Icons.group_outlined,
+          icon: Icons.group_outlined,
           label: 'Users',
           route: '/data/users',
           view: DataView(
@@ -76,7 +79,7 @@ class Destinations {
           ),
         ),
         SubDestination(
-          icons: Icons.credit_card_outlined,
+          icon: Icons.credit_card_outlined,
           label: 'Usercards',
           route: '/data/usercards',
           view: DataView(
@@ -90,7 +93,7 @@ class Destinations {
           fabIcon: Icons.credit_card_outlined,
         ),
         SubDestination(
-          icons: Icons.devices_outlined,
+          icon: Icons.devices_outlined,
           label: 'Devices',
           route: '/data/devices',
           view: DataView(
@@ -109,7 +112,7 @@ class Destinations {
           ),
         ),
         SubDestination(
-          icons: Icons.token_outlined,
+          icon: Icons.token_outlined,
           label: 'Token',
           route: '/data/token',
           view: DataView(
@@ -123,7 +126,7 @@ class Destinations {
           fabIcon: Icons.token_outlined,
         ),
         SubDestination(
-          icons: Icons.class_outlined,
+          icon: Icons.class_outlined,
           label: 'Classes',
           route: '/data/classes',
           view: DataView(
@@ -145,16 +148,24 @@ class Destinations {
         view: const PrebookView(),
         subDestinations: [
           SubDestination(
-            icons: Icons.calendar_today_outlined,
+            whichData: WhichData.prebook,
+            icon: Icons.calendar_today_outlined,
             label: 'Bookings',
+            showAmount: false,
             route: '/prebook/bookings',
-            view: const Center(
-              child: Center(
-                child: Text('Bookings'),
-              ),
+            view: DataView(
+              whichData: WhichData.prebook,
+              onShowDetails: (id) => onShowDetails != null
+                  ? onShowDetails!(WhichData.prebook, id)
+                  : null,
             ),
             fabLabel: 'Booking',
-            fabIcon: Icons.calendar_today_outlined,
+            fabIcon: Icons.add,
+            fabContent: CreatePrebookViewContent(
+              key: UniqueKey(),
+              onCancel: onFabCancel,
+              onSubmit: onFabSubmit,
+            ),
           ),
         ]),
     Destination(

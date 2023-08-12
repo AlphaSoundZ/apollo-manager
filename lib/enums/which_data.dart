@@ -1,4 +1,5 @@
-import 'package:apollo_manager/views/stack_views/stack_details_views/user_details_view.dart';
+import '../../models/prebook_model.dart';
+import '../../views/stack_views/stack_details_views/user_details_view.dart';
 
 import '../models/class_model.dart';
 import '../models/device_model.dart';
@@ -19,6 +20,7 @@ enum WhichData {
   classes,
   usercards,
   tokens,
+  prebook,
 }
 
 extension WhichDataExtension on WhichData {
@@ -36,7 +38,8 @@ extension WhichDataExtension on WhichData {
         return Usercard.fromJson(json);
       case WhichData.tokens:
         return Token.fromJson(json);
-        break;
+      case WhichData.prebook:
+        return Prebook.fromJson(json);
     }
   }
 
@@ -54,6 +57,8 @@ extension WhichDataExtension on WhichData {
         return "/usercard";
       case WhichData.tokens:
         return "/token";
+      case WhichData.prebook:
+        return "/prebook";
     }
   }
 
@@ -89,6 +94,11 @@ extension WhichDataExtension on WhichData {
         return WhichDataIcons(
           single: Icons.token_outlined,
           multiple: Icons.token_outlined,
+        );
+      case WhichData.prebook:
+        return WhichDataIcons(
+          single: Icons.calendar_today_outlined,
+          multiple: Icons.calendar_today_outlined,
         );
     }
   }

@@ -51,7 +51,7 @@ class _CreateDeviceViewContentState extends State<CreateDeviceViewContent> {
           if (_formKey.currentState!.validate()) {
             _formKey.currentState!.save();
 
-            _handleCreateUser(scaffoldMessenger);
+            _handleCreateDevice(scaffoldMessenger);
           }
         },
         title: "Create Device",
@@ -68,6 +68,7 @@ class _CreateDeviceViewContentState extends State<CreateDeviceViewContent> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         TextFormField(
+                          autofocus: true,
                           controller: uidController,
                           decoration: const InputDecoration(
                             border: UnderlineInputBorder(),
@@ -87,7 +88,7 @@ class _CreateDeviceViewContentState extends State<CreateDeviceViewContent> {
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState!.save();
 
-                              _handleCreateUser(scaffoldMessenger);
+                              _handleCreateDevice(scaffoldMessenger);
                             }
                           },
                         ),
@@ -118,9 +119,8 @@ class _CreateDeviceViewContentState extends State<CreateDeviceViewContent> {
                                       )
                                       .toList(),
                               onSelected: (value) {
-                                selectedDeviceType = value ??
-                                    deviceTypeData[0].id ??
-                                    0;
+                                selectedDeviceType =
+                                    value ?? deviceTypeData[0].id ?? 0;
                               },
                             );
                           },
@@ -137,7 +137,7 @@ class _CreateDeviceViewContentState extends State<CreateDeviceViewContent> {
     );
   }
 
-  void _handleCreateUser(ScaffoldMessengerState scaffoldMessenger) async {
+  void _handleCreateDevice(ScaffoldMessengerState scaffoldMessenger) async {
     // Show the loading indicator
     if (!_formKey.currentState!.validate()) {
       return;

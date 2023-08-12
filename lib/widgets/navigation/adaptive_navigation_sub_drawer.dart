@@ -85,11 +85,18 @@ class SubDrawerState extends State<SubDrawer> {
                                     .subDestinations[selectedSubView]
                                     .whichData !=
                                 null)
-                            ? destinations[selectedView]
-                                .subDestinations[selectedSubView]
-                                .whichData!
-                                .icons
-                                .multiple
+                            ? (destinations[selectedView]
+                                        .subDestinations[selectedSubView]
+                                        .fabIcon !=
+                                    null)
+                                ? destinations[selectedView]
+                                    .subDestinations[selectedSubView]
+                                    .fabIcon
+                                : destinations[selectedView]
+                                    .subDestinations[selectedSubView]
+                                    .whichData!
+                                    .icons
+                                    .multiple
                             : Icons.add,
                       ),
                       onPressed: widget.onFABPressed,
@@ -105,7 +112,7 @@ class SubDrawerState extends State<SubDrawer> {
                               height: 32.0, // alternative: 40.0
                               width: double.infinity,
                               child: FilledButton.tonalIcon(
-                                icon: Icon(e.icons),
+                                icon: Icon(e.icon),
                                 label: Row(
                                   children: [
                                     Text(
@@ -124,7 +131,10 @@ class SubDrawerState extends State<SubDrawer> {
                                       ),
                                     ),
                                     const Spacer(),
-                                    if (e.whichData != null)
+                                    if (e.whichData != null &&
+                                        destinations[selectedView]
+                                            .subDestinations[selectedSubView]
+                                            .showAmount)
                                       Text(
                                         // get Text from provider by counting amount of data
                                         Provider.of<DataModel>(context)

@@ -68,6 +68,7 @@ class _CreateUserViewContentState extends State<CreateUserViewContent> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         TextFormField(
+                          autofocus: true,
                           controller: firstnameController,
                           decoration: const InputDecoration(
                             border: UnderlineInputBorder(),
