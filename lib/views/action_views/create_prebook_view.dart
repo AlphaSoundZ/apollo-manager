@@ -129,7 +129,7 @@ class _CreatePrebookViewContentState extends State<CreatePrebookViewContent> {
                             try {
                               if (DateTime.parse(value).isBefore(
                                   today.add(const Duration(days: 1)))) {
-                                return 'Please enter a date after today';
+                                return 'Please enter a date in the future';
                               }
 
                               if (DateTime.parse(value).isAfter(
@@ -176,9 +176,6 @@ class _CreatePrebookViewContentState extends State<CreatePrebookViewContent> {
                         ),
                         // start time picker
                         TextFormField(
-                          onSaved: (string) {
-                            _setTimes(startTime: selectedStartTime);
-                          },
                           validator: (value) {
                             if (value == null ||
                                 value.isEmpty ||
@@ -186,7 +183,7 @@ class _CreatePrebookViewContentState extends State<CreatePrebookViewContent> {
                               return 'Please enter a time';
                             }
 
-                            if (!validateTime(value)) {
+                            if (!isValidTime(value)) {
                               return 'Please enter a valid time';
                             }
 
@@ -230,6 +227,27 @@ class _CreatePrebookViewContentState extends State<CreatePrebookViewContent> {
                         TextFormField(
                           onChanged: (value) {
                             // Implement the same as in _selectStartTime (put the stuff in a function and call it here and in _selectStartTime)
+                          },
+                          validator: (value) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                value.trim() == "") {
+                              return 'Please enter a time';
+                            }
+
+                            if (!isValidTime(value)) {
+                              return 'Please enter a valid time';
+                            }
+
+                            return null;
+                          },
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          onFieldSubmitted: (value) {
+                            if (_formKey.currentState!.validate()) {
+                              _formKey.currentState!.save();
+
+                              _handleCreatePrebook(scaffoldMessenger);
+                            }
                           },
                           controller: endTimeController,
                           decoration: InputDecoration(
@@ -293,16 +311,9 @@ class _CreatePrebookViewContentState extends State<CreatePrebookViewContent> {
     );
   }
 
-  bool validateTime(time) {
-    // TODO: does not work + implement this in End time picker
-    // check parse
-    try {
-      DateTime.parse("${selectedDate.toLocal()} $time");
-
-      return true;
-    } on FormatException catch (_) {
-      return false;
-    }
+  bool isValidTime(String input) {
+    final RegExp timeRegex = RegExp(r'^([01]\d|2[0-3]):([0-5]\d)$');
+    return timeRegex.hasMatch(input);
   }
 
   void _handleCreatePrebook(ScaffoldMessengerState scaffoldMessenger) async {
@@ -317,6 +328,20 @@ class _CreatePrebookViewContentState extends State<CreatePrebookViewContent> {
 
     Object body = {
       "amount": amountController.text,
+      "begin": DateTime(
+        selectedDate.year,
+        selectedDate.month,
+        selectedDate.day,
+        selectedStartTime.hour,
+        selectedStartTime.minute,
+      ).toIso8601String(),
+      "end": DateTime(
+        selectedDate.year,
+        selectedDate.month,
+        selectedDate.day,
+        selectedEndTime.hour,
+        selectedEndTime.minute,
+      ).toIso8601String(),
     };
 
     // call the api
@@ -365,6 +390,7 @@ class _CreatePrebookViewContentState extends State<CreatePrebookViewContent> {
     }
 
     if (startTime != null && startTime != selectedStartTime) {
+      // if start time is changed
       int newHour =
           selectedEndTime.hour + (startTime.hour - selectedStartTime.hour);
       int newMinute = selectedEndTime.minute +
@@ -375,9 +401,6 @@ class _CreatePrebookViewContentState extends State<CreatePrebookViewContent> {
 
       if (newHour > 23) {
         newHour = 23;
-      }
-
-      if (newHour == 23 && newMinute < startTime.minute) {
         newMinute = 59;
       }
 
@@ -395,21 +418,21 @@ class _CreatePrebookViewContentState extends State<CreatePrebookViewContent> {
     }
 
     if (endTime != null && endTime != selectedEndTime) {
-      if (endTime.hour < selectedStartTime.hour) {
+      // if end time is changed
+      if (endTime.hour < selectedStartTime.hour ||
+          (endTime.hour == selectedStartTime.hour &&
+              endTime.minute < selectedStartTime.minute)) {
         // if start time is before start time, change start time so that the offset remains the same
         int newHour =
-            selectedStartTime.hour + (selectedEndTime.hour - endTime.hour);
-        int newMinute = selectedStartTime.minute +
+            selectedStartTime.hour - (selectedEndTime.hour - endTime.hour);
+        int newMinute = selectedStartTime.minute -
             (selectedEndTime.minute - endTime.minute);
 
-        newHour = newMinute ~/ 60;
+        newHour -= newHour ~/ 60;
         newMinute = newMinute % 60;
 
         if (newHour < 0) {
           newHour = 0;
-        }
-
-        if (newMinute < 0 && newHour == 0) {
           newMinute = 0;
         }
 

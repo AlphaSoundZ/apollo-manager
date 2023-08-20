@@ -3,13 +3,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:dio/dio.dart';
+import 'package:get/get.dart';
 import 'dart:core';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import '../models/get_response_model.dart';
 
 class Api {
   final EncryptedSharedPreferences _storage = EncryptedSharedPreferences();
-  final dio = Dio(BaseOptions(
+  late final dio = Dio(BaseOptions(
     baseUrl: dotenv.env["API_BASE_URL"]!,
     contentType: "application/json",
     validateStatus: (status) {
@@ -23,6 +24,16 @@ class Api {
       responseBody: true,
       error: true,
       compact: true,
+    ))
+    ..interceptors.add(InterceptorsWrapper(
+      onError: (DioException error, handler) {
+        if (error.response?.statusCode == 401) {
+          // logout
+          logout();
+          Get.offAllNamed("/login");
+        }
+        return handler.next(error);
+      },
     ));
 
   Future<dynamic> login(String username, String password) async {
