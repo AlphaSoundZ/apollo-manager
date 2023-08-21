@@ -2,6 +2,7 @@ import 'package:apollo_manager/enums/which_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'dart:core';
@@ -10,6 +11,7 @@ import '../models/get_response_model.dart';
 
 class Api {
   final EncryptedSharedPreferences _storage = EncryptedSharedPreferences();
+  final _prefs = SharedPreferences.getInstance();
   late final dio = Dio(BaseOptions(
     baseUrl: dotenv.env["API_BASE_URL"]!,
     contentType: "application/json",
@@ -45,6 +47,14 @@ class Api {
       },
     );
 
+    // save payload in prefs
+    final SharedPreferences prefs = await _prefs;
+    await prefs.setString("username", username);
+    await prefs.setString("firstName", response.data["user"]["firstname"]);
+    await prefs.setString("lastName", response.data["user"]["lastname"]);
+
+    await _storage.setString('token', response.data['jwt']);
+
     return response.data;
   }
 
@@ -77,8 +87,8 @@ class Api {
     }
   }
 
-  void logout() {
-    _storage.setString("token", "");
+  Future<void> logout() async {
+    await _storage.setString("token", "");
   }
 
   Future<dynamic> delete(String route, Object body) async {
