@@ -350,19 +350,11 @@ class _HomePageState extends State<HomePage> {
                                 (destinations[selectedView]
                                         .subDestinations
                                         .isEmpty)
-                                    ? IndexedStack(
-                                        index: selectedSubView,
-                                        children: [
-                                          destinations[selectedView].view
-                                        ],
-                                      )
-                                    : IndexedStack(
-                                        index: selectedSubView,
-                                        children: destinations[selectedView]
-                                            .subDestinations
-                                            .map<Widget>((e) => e.view)
-                                            .toList(),
-                                      ),
+                                    ? destinations[selectedView].view
+                                    : destinations[selectedView]
+                                        .subDestinations
+                                        .map<Widget>((e) => e.view)
+                                        .toList()[selectedSubView],
                                 // STACKED VIEW (like search results, user details etc.)
                                 ...stack,
                               ],
