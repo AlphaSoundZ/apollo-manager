@@ -2,7 +2,7 @@ import 'package:apollo_manager/enums/which_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:jwt_decode/jwt_decode.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'dart:core';
@@ -11,7 +11,6 @@ import '../models/get_response_model.dart';
 
 class Api {
   final EncryptedSharedPreferences _storage = EncryptedSharedPreferences();
-  final _prefs = SharedPreferences.getInstance();
   late final dio = Dio(BaseOptions(
     baseUrl: dotenv.env["API_BASE_URL"]!,
     contentType: "application/json",
@@ -23,7 +22,7 @@ class Api {
     ..interceptors.add(PrettyDioLogger(
       requestHeader: true,
       requestBody: true,
-      responseBody: true,
+      responseBody: false,
       error: true,
       compact: true,
     ))
@@ -47,23 +46,35 @@ class Api {
       },
     );
 
-    // save payload in prefs
-    final SharedPreferences prefs = await _prefs;
-    await prefs.setString("username", username);
-    await prefs.setString("firstName", response.data["user"]["firstname"]);
-    await prefs.setString("lastName", response.data["user"]["lastname"]);
-
-    await _storage.setString('token', response.data['jwt']);
+    if (response.statusCode == 200) {
+      // save payload in prefs
+      await _storage.setString("username", username);
+      await _storage.setString("firstName", response.data["user"]["firstname"]);
+      await _storage.setString("lastName", response.data["user"]["lastname"]);
+      await _storage.setString("token", response.data["jwt"]);
+    }
 
     return response.data;
   }
 
-  Future<bool> isLoggedIn() async {
-    final EncryptedSharedPreferences storage = EncryptedSharedPreferences();
-    final token = await storage.getString("token");
+  Future<List<int>> getPermissions() async {
+    String token = await _storage.getString("token");
 
     if (token == "") {
-      return false;
+      return [];
+    }
+
+    final payload = Jwt.parseJwt(token);
+
+    return payload["permissions"].cast<int>();
+  }
+
+  Future<String> isLoggedIn() async {
+    String? token = await _storage.getString("token");
+    debugPrint("token: $token");
+
+    if (token == "") {
+      return "";
     }
 
     try {
@@ -77,18 +88,21 @@ class Api {
       );
 
       if (response.statusCode == 200) {
-        return true;
+        return token;
       } else {
-        return false;
+        return "";
       }
     } catch (e) {
       debugPrint("Error (at checking login): $e");
-      return false;
+      return "";
     }
   }
 
   Future<void> logout() async {
     await _storage.setString("token", "");
+    await _storage.setString("username", "");
+    await _storage.setString("firstName", "");
+    await _storage.setString("lastName", "");
   }
 
   Future<dynamic> delete(String route, Object body) async {
@@ -178,7 +192,12 @@ class Api {
     List<dynamic> data = [];
 
     // if whichData is not null, then we need to map the data to the model
+
     if (whichData != null) {
+      if (response.data["data"] == null) {
+        return GetResponseBody.empty();
+      }
+
       data = response.data["data"]
           .map((json) => whichData
               .fromJson(json.containsKey("accordance") ? json["data"] : json))

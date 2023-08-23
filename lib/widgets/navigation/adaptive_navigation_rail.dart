@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import '../../destinations.dart';
 
 class AdaptiveNavigationRail extends StatelessWidget {
-  AdaptiveNavigationRail({
+  const AdaptiveNavigationRail({
     super.key,
     required this.selectedIndex,
     required this.backgroundColor,
+    required this.destinations,
     this.onDestinationSelected,
     this.onMenuButtonPressed,
   });
@@ -14,8 +15,7 @@ class AdaptiveNavigationRail extends StatelessWidget {
   final Color backgroundColor;
   final ValueChanged<int>? onDestinationSelected;
   final VoidCallback? onMenuButtonPressed;
-
-  final List<Destination> destinations = Destinations().destinations;
+  final List<Destination> destinations;
 
   @override
   Widget build(BuildContext context) {

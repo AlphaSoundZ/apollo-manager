@@ -10,6 +10,7 @@ class SubDrawer extends StatefulWidget {
     required this.selectedView,
     required this.selectedSubView,
     required this.isOpen,
+    required this.destinations,
     this.onViewSelected,
     this.onFABPressed,
   });
@@ -17,6 +18,7 @@ class SubDrawer extends StatefulWidget {
   final int selectedView;
   final int selectedSubView;
   final bool isOpen;
+  final List<Destination> destinations;
   final ValueChanged<int>? onViewSelected;
   final void Function()? onFABPressed;
 
@@ -27,8 +29,6 @@ class SubDrawer extends StatefulWidget {
 class SubDrawerState extends State<SubDrawer> {
   int selectedView = 0;
   int selectedSubView = 0;
-
-  List<Destination> destinations = Destinations().destinations;
 
   @override
   Widget build(BuildContext context) {
@@ -79,20 +79,20 @@ class SubDrawerState extends State<SubDrawer> {
                       // backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
                       // foregroundColor: Theme.of(context).colorScheme.onTertiaryContainer,
                       label: Text(
-                          "New ${destinations[selectedView].subDestinations[selectedSubView].fabLabel}"),
+                          "New ${widget.destinations[selectedView].subDestinations[selectedSubView].fabLabel}"),
                       icon: Icon(
-                        (destinations[selectedView]
+                        (widget.destinations[selectedView]
                                     .subDestinations[selectedSubView]
                                     .whichData !=
                                 null)
-                            ? (destinations[selectedView]
+                            ? (widget.destinations[selectedView]
                                         .subDestinations[selectedSubView]
                                         .fabIcon !=
                                     null)
-                                ? destinations[selectedView]
+                                ? widget.destinations[selectedView]
                                     .subDestinations[selectedSubView]
                                     .fabIcon
-                                : destinations[selectedView]
+                                : widget.destinations[selectedView]
                                     .subDestinations[selectedSubView]
                                     .whichData!
                                     .icons
@@ -105,7 +105,7 @@ class SubDrawerState extends State<SubDrawer> {
                     const SizedBox(height: 32),
                     Column(
                       verticalDirection: VerticalDirection.up,
-                      children: List.from(destinations[selectedView]
+                      children: List.from(widget.destinations[selectedView]
                           .subDestinations
                           .map<Widget>(
                             (e) => SizedBox(
@@ -120,7 +120,7 @@ class SubDrawerState extends State<SubDrawer> {
                                       maxLines: 1,
                                       style: TextStyle(
                                         fontWeight: selectedSubView ==
-                                                destinations[selectedView]
+                                                widget.destinations[selectedView]
                                                     .subDestinations
                                                     .indexOf(e)
                                             ? FontWeight.bold
@@ -132,7 +132,7 @@ class SubDrawerState extends State<SubDrawer> {
                                     ),
                                     const Spacer(),
                                     if (e.whichData != null &&
-                                        destinations[selectedView]
+                                        widget.destinations[selectedView]
                                             .subDestinations[selectedSubView]
                                             .showAmount)
                                       Text(
@@ -145,7 +145,7 @@ class SubDrawerState extends State<SubDrawer> {
                                         maxLines: 1,
                                         style: TextStyle(
                                           fontWeight: selectedSubView ==
-                                                  destinations[selectedView]
+                                                  widget.destinations[selectedView]
                                                       .subDestinations
                                                       .indexOf(e)
                                               ? FontWeight.bold
@@ -162,7 +162,7 @@ class SubDrawerState extends State<SubDrawer> {
                                   backgroundColor:
                                       MaterialStateProperty.all<Color>(
                                     selectedSubView ==
-                                            destinations[selectedView]
+                                            widget.destinations[selectedView]
                                                 .subDestinations
                                                 .indexOf(e)
                                         ? colorScheme.secondaryContainer
@@ -171,7 +171,7 @@ class SubDrawerState extends State<SubDrawer> {
                                 ),
                                 onPressed: () {
                                   setState(() {
-                                    selectedSubView = destinations[selectedView]
+                                    selectedSubView = widget.destinations[selectedView]
                                         .subDestinations
                                         .indexOf(e);
                                   });

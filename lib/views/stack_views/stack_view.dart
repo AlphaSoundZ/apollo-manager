@@ -66,7 +66,8 @@ class StackViewState extends State<StackView> {
                   ),
                 ],
               ),
-              const Spacer(),
+              if (widget.onEdit != null || widget.onMenuItemSelected != null)
+                const Spacer(),
               if (widget.onEdit != null)
                 IconButton.filledTonal(
                   onPressed: () {
@@ -89,7 +90,7 @@ class StackViewState extends State<StackView> {
   Widget _buildPopupMenuButton() {
     return PopupMenuButton<String>(
       position: PopupMenuPosition.under,
-      // move  it under the icon with a little padding
+      // move it under the icon with a little padding
       offset: const Offset(0, 8),
 
       tooltip: "",

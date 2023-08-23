@@ -1,5 +1,6 @@
 import 'package:apollo_manager/views/prebook_view.dart';
 import 'package:flutter/material.dart';
+import 'enums/permissions.dart';
 import 'views/action_views/create_prebook_view.dart';
 import 'views/data_view.dart';
 import '../enums/which_data.dart';
@@ -15,12 +16,14 @@ class Destination {
     required this.label,
     required this.route,
     this.view,
+    this.permission,
   });
   final IconData icon;
   final String label;
   final String route;
   final dynamic view;
-  final List<SubDestination> subDestinations;
+  List<SubDestination> subDestinations;
+  final Permissions? permission;
 }
 
 class SubDestination {
@@ -34,6 +37,7 @@ class SubDestination {
     this.fabIcon,
     this.fabContent,
     this.showAmount = true,
+    this.permission,
   });
   final IconData icon;
   final String label;
@@ -44,16 +48,29 @@ class SubDestination {
   final IconData? fabIcon;
   final Widget? fabContent;
   final bool showAmount;
+  final Permissions? permission;
 }
 
-class Destinations {
-  Destinations({this.onFabCancel, this.onFabSubmit, this.onShowDetails});
+class Destinations extends ChangeNotifier {
+  Destinations(
+      {required this.withPermissions,
+      this.onFabCancel,
+      this.onFabSubmit,
+      this.onShowDetails});
 
-  final void Function()? onFabCancel;
-  final void Function()? onFabSubmit;
-  final void Function(WhichData whichData, int id)? onShowDetails;
+  void Function()? onFabCancel;
+  void Function()? onFabSubmit;
+  void Function(WhichData whichData, int id)? onShowDetails;
+  List<int> withPermissions;
 
-  late List<Destination> destinations = <Destination>[
+  // notifys listeners on change
+  void updatePermissions({required List<int> withPermissions}) {
+    this.withPermissions = withPermissions;
+    debugPrint("updating permissions");
+    notifyListeners();
+  }
+
+  late final List<Destination> _destinations = <Destination>[
     Destination(
       icon: Icons.data_array,
       label: 'Data',
@@ -77,6 +94,7 @@ class Destinations {
             onCancel: onFabCancel,
             onSubmit: onFabSubmit,
           ),
+          permission: Permissions.user,
         ),
         SubDestination(
           icon: Icons.credit_card_outlined,
@@ -91,6 +109,7 @@ class Destinations {
           whichData: WhichData.usercards,
           fabLabel: 'Usercard',
           fabIcon: Icons.credit_card_outlined,
+          permission: Permissions.usercard,
         ),
         SubDestination(
           icon: Icons.devices_outlined,
@@ -110,6 +129,7 @@ class Destinations {
             onCancel: onFabCancel,
             onSubmit: onFabSubmit,
           ),
+          permission: Permissions.device,
         ),
         SubDestination(
           icon: Icons.token_outlined,
@@ -124,6 +144,7 @@ class Destinations {
           whichData: WhichData.tokens,
           fabLabel: 'Token',
           fabIcon: Icons.token_outlined,
+          permission: Permissions.token,
         ),
         SubDestination(
           icon: Icons.class_outlined,
@@ -138,10 +159,12 @@ class Destinations {
           whichData: WhichData.classes,
           fabLabel: 'Class',
           fabIcon: Icons.class_outlined,
+          permission: Permissions.userClass,
         ),
       ],
     ),
     Destination(
+        permission: Permissions.prebook,
         icon: Icons.calendar_month,
         label: 'Prebook',
         route: '/prebook',
@@ -166,6 +189,7 @@ class Destinations {
               onCancel: onFabCancel,
               onSubmit: onFabSubmit,
             ),
+            permission: Permissions.prebook,
           ),
         ]),
     Destination(
@@ -185,4 +209,37 @@ class Destinations {
       view: const SettingsView(),
     ),
   ];
+
+  List<Destination> get destinations {
+    List<Destination> destiantions = [];
+
+    // iterate through destinations
+    for (Destination destination in _destinations) {
+      List<SubDestination> subDestinations = [];
+
+      // check if there are no subDestinations and if the destination has permission
+      if (destination.permission != null &&
+          !withPermissions.contains(destination.permission!.value)) {
+        continue;
+      }
+
+      // iterate through subDestinations
+      for (SubDestination subDestination in destination.subDestinations) {
+        if ((subDestination.permission == null ||
+            withPermissions.contains(subDestination.permission!.value))) {
+          subDestinations.add(subDestination);
+        }
+      }
+
+      if (subDestinations.isNotEmpty) {
+        destination.subDestinations = subDestinations;
+      } else if (destination.subDestinations.isNotEmpty) {
+        continue;
+      }
+
+      destiantions.add(destination);
+    }
+
+    return destiantions;
+  }
 }

@@ -1,8 +1,11 @@
 // TODO Implement this library.
+import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../models/data_model.dart';
 import '../services/api.dart';
 
 class SettingsView extends StatefulWidget {
@@ -13,7 +16,7 @@ class SettingsView extends StatefulWidget {
 }
 
 class _SettingsViewState extends State<SettingsView> {
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  final EncryptedSharedPreferences _storage = EncryptedSharedPreferences();
   late String username = '';
   late String firstName = '';
   late String lastName = '';
@@ -21,11 +24,22 @@ class _SettingsViewState extends State<SettingsView> {
   @override
   void initState() {
     super.initState();
-    _prefs.then((SharedPreferences prefs) {
+
+    _storage.getString('username').then((value) {
       setState(() {
-        username = prefs.getString('username') ?? '';
-        firstName = prefs.getString('firstName') ?? '';
-        lastName = prefs.getString('lastName') ?? '';
+        username = value;
+      });
+    });
+
+    _storage.getString('firstName').then((value) {
+      setState(() {
+        firstName = value;
+      });
+    });
+
+    _storage.getString('lastName').then((value) {
+      setState(() {
+        lastName = value;
       });
     });
   }
@@ -49,8 +63,6 @@ class _SettingsViewState extends State<SettingsView> {
               children: [
                 FilledButton(
                   onPressed: () {
-                    Api api = Api();
-                    api.logout();
                     Get.offAllNamed("/login");
                   },
                   child: const Text('Logout'),

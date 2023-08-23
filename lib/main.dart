@@ -1,4 +1,6 @@
 import 'package:apollo_manager/services/api.dart';
+import 'package:provider/provider.dart';
+import 'models/data_model.dart';
 import 'pages/home_page.dart';
 import '/pages/login_page.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +11,7 @@ import 'pages/loading_page.dart';
 
 Future main() async {
   await dotenv.load(fileName: ".env");
-  runApp(const MainApp());
+  runApp(const MainAppProvider());
 }
 
 class MainApp extends StatefulWidget {
@@ -20,15 +22,17 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
-  List<Destination> destinations = Destinations().destinations;
-  List<GetPage> pages = [];
-
   @override
   Widget build(BuildContext context) {
+    debugPrint(
+      "rebuild with permissions: ${Provider.of<Destinations>(context, listen: true).withPermissions}",
+    );
+
     return GetMaterialApp(
       initialRoute: '/',
       home: const LoadingPage(),
-      getPages: pages,
+      getPages: _getPagesFromDestinations(
+          Provider.of<Destinations>(context, listen: true).withPermissions),
       theme: ThemeData(
         useMaterial3: true,
         brightness: Brightness.light,
@@ -47,24 +51,25 @@ class _MainAppState extends State<MainApp> {
   void initState() {
     super.initState();
 
-    debugPrint('Initializing app');
-
     // Set default theme
     Get.changeThemeMode(ThemeMode.light);
 
-    // Get Pages
-    pages = _getPagesFromDestinations();
-
-    // check if user is logged in
-    Api api = Api();
-
-    api.isLoggedIn().then((isLoggedIn) {
-      if (isLoggedIn && Get.currentRoute != '/login') {
+    //  check if user is logged in
+    Api().isLoggedIn().then((token) {
+      if (token.isNotEmpty && Get.currentRoute != '/login') {
         debugPrint('User is logged in');
 
-        if (Get.currentRoute != '/home') {
-          Get.offAllNamed("/home");
-        }
+        // get pages
+        Api().getPermissions().then((permissions) {
+          // update destination permissions in provider
+          Provider.of<Destinations>(context, listen: false)
+              .updatePermissions(withPermissions: permissions);
+
+          // if there is no specific route, go to home
+          if (Get.currentRoute == '/') {
+            Get.offAllNamed("/home");
+          }
+        });
       } else {
         debugPrint('User is not logged in or is on login page');
         Get.offAllNamed("/login");
@@ -72,8 +77,11 @@ class _MainAppState extends State<MainApp> {
     });
   }
 
-  _getPagesFromDestinations() {
-    List<GetPage> pages = [];
+  List<GetPage<dynamic>> _getPagesFromDestinations(List<int> withPermissions) {
+    List<GetPage<dynamic>> pages = [];
+
+    List<Destination> destinations =
+        Destinations(withPermissions: withPermissions).destinations;
 
     for (var i = 0; i < destinations.length; i++) {
       pages.add(
@@ -110,5 +118,26 @@ class _MainAppState extends State<MainApp> {
     ));
 
     return pages;
+  }
+}
+
+class MainAppProvider extends StatelessWidget {
+  const MainAppProvider({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ListenableProvider<DataModel>(
+            create: (context) =>
+                DataModel()), // TODO: separate providers for each data type, else it will rebuild everything
+        ListenableProvider<Destinations>(
+          create: (context) => Destinations(
+            withPermissions: [],
+          ),
+        ),
+      ],
+      child: const MainApp(),
+    );
   }
 }

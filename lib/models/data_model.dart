@@ -4,6 +4,7 @@ import '../enums/which_data.dart';
 import '../services/api.dart';
 
 class DataModel extends ChangeNotifier {
+  // TODO: only add WhichData types where user has the permission to view the data to save requests
   Map<WhichData, GetResponseBody> data = WhichData.values
       .asMap()
       .map((key, value) => MapEntry(value, GetResponseBody.empty()));
@@ -32,6 +33,17 @@ class DataModel extends ChangeNotifier {
     }
 
     return object;
+  }
+
+  void deleteDataModel() {
+    data = WhichData.values
+        .asMap()
+        .map((key, value) => MapEntry(value, GetResponseBody.empty()));
+    searchResults = WhichData.values
+        .asMap()
+        .map((key, value) => MapEntry(value, GetResponseBody.empty()));
+    isLoaded =
+        WhichData.values.asMap().map((key, value) => MapEntry(value, false));
   }
 
   dynamic getById(WhichData whichData, int id) {
@@ -73,8 +85,8 @@ class DataModel extends ChangeNotifier {
 
   Future<void> updateAll() async {
     final List<Future<void>> futures = [];
-    
-    for (WhichData type in WhichData.values) {
+
+    for (WhichData type in data.keys) {
       futures.add(updateData(whichData: type, draw: false));
     }
 
@@ -109,12 +121,11 @@ class DataModel extends ChangeNotifier {
   }
 
   void clearSearch({bool draw = false}) {
-    searchResults
-        .clear(); // TODO: Maybe only clear the search results of specific data types? (only clear the search results of the current page), needs to be tested
+    // TODO: Maybe only clear the search results of specific data types? (only clear the search results of the current page), needs to be tested
 
-    searchResults = WhichData.values
-        .asMap()
-        .map((key, value) => MapEntry(value, GetResponseBody.empty()));
+    searchResults = searchResults.map(
+      (key, value) => MapEntry(key, GetResponseBody.empty()),
+    );
 
     if (draw) {
       notifyListeners();

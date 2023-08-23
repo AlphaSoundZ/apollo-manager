@@ -7,17 +7,18 @@ class SideSheet extends StatefulWidget {
     super.key,
     required this.isOpen,
     required this.child,
+    required this.destinations,
   });
 
   final bool isOpen;
   final Widget child;
+  final List<Destination> destinations;
 
   @override
   State<SideSheet> createState() => SideSheetState();
 }
 
 class SideSheetState extends State<SideSheet> {
-  List<Destination> destinations = Destinations().destinations;
 
   @override
   Widget build(BuildContext context) {

@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import '../../destinations.dart';
 
 class AdaptiveNavigationBar extends StatelessWidget {
-  AdaptiveNavigationBar({
+  const AdaptiveNavigationBar({
     super.key,
     required this.selectedView,
+    required this.destinations,
     this.onDestinationSelected,
   });
 
   final int selectedView;
   final ValueChanged<int>? onDestinationSelected;
-
-  final List<Destination> destinations = Destinations().destinations;
+  final List<Destination> destinations;
 
   @override
   Widget build(BuildContext context) {

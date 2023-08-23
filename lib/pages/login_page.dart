@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
+import 'package:provider/provider.dart';
+import '../destinations.dart';
+import '../models/data_model.dart';
 import '../services/api.dart';
 
 class LoginPage extends StatefulWidget {
@@ -22,8 +25,10 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
 
-    // Remove the token
-    _storage.remove('token');
+    Api().logout();
+
+    // delete DataModel from provider
+    Provider.of<DataModel>(context, listen: false).deleteDataModel();
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -137,8 +142,6 @@ class _LoginPageState extends State<LoginPage> {
     final response =
         await api.login(usernameController.text, passwordController.text);
 
-    // log the response
-
     // show a snackbar
     scaffoldMessenger.showSnackBar(
       SnackBar(
@@ -148,7 +151,12 @@ class _LoginPageState extends State<LoginPage> {
 
     if (response['code'] == 200) {
       // Push to the home page
-      Get.offNamed("/home");
+      api.getPermissions().then((permissions) {
+        Provider.of<Destinations>(context, listen: false)
+            .updatePermissions(withPermissions: permissions);
+        Get.offAllNamed("/home");
+      });
+      Get.offAllNamed("/home");
     } else {
       // Pop the dialog
       setState(() {
