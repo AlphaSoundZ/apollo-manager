@@ -1,12 +1,6 @@
-// TODO Implement this library.
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../models/data_model.dart';
-import '../services/api.dart';
 
 class SettingsView extends StatefulWidget {
   const SettingsView({super.key});

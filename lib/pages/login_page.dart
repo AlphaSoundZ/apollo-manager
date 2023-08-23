@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:provider/provider.dart';
 import '../destinations.dart';
 import '../models/data_model.dart';
@@ -18,7 +17,6 @@ class _LoginPageState extends State<LoginPage> {
 
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final EncryptedSharedPreferences _storage = EncryptedSharedPreferences();
   bool _loading = false;
 
   @override

@@ -1,5 +1,3 @@
-import '../enums/which_data.dart';
-
 class StackViewModel {
   StackViewModel({
     required this.title,

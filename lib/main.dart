@@ -24,10 +24,6 @@ class MainApp extends StatefulWidget {
 class _MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
-    debugPrint(
-      "rebuild with permissions: ${Provider.of<Destinations>(context, listen: true).withPermissions}",
-    );
-
     return GetMaterialApp(
       initialRoute: '/',
       home: const LoadingPage(),

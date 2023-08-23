@@ -42,7 +42,6 @@ class _DataViewState extends State<DataView> {
 
   @override
   void didUpdateWidget(covariant DataView oldWidget) {
-    // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
 
     if (widget.params != null) {

@@ -3,15 +3,12 @@ import 'package:apollo_manager/views/data_view.dart';
 import 'package:apollo_manager/widgets/navigation/adaptive_navigation_sub_drawer.dart';
 import 'package:apollo_manager/widgets/navigation/adaptive_navigation_bar.dart';
 import 'package:apollo_manager/widgets/navigation/adaptive_navigation_rail.dart';
-import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
-import 'package:jwt_decode/jwt_decode.dart';
 import 'package:provider/provider.dart';
 import '../models/stack_view_model.dart';
 import '../widgets/app_bar_widget.dart' as search_bar;
 import '../destinations.dart';
 import '../widgets/side_sheet_widget.dart';
-import '../models/data_model.dart';
 import '../views/stack_views/stack_view.dart';
 import '../views/stack_views/stack_details_view.dart';
 
@@ -77,15 +74,11 @@ class _HomePageState extends State<HomePage> {
     return false;
   }
 
-  final EncryptedSharedPreferences _storage = EncryptedSharedPreferences();
-
   @override
   Widget build(BuildContext context) {
     late Destinations destinationsInstance;
 
     dynamic dest = Provider.of<Destinations>(context, listen: true);
-
-    debugPrint("rebuild with (permissions): ${dest.withPermissions}");
 
     destinationsInstance = Destinations(
       withPermissions: dest.withPermissions,

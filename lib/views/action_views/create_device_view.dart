@@ -173,6 +173,10 @@ class _CreateDeviceViewContentState extends State<CreateDeviceViewContent> {
 
       _loading = false;
 
+      if (!mounted) {
+        return;
+      }
+
       // Update Provider Data
       Provider.of<DataModel>(context, listen: false)
           .updateData(whichData: WhichData.devices);
