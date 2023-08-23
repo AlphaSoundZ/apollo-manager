@@ -4,7 +4,7 @@ import '../enums/which_data.dart';
 import '../services/api.dart';
 
 class DataModel extends ChangeNotifier {
-  // TODO: only add WhichData types where user has the permission to view the data to save requests
+  // TODO: only add WhichData types where user has the permission to view the data to save requests amount
   Map<WhichData, GetResponseBody> data = WhichData.values
       .asMap()
       .map((key, value) => MapEntry(value, GetResponseBody.empty()));
