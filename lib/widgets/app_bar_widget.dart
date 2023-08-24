@@ -97,8 +97,9 @@ class _AppBarState extends State<AppBar> {
                     ),
                   ),
                 ),
+                if (!wideScreen) const SizedBox(width: 8),
                 SizedBox(
-                  width: 346,
+                  width: wideScreen ? 346 : null,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
