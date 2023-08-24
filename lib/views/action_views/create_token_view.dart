@@ -4,26 +4,30 @@ import 'package:apollo_manager/models/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'create_sidesheet_view.dart';
+import '../../enums/permissions.dart';
 
-class CreateUserViewContent extends StatefulWidget {
-  const CreateUserViewContent({super.key, this.onCancel, this.onSubmit});
+class CreateTokenViewContent extends StatefulWidget {
+  const CreateTokenViewContent({super.key, this.onCancel, this.onSubmit});
 
   final void Function()? onCancel;
   final void Function()? onSubmit;
 
   @override
-  State<CreateUserViewContent> createState() => _CreateUserViewContentState();
+  State<CreateTokenViewContent> createState() => _CreateTokenViewContentState();
 }
 
-class _CreateUserViewContentState extends State<CreateUserViewContent> {
+class _CreateTokenViewContentState extends State<CreateTokenViewContent> {
   final Api api = Api();
 
-  final TextEditingController firstnameController = TextEditingController();
-  final TextEditingController lastnameController = TextEditingController();
-  final TextEditingController classController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController permissionsController = TextEditingController();
+  final TextEditingController userController = TextEditingController();
 
   bool _loading = false;
-  int selectedClass = 0;
+  List<int> selectedPermissions = [];
+  bool showPassword = false;
+  int selectedUser = -1;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -36,7 +40,7 @@ class _CreateUserViewContentState extends State<CreateUserViewContent> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    Provider.of<DataModel>(context).get(WhichData.classes);
+    Provider.of<DataModel>(context).get(WhichData.users);
   }
 
   @override
@@ -51,10 +55,10 @@ class _CreateUserViewContentState extends State<CreateUserViewContent> {
           if (_formKey.currentState!.validate()) {
             _formKey.currentState!.save();
 
-            _handleCreateUser(scaffoldMessenger);
+            _handleCreateToken(scaffoldMessenger);
           }
         },
-        title: "Create User",
+        title: "Create Token",
         children: [
           Center(
             child: Stack(
@@ -69,17 +73,17 @@ class _CreateUserViewContentState extends State<CreateUserViewContent> {
                       children: [
                         TextFormField(
                           autofocus: true,
-                          controller: firstnameController,
+                          controller: usernameController,
                           decoration: const InputDecoration(
                             border: UnderlineInputBorder(),
-                            labelText: 'First name',
+                            labelText: 'Username',
                             filled: true,
                           ),
                           validator: (value) {
                             if (value == null ||
                                 value.isEmpty ||
                                 value.trim() == "") {
-                              return 'Please enter a name';
+                              return 'Please enter a Username';
                             }
                             return null;
                           },
@@ -88,21 +92,41 @@ class _CreateUserViewContentState extends State<CreateUserViewContent> {
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState!.save();
 
-                              _handleCreateUser(scaffoldMessenger);
+                              _handleCreateToken(scaffoldMessenger);
                             }
                           },
                         ),
                         const SizedBox(height: 20),
                         TextFormField(
-                          controller: lastnameController,
-                          decoration: const InputDecoration(
-                            border: UnderlineInputBorder(),
-                            labelText: 'Surname',
+                          // password
+                          autofocus: true,
+                          controller: passwordController,
+                          decoration: InputDecoration(
+                            border: const UnderlineInputBorder(),
+                            labelText: 'Password',
                             filled: true,
+                            suffixIcon: Padding(
+                              padding: const EdgeInsets.only(right: 4.0),
+                              child: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    showPassword = !showPassword;
+                                  });
+                                },
+                                icon: Icon(
+                                  showPassword
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                ),
+                              ),
+                            ),
                           ),
+                          obscureText: showPassword,
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter a Surname';
+                            if (value == null ||
+                                value.isEmpty ||
+                                value.trim() == "") {
+                              return 'Please enter a Password';
                             }
                             return null;
                           },
@@ -111,42 +135,70 @@ class _CreateUserViewContentState extends State<CreateUserViewContent> {
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState!.save();
 
-                              _handleCreateUser(scaffoldMessenger);
+                              _handleCreateToken(scaffoldMessenger);
                             }
                           },
                         ),
                         const SizedBox(height: 20),
                         Consumer<DataModel>(
                           builder: (context, data, child) {
-                            List<dynamic> classData =
-                                data.data[WhichData.classes]!.data;
+                            List<dynamic> userData =
+                                data.data[WhichData.users]!.data ?? [];
 
-                            if (classData.isEmpty) return Container();
+                            if (userData.isEmpty) return Container();
 
                             return DropdownMenu(
-                              controller: classController,
-                              label: const Text("Class"),
+                              controller: userController,
+                              label: const Text("User"),
                               inputDecorationTheme: const InputDecorationTheme(
                                 filled: true,
                               ),
+                              menuHeight: 300,
+                              enableFilter: true,
+                              enableSearch: true,
                               initialSelection: 0,
                               width: 282,
-                              dropdownMenuEntries: (classData.isEmpty)
+                              dropdownMenuEntries: (userData.isEmpty)
                                   ? []
-                                  : classData
+                                  : userData
                                       .map(
                                         (e) => DropdownMenuEntry(
                                           value: e.id,
-                                          label: e.name,
+                                          label: e.name.fullName,
                                         ),
                                       )
                                       .toList(),
                               onSelected: (value) {
-                                selectedClass = value ?? classData[0].id ?? 0;
+                                selectedUser = value ?? userData[0].id ?? 0;
                               },
                             );
                           },
                         ),
+                        const SizedBox(height: 20),
+                        // checkboxes to select multiple permissions using Permissions.values
+                        SizedBox(
+                          width: 282,
+                          child: Text("Permissions",
+                              style: Theme.of(context).textTheme.bodyLarge),
+                        ),
+                        const Divider(),
+                        for (var permission in Permissions.values)
+                          CheckboxListTile(
+                            controlAffinity: ListTileControlAffinity.leading,
+                            title: Text(permission.name),
+                            dense: true,
+                            value:
+                                selectedPermissions.contains(permission.value),
+                            onChanged: (value) {
+                              setState(() {
+                                if (value == true) {
+                                  selectedPermissions.add(permission.value);
+                                } else {
+                                  selectedPermissions.remove(permission.value);
+                                }
+                              });
+                            },
+                          ),
                       ],
                     ),
                   ),
@@ -159,7 +211,7 @@ class _CreateUserViewContentState extends State<CreateUserViewContent> {
     );
   }
 
-  void _handleCreateUser(ScaffoldMessengerState scaffoldMessenger) async {
+  void _handleCreateToken(ScaffoldMessengerState scaffoldMessenger) async {
     // Show the loading indicator
     if (!_formKey.currentState!.validate()) {
       return;
@@ -170,13 +222,14 @@ class _CreateUserViewContentState extends State<CreateUserViewContent> {
     });
 
     Object body = {
-      "firstname": firstnameController.text,
-      "lastname": lastnameController.text,
-      "class_id": selectedClass,
+      "username": usernameController.text,
+      "password": passwordController.text,
+      "user_id": selectedUser,
+      "permissions": selectedPermissions,
     };
 
     // call the api
-    final response = await api.post("/user/create", body);
+    final response = await api.post("/token/create", body);
 
     // log the response
     debugPrint(response.toString());
@@ -194,12 +247,11 @@ class _CreateUserViewContentState extends State<CreateUserViewContent> {
 
       _loading = false;
 
-      // prevent usage of context if widget is not mounted
       if (!mounted) return;
 
       // Update Provider Data
       Provider.of<DataModel>(context, listen: false)
-          .updateData(whichData: WhichData.users);
+          .updateData(whichData: WhichData.tokens);
     } else {
       // Pop the dialog
       setState(() {

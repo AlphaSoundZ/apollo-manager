@@ -23,7 +23,7 @@ class _CreateDeviceViewContentState extends State<CreateDeviceViewContent> {
   final TextEditingController deviceTypeController = TextEditingController();
 
   bool _loading = false;
-  int selectedDeviceType = 0;
+  int selectedDeviceType = -1;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -173,9 +173,7 @@ class _CreateDeviceViewContentState extends State<CreateDeviceViewContent> {
 
       _loading = false;
 
-      if (!mounted) {
-        return;
-      }
+      if (!mounted) return;
 
       // Update Provider Data
       Provider.of<DataModel>(context, listen: false)

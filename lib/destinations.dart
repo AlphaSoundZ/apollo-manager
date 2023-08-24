@@ -2,6 +2,7 @@ import 'package:apollo_manager/views/prebook_view.dart';
 import 'package:flutter/material.dart';
 import 'enums/permissions.dart';
 import 'views/action_views/create_prebook_view.dart';
+import 'views/action_views/create_token_view.dart';
 import 'views/data_view.dart';
 import '../enums/which_data.dart';
 import '../views/action_views/create_user_view.dart';
@@ -144,6 +145,11 @@ class Destinations extends ChangeNotifier {
           whichData: WhichData.tokens,
           fabLabel: 'Token',
           fabIcon: Icons.token_outlined,
+          fabContent: CreateTokenViewContent(
+            key: UniqueKey(),
+            onCancel: onFabCancel,
+            onSubmit: onFabSubmit,
+          ),
           permission: Permissions.token,
         ),
         SubDestination(
