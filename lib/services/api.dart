@@ -99,10 +99,11 @@ class Api {
   }
 
   Future<void> logout() async {
-    await _storage.setString("token", "");
-    await _storage.setString("username", "");
-    await _storage.setString("firstName", "");
-    await _storage.setString("lastName", "");
+    await _storage.remove("token");
+    await _storage.remove("username");
+    await _storage.remove("username");
+    await _storage.remove("firstName");
+    await _storage.remove("lastName");
   }
 
   Future<dynamic> delete(String route, Object body) async {

@@ -8,9 +8,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'destinations.dart';
 import 'pages/loading_page.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
+
+enum AppState { loading, loggedIn, loggedOut }
 
 Future main() async {
   await dotenv.load(fileName: ".env");
+  usePathUrlStrategy();
   runApp(const MainAppProvider());
 }
 
@@ -21,12 +25,37 @@ class MainApp extends StatefulWidget {
   State<MainApp> createState() => _MainAppState();
 }
 
+AppState appState = AppState.loading;
+String currentRoute = Uri.base.path;
+
 class _MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
+    if (appState == AppState.loading) {
+      return MaterialApp(
+        initialRoute: "/",
+        // ignore route
+        onGenerateRoute: (settings) {
+          return MaterialPageRoute(
+            builder: (context) => const LoadingPage(),
+          );
+        },
+        home: const LoadingPage(),
+        theme: ThemeData(
+          useMaterial3: true,
+          brightness: Brightness.light,
+          colorSchemeSeed: Colors.orange,
+        ),
+        darkTheme: ThemeData(
+          useMaterial3: true,
+          brightness: Brightness.dark,
+          colorSchemeSeed: Colors.orange,
+        ),
+        debugShowCheckedModeBanner: false,
+      );
+    }
     return GetMaterialApp(
-      initialRoute: '/',
-      home: const LoadingPage(),
+      initialRoute: currentRoute,
       getPages: _getPagesFromDestinations(
           Provider.of<Destinations>(context, listen: true).withPermissions),
       theme: ThemeData(
@@ -40,6 +69,21 @@ class _MainAppState extends State<MainApp> {
         colorSchemeSeed: Colors.orange,
       ),
       debugShowCheckedModeBanner: false,
+      // 404
+      unknownRoute: GetPage(
+        name: '/404',
+        page: () => const Scaffold(
+          body: Center(
+            child: Text(
+              '404',
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -52,7 +96,7 @@ class _MainAppState extends State<MainApp> {
 
     //  check if user is logged in
     Api().isLoggedIn().then((token) {
-      if (token.isNotEmpty && Get.currentRoute != '/login') {
+      if (token.isNotEmpty && currentRoute != '/login') {
         debugPrint('User is logged in');
 
         // get pages
@@ -61,14 +105,29 @@ class _MainAppState extends State<MainApp> {
           Provider.of<Destinations>(context, listen: false)
               .updatePermissions(withPermissions: permissions);
 
-          // if there is no specific route, go to home
-          if (Get.currentRoute == '/') {
-            Get.offAllNamed("/home");
-          }
+          debugPrint('Route: ${Uri.base.path}');
+
+          // check if route exists
+          List<String> routes = [];
+
+          routes = _getPagesFromDestinations(permissions)
+              .map((e) => e.name)
+              .toList();
+
+          debugPrint('Route exists');
+          setState(() {
+            currentRoute = Uri.base.path;
+            appState = AppState.loggedIn;
+          });
         });
       } else {
         debugPrint('User is not logged in or is on login page');
-        Get.offAllNamed("/login");
+        setState(() {
+          currentRoute = "/login";
+          appState = AppState.loggedOut;
+        });
+
+        // Get.offAllNamed("/login");
       }
     });
   }

@@ -2,6 +2,8 @@ import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../services/api.dart';
+
 class SettingsView extends StatefulWidget {
   const SettingsView({super.key});
 
@@ -57,6 +59,20 @@ class _SettingsViewState extends State<SettingsView> {
               children: [
                 FilledButton(
                   onPressed: () {
+                    Api().logout().then((value) => {
+                          scaffoldMessenger.hideCurrentSnackBar(),
+                          scaffoldMessenger.showSnackBar(
+                            const SnackBar(
+                              showCloseIcon: true,
+                              behavior: SnackBarBehavior.floating,
+                              content: Text(
+                                'Logged out',
+                              ),
+                              width: 280.0, // Width of the SnackBar.
+                            ),
+                          ),
+                        });
+
                     Get.offAllNamed("/login");
                   },
                   child: const Text('Logout'),
