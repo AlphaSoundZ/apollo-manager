@@ -36,7 +36,7 @@ class _CreateDeviceViewContentState extends State<CreateDeviceViewContent> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    Provider.of<DataModel>(context).get(WhichData.deviceTypes);
+    Provider.of<DataModel>(context).get(context, WhichData.deviceTypes);
   }
 
   @override
@@ -177,7 +177,7 @@ class _CreateDeviceViewContentState extends State<CreateDeviceViewContent> {
 
       // Update Provider Data
       Provider.of<DataModel>(context, listen: false)
-          .updateData(whichData: WhichData.devices);
+          .updateData(context, whichData: WhichData.devices);
     } else {
       // Pop the dialog
       setState(() {

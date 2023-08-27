@@ -47,7 +47,7 @@ class _DetailsViewState extends State<DetailsView> {
                 {"id": widget.id},
               ).then((value) {
                 Provider.of<DataModel>(context, listen: false)
-                    .updateData(whichData: widget.whichData);
+                    .updateData(context, whichData: widget.whichData);
 
                 widget.onPop!();
               });

@@ -169,7 +169,8 @@ class Api {
     }
   }
 
-  Future<GetResponseBody> get({
+  Future<GetResponseBody> get(
+    BuildContext context, {
     required route,
     WhichData? whichData,
     Map<String, dynamic>? params,
@@ -200,8 +201,8 @@ class Api {
       }
 
       data = response.data["data"]
-          .map((json) => whichData
-              .fromJson(json.containsKey("accordance") ? json["data"] : json))
+          .map((json) => whichData.fromJson(
+              context, json.containsKey("accordance") ? json["data"] : json))
           .toList();
     } else {
       data = response.data["data"];

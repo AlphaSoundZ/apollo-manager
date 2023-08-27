@@ -45,13 +45,13 @@ class _EditUserViewContentState extends State<EditUserViewContent> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    Provider.of<DataModel>(context).get(WhichData.classes);
+    Provider.of<DataModel>(context).get(context, WhichData.classes);
   }
 
   @override
   Widget build(BuildContext context) {
     User? user =
-        Provider.of<DataModel>(context).getById(WhichData.users, widget.id);
+        Provider.of<DataModel>(context).getById(context, WhichData.users, widget.id);
 
     if (user != null) {
       // if user is null, then the user doesn't exist, if its [] or not null, then the user exists
@@ -214,7 +214,7 @@ class _EditUserViewContentState extends State<EditUserViewContent> {
 
       // Update Provider Data
       Provider.of<DataModel>(context, listen: false)
-          .updateData(whichData: WhichData.users);
+          .updateData(context, whichData: WhichData.users);
     } else {
       // Pop the dialog
       setState(() {
@@ -266,7 +266,7 @@ class _EditUserViewContentState extends State<EditUserViewContent> {
 
       // Update Provider Data
       Provider.of<DataModel>(context, listen: false)
-          .updateData(whichData: WhichData.users);
+          .updateData(context, whichData: WhichData.users);
     } else {
       // Pop the dialog
       setState(() {

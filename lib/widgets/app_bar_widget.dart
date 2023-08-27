@@ -121,7 +121,7 @@ class _AppBarState extends State<AppBar> {
                           ),
                           onPressed: () {
                             Provider.of<DataModel>(context, listen: false)
-                                .updateAll()
+                                .updateAll(context)
                                 .then((value) {
                               scaffoldMessenger.hideCurrentSnackBar();
                               scaffoldMessenger.showSnackBar(
@@ -201,6 +201,7 @@ class _SearchAnchorsState extends State<SearchAnchors> {
   List<int> selectedFilters = [];
   List<dynamic> quickSearchResults = [];
   late QuickSearch quickSearch = QuickSearch(
+    context,
     whichData: widget.whichData,
   );
 
@@ -212,6 +213,7 @@ class _SearchAnchorsState extends State<SearchAnchors> {
         quickSearchResults.clear();
         searchController.clear();
         quickSearch = QuickSearch(
+          context,
           whichData: widget.whichData,
         );
       });
@@ -352,8 +354,9 @@ class _SearchAnchorsState extends State<SearchAnchors> {
 }
 
 class QuickSearch {
-  QuickSearch({required this.whichData});
+  QuickSearch(this.context, {required this.whichData});
 
+  final BuildContext context;
   final WhichData whichData;
 
   List<dynamic> responseData = [];
@@ -364,6 +367,7 @@ class QuickSearch {
       responseData.clear();
     } else {
       GetResponseBody response = await Api().get(
+        context,
         route: whichData.route,
         whichData: whichData,
         params: {

@@ -31,10 +31,10 @@ class _DataViewState extends State<DataView> {
     if (widget.params != null) {
       Provider.of<DataModel>(context, listen: false).clearSearch();
       responseBody = Provider.of<DataModel>(context, listen: false)
-          .search(whichData: widget.whichData, params: widget.params!);
+          .search(context, whichData: widget.whichData, params: widget.params!);
     } else {
       responseBody =
-          Provider.of<DataModel>(context, listen: false).get(widget.whichData);
+          Provider.of<DataModel>(context, listen: false).get(context, widget.whichData);
     }
 
     super.initState();
@@ -47,10 +47,10 @@ class _DataViewState extends State<DataView> {
     if (widget.params != null) {
       Provider.of<DataModel>(context, listen: false).clearSearch();
       responseBody = Provider.of<DataModel>(context, listen: false)
-          .search(whichData: widget.whichData, params: widget.params!);
+          .search(context, whichData: widget.whichData, params: widget.params!);
     } else {
       responseBody =
-          Provider.of<DataModel>(context, listen: false).get(widget.whichData);
+          Provider.of<DataModel>(context, listen: false).get(context, widget.whichData);
     }
   }
 
@@ -59,9 +59,9 @@ class _DataViewState extends State<DataView> {
     // get data from data model
     if (widget.params != null) {
       responseBody = Provider.of<DataModel>(context)
-          .search(whichData: widget.whichData, params: widget.params!);
+          .search(context, whichData: widget.whichData, params: widget.params!);
     } else {
-      responseBody = Provider.of<DataModel>(context).get(widget.whichData);
+      responseBody = Provider.of<DataModel>(context).get(context, widget.whichData);
     }
 
     return Container(

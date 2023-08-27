@@ -22,12 +22,12 @@ class DataModel extends ChangeNotifier {
     }
   }
 
-  GetResponseBody get(WhichData whichData) {
+  GetResponseBody get(context, WhichData whichData) {
     GetResponseBody object = data[whichData]!;
 
     if (object.isEmpty()) {
       if (isLoaded[whichData] == false) {
-        updateData(whichData: whichData);
+        updateData(context, whichData: whichData);
         isLoaded[whichData] = true;
       }
     }
@@ -46,11 +46,11 @@ class DataModel extends ChangeNotifier {
         WhichData.values.asMap().map((key, value) => MapEntry(value, false));
   }
 
-  dynamic getById(WhichData whichData, int id) {
+  dynamic getById(context, WhichData whichData, int id) {
     GetResponseBody object = data[whichData]!;
 
     if (object.isEmpty()) {
-      updateData(whichData: whichData);
+      updateData(context, whichData: whichData);
       return [];
     }
 
@@ -58,12 +58,13 @@ class DataModel extends ChangeNotifier {
         .firstWhere((element) => element.id == id, orElse: () => null);
   }
 
-  Future<void> updateData({
+  Future<void> updateData(BuildContext context, {
     required WhichData whichData,
     Map<String, dynamic>? params,
     bool draw = true,
   }) async {
     data[whichData] = await Api().get(
+      context,
       route: whichData.route,
       whichData: whichData,
       params: params,
@@ -72,6 +73,7 @@ class DataModel extends ChangeNotifier {
     // if there is a search result for this data type, update it
     if (!searchResults[whichData]!.isEmpty()) {
       searchResults[whichData] = await Api().get(
+        context,
         route: whichData.route,
         whichData: whichData,
         params: searchResults[whichData]!.params,
@@ -83,11 +85,11 @@ class DataModel extends ChangeNotifier {
     }
   }
 
-  Future<void> updateAll() async {
+  Future<void> updateAll(BuildContext context) async {
     final List<Future<void>> futures = [];
 
     for (WhichData type in data.keys) {
-      futures.add(updateData(whichData: type, draw: false));
+      futures.add(updateData(context, whichData: type, draw: false));
     }
 
     await Future.wait(futures);
@@ -95,7 +97,7 @@ class DataModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  GetResponseBody search({
+  GetResponseBody search(BuildContext context, {
     required WhichData whichData,
     required Map<String, dynamic> params,
     bool draw = true,
@@ -103,6 +105,7 @@ class DataModel extends ChangeNotifier {
     if (searchResults[whichData]!.isEmpty()) {
       Api()
           .get(
+        context,
         route: whichData.route,
         whichData: whichData,
         params: params,

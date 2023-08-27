@@ -24,7 +24,7 @@ enum WhichData {
 }
 
 extension WhichDataExtension on WhichData {
-  dynamic fromJson(Map<String, dynamic> json) {
+  dynamic fromJson(context, Map<String, dynamic> json) {
     switch (this) {
       case WhichData.users:
         return User.fromJson(json);
@@ -39,7 +39,7 @@ extension WhichDataExtension on WhichData {
       case WhichData.tokens:
         return Token.fromJson(json);
       case WhichData.prebook:
-        return Prebook.fromJson(json);
+        return Prebook.fromJson(context, json);
     }
   }
 

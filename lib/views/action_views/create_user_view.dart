@@ -36,7 +36,7 @@ class _CreateUserViewContentState extends State<CreateUserViewContent> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    Provider.of<DataModel>(context).get(WhichData.classes);
+    Provider.of<DataModel>(context).get(context, WhichData.classes);
   }
 
   @override
@@ -199,7 +199,7 @@ class _CreateUserViewContentState extends State<CreateUserViewContent> {
 
       // Update Provider Data
       Provider.of<DataModel>(context, listen: false)
-          .updateData(whichData: WhichData.users);
+          .updateData(context, whichData: WhichData.users);
     } else {
       // Pop the dialog
       setState(() {

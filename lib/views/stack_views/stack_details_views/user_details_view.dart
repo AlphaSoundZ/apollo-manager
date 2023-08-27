@@ -14,6 +14,7 @@ import '../../../models/user_model.dart';
 StackViewModel userDetailsStackView(BuildContext context,
     {required int id, required WhichData whichData}) {
   User? user = Provider.of<DataModel>(context, listen: true).getById(
+    context,
     whichData,
     id,
   );

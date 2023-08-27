@@ -40,7 +40,7 @@ class _CreateTokenViewContentState extends State<CreateTokenViewContent> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    Provider.of<DataModel>(context).get(WhichData.users);
+    Provider.of<DataModel>(context).get(context, WhichData.users);
   }
 
   @override
@@ -251,7 +251,7 @@ class _CreateTokenViewContentState extends State<CreateTokenViewContent> {
 
       // Update Provider Data
       Provider.of<DataModel>(context, listen: false)
-          .updateData(whichData: WhichData.tokens);
+          .updateData(context, whichData: WhichData.tokens);
     } else {
       // Pop the dialog
       setState(() {
