@@ -1,6 +1,7 @@
 import 'package:apollo_manager/views/prebook_view.dart';
 import 'package:flutter/material.dart';
 import 'enums/permissions.dart';
+import 'views/action_views/create_book_view.dart';
 import 'views/action_views/create_prebook_view.dart';
 import 'views/action_views/create_token_view.dart';
 import 'views/data_view.dart';
@@ -190,7 +191,7 @@ class Destinations extends ChangeNotifier {
             ),
             fabLabel: 'Booking',
             fabIcon: Icons.nfc_outlined,
-            fabContent: CreatePrebookViewContent(
+            fabContent: CreateBookViewContent(
               key: UniqueKey(),
               onCancel: onFabCancel,
               onSubmit: onFabSubmit,

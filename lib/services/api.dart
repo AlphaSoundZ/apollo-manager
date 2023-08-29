@@ -67,6 +67,10 @@ class Api {
       await _storage.setString("username", username);
       await _storage.setString("firstName", response.data["user"]["firstname"]);
       await _storage.setString("lastName", response.data["user"]["lastname"]);
+      await _storage.setString(
+          "usercardId", response.data["user"]["usercard"]["id"].toString());
+      await _storage.setString(
+          "usercardUid", response.data["user"]["usercard"]["uid"].toString());
       await _storage.setString("token", response.data["jwt"]);
       await _storage.setString(
           "userId", response.data["user"]["id"].toString());
