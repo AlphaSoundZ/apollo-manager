@@ -1,20 +1,6 @@
 import 'list_tile_content_model.dart';
 import 'class_model.dart';
 
-class Bookings {
-  const Bookings({
-    required this.id,
-    required this.begin,
-    required this.end,
-    required this.amount,
-  });
-
-  final int id;
-  final DateTime begin;
-  final DateTime end;
-  final int amount;
-}
-
 class Name {
   const Name({
     required this.firstname,
@@ -24,6 +10,7 @@ class Name {
   final String firstname;
   final String lastname;
   String get fullName => '$firstname $lastname';
+  String get shortName => '${firstname[0]}. $lastname';
 }
 
 class User {

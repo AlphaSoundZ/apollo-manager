@@ -143,7 +143,8 @@ class _LoginPageState extends State<LoginPage> {
     // show a snackbar
     scaffoldMessenger.showSnackBar(
       SnackBar(
-        content: Text(response['message']),
+        content: Text(
+            "${response['message']} (${response['code']}, ${response['status']})"),
       ),
     );
 

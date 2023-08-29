@@ -4,7 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:dio/dio.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Response;
 import 'dart:core';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import '../models/get_response_model.dart';
@@ -33,7 +33,23 @@ class Api {
           logout();
           Get.offAllNamed("/login");
         }
-        return handler.next(error);
+
+        if (error.response == null) {
+          // can't reach server because of not being in the same network
+          return handler.resolve(Response(
+            requestOptions: error.requestOptions,
+            data: {
+              "message": "Can't reach server",
+              "code": 503,
+              "status": "NETWORK_ERROR",
+            },
+            statusCode: 503,
+            statusMessage: "Can't reach server",
+          ));
+        }
+
+        return handler.resolve(error.response!);
+        // return handler.next(error);
       },
     ));
 
@@ -52,6 +68,8 @@ class Api {
       await _storage.setString("firstName", response.data["user"]["firstname"]);
       await _storage.setString("lastName", response.data["user"]["lastname"]);
       await _storage.setString("token", response.data["jwt"]);
+      await _storage.setString(
+          "userId", response.data["user"]["id"].toString());
     }
 
     return response.data;
@@ -100,7 +118,7 @@ class Api {
 
   Future<void> logout() async {
     await _storage.remove("token");
-    await _storage.remove("username");
+    await _storage.remove("userId");
     await _storage.remove("username");
     await _storage.remove("firstName");
     await _storage.remove("lastName");
@@ -143,7 +161,7 @@ class Api {
 
       return response.data;
     } catch (e) {
-      debugPrint("Error (at delete request): $e");
+      debugPrint("Error (at patch request): $e");
       return [];
     }
   }

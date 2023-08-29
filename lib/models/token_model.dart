@@ -5,7 +5,7 @@ class Token {
   Token({
     required this.id,
     required this.username,
-    required this.permissionIds,
+    required this.permissions,
     required this.permissionTexts,
     required this.lastChange,
     required this.user,
@@ -13,7 +13,7 @@ class Token {
 
   final int id;
   final String username;
-  final List<dynamic> permissionIds;
+  final List<dynamic> permissions;
   final List<dynamic> permissionTexts;
   final String lastChange;
   final User user;
@@ -28,7 +28,7 @@ class Token {
     return Token(
       id: json['token_id'] as int,
       username: json['username'].toString(),
-      permissionIds: json['permission_id'] as List<dynamic>,
+      permissions: json['permission_id'] as List<dynamic>,
       permissionTexts: json['permission_text'] as List<dynamic>,
       lastChange: json['last_change'].toString(),
       user: User.fromJson(json['user']),

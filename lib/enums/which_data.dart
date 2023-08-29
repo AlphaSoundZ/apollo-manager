@@ -1,4 +1,5 @@
-import '../../models/prebook_model.dart';
+import '../models/booking_model.dart';
+import '../models/prebooking_model.dart';
 import '../../views/stack_views/stack_details_views/user_details_view.dart';
 
 import '../models/class_model.dart';
@@ -20,7 +21,8 @@ enum WhichData {
   classes,
   usercards,
   tokens,
-  prebook,
+  prebookings,
+  bookings
 }
 
 extension WhichDataExtension on WhichData {
@@ -38,12 +40,14 @@ extension WhichDataExtension on WhichData {
         return Usercard.fromJson(json);
       case WhichData.tokens:
         return Token.fromJson(json);
-      case WhichData.prebook:
-        return Prebook.fromJson(context, json);
+      case WhichData.prebookings:
+        return Prebooking.fromJson(context, json);
+      case WhichData.bookings:
+        return Booking.fromJson(json);
     }
   }
 
-  String get route {
+  String get endpoint {
     switch (this) {
       case WhichData.users:
         return "/user";
@@ -57,8 +61,10 @@ extension WhichDataExtension on WhichData {
         return "/usercard";
       case WhichData.tokens:
         return "/token";
-      case WhichData.prebook:
+      case WhichData.prebookings:
         return "/prebook";
+      case WhichData.bookings:
+        return "/event";
     }
   }
 
@@ -95,10 +101,15 @@ extension WhichDataExtension on WhichData {
           single: Icons.token_outlined,
           multiple: Icons.token_outlined,
         );
-      case WhichData.prebook:
+      case WhichData.prebookings:
         return WhichDataIcons(
           single: Icons.calendar_today_outlined,
           multiple: Icons.calendar_today_outlined,
+        );
+      case WhichData.bookings:
+        return WhichDataIcons(
+          single: Icons.devices_outlined,
+          multiple: Icons.devices_outlined,
         );
     }
   }
@@ -114,7 +125,7 @@ extension WhichDataExtension on WhichData {
       default:
         return StackViewModel(
           title: "Details for id $itemId",
-          subTitle: route,
+          subTitle: endpoint,
           content: Center(
             child: Text(name),
           ),

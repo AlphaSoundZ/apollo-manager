@@ -1,5 +1,6 @@
 import 'package:apollo_manager/services/api.dart';
 import 'package:provider/provider.dart';
+import 'enums/app_state.dart';
 import 'models/data_model.dart';
 import 'pages/home_page.dart';
 import '/pages/login_page.dart';
@@ -9,8 +10,7 @@ import 'package:get/get.dart';
 import 'destinations.dart';
 import 'pages/loading_page.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
-
-enum AppState { loading, loggedIn, loggedOut }
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 Future main() async {
   await dotenv.load(fileName: ".env");
@@ -25,13 +25,13 @@ class MainApp extends StatefulWidget {
   State<MainApp> createState() => _MainAppState();
 }
 
-AppState appState = AppState.loading;
+LoginState appState = LoginState.loading;
 String currentRoute = Uri.base.path;
 
 class _MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
-    if (appState == AppState.loading) {
+    if (appState == LoginState.loading) {
       return MaterialApp(
         initialRoute: "/",
         // ignore route
@@ -107,24 +107,20 @@ class _MainAppState extends State<MainApp> {
 
           debugPrint('Route: ${Uri.base.path}');
 
-          // check if route exists
-          List<String> routes = [];
-
-          routes = _getPagesFromDestinations(permissions)
-              .map((e) => e.name)
-              .toList();
-
-          debugPrint('Route exists');
           setState(() {
-            currentRoute = Uri.base.path;
-            appState = AppState.loggedIn;
+            if (kIsWeb) {
+              currentRoute = Uri.base.path == "/" ? "/home" : Uri.base.path;
+            } else {
+              currentRoute = "/home";
+            }
+            appState = LoginState.loggedIn;
           });
         });
       } else {
         debugPrint('User is not logged in or is on login page');
         setState(() {
           currentRoute = "/login";
-          appState = AppState.loggedOut;
+          appState = LoginState.loggedOut;
         });
 
         // Get.offAllNamed("/login");

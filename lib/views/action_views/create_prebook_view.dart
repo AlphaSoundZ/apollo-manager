@@ -371,7 +371,7 @@ class _CreatePrebookViewContentState extends State<CreatePrebookViewContent> {
 
       // Update Provider Data
       Provider.of<DataModel>(context, listen: false)
-          .updateData(context, whichData: WhichData.prebook);
+          .updateData(context, whichData: WhichData.prebookings);
     } else {
       // Pop the dialog
       setState(() {

@@ -43,7 +43,7 @@ class _DetailsViewState extends State<DetailsView> {
           switch (item) {
             case "delete":
               Api().delete(
-                "${widget.whichData.route}/delete",
+                "${widget.whichData.endpoint}/delete",
                 {"id": widget.id},
               ).then((value) {
                 Provider.of<DataModel>(context, listen: false)

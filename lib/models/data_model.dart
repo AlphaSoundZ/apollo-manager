@@ -51,30 +51,32 @@ class DataModel extends ChangeNotifier {
 
     if (object.isEmpty()) {
       updateData(context, whichData: whichData);
-      return [];
+      return null;
     }
 
     return object.data
         .firstWhere((element) => element.id == id, orElse: () => null);
   }
 
-  Future<void> updateData(BuildContext context, {
+  Future<void> updateData(
+    BuildContext context, {
     required WhichData whichData,
     Map<String, dynamic>? params,
     bool draw = true,
   }) async {
     data[whichData] = await Api().get(
       context,
-      route: whichData.route,
+      route: whichData.endpoint,
       whichData: whichData,
       params: params,
     );
 
     // if there is a search result for this data type, update it
     if (!searchResults[whichData]!.isEmpty()) {
+      // ignore: use_build_context_synchronously
       searchResults[whichData] = await Api().get(
         context,
-        route: whichData.route,
+        route: whichData.endpoint,
         whichData: whichData,
         params: searchResults[whichData]!.params,
       );
@@ -97,7 +99,8 @@ class DataModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  GetResponseBody search(BuildContext context, {
+  GetResponseBody search(
+    BuildContext context, {
     required WhichData whichData,
     required Map<String, dynamic> params,
     bool draw = true,
@@ -106,7 +109,7 @@ class DataModel extends ChangeNotifier {
       Api()
           .get(
         context,
-        route: whichData.route,
+        route: whichData.endpoint,
         whichData: whichData,
         params: params,
       )

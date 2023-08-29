@@ -368,7 +368,7 @@ class QuickSearch {
     } else {
       GetResponseBody response = await Api().get(
         context,
-        route: whichData.route,
+        route: whichData.endpoint,
         whichData: whichData,
         params: {
           "query": query,

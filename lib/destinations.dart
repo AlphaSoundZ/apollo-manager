@@ -172,23 +172,44 @@ class Destinations extends ChangeNotifier {
     Destination(
         permission: Permissions.prebook,
         icon: Icons.calendar_month,
-        label: 'Prebook',
-        route: '/prebook',
+        label: 'Book',
+        route: '/book',
         view: const PrebookView(),
         subDestinations: [
           SubDestination(
-            whichData: WhichData.prebook,
-            icon: Icons.calendar_today_outlined,
+            whichData: WhichData.bookings,
+            icon: Icons.devices_outlined,
             label: 'Bookings',
             showAmount: false,
-            route: '/prebook/bookings',
+            route: '/book/bookings',
             view: DataView(
-              whichData: WhichData.prebook,
+              whichData: WhichData.bookings,
               onShowDetails: (id) => onShowDetails != null
-                  ? onShowDetails!(WhichData.prebook, id)
+                  ? onShowDetails!(WhichData.bookings, id)
                   : null,
             ),
             fabLabel: 'Booking',
+            fabIcon: Icons.add,
+            fabContent: CreatePrebookViewContent(
+              key: UniqueKey(),
+              onCancel: onFabCancel,
+              onSubmit: onFabSubmit,
+            ),
+            permission: Permissions.book,
+          ),
+          SubDestination(
+            whichData: WhichData.prebookings,
+            icon: Icons.calendar_today_outlined,
+            label: 'Prebookings',
+            showAmount: false,
+            route: '/book/prebookings',
+            view: DataView(
+              whichData: WhichData.prebookings,
+              onShowDetails: (id) => onShowDetails != null
+                  ? onShowDetails!(WhichData.prebookings, id)
+                  : null,
+            ),
+            fabLabel: 'Prebooking',
             fabIcon: Icons.add,
             fabContent: CreatePrebookViewContent(
               key: UniqueKey(),
