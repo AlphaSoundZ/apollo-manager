@@ -189,7 +189,7 @@ class Destinations extends ChangeNotifier {
                   : null,
             ),
             fabLabel: 'Booking',
-            fabIcon: Icons.add,
+            fabIcon: Icons.nfc_outlined,
             fabContent: CreatePrebookViewContent(
               key: UniqueKey(),
               onCancel: onFabCancel,
