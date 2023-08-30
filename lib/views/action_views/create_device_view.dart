@@ -22,6 +22,7 @@ class _CreateDeviceViewContentState extends State<CreateDeviceViewContent> {
   final TextEditingController uidController = TextEditingController();
   final TextEditingController deviceTypeController = TextEditingController();
 
+  // ignore: unused_field
   bool _loading = false;
   int selectedDeviceType = -1;
 

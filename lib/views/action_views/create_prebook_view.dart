@@ -29,6 +29,7 @@ class _CreatePrebookViewContentState extends State<CreatePrebookViewContent> {
 
   final TextEditingController endTimeController = TextEditingController();
 
+  // ignore: unused_field
   bool _loading = false;
 
   final _formKey = GlobalKey<FormState>();

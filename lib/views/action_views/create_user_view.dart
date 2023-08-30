@@ -22,6 +22,7 @@ class _CreateUserViewContentState extends State<CreateUserViewContent> {
   final TextEditingController lastnameController = TextEditingController();
   final TextEditingController classController = TextEditingController();
 
+  // ignore: unused_field
   bool _loading = false;
   int selectedClass = 0;
 

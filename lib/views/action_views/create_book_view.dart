@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'create_sidesheet_view.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
-import 'package:ndef/ndef.dart' as ndef;
 
 class CreateBookViewContent extends StatefulWidget {
   const CreateBookViewContent({super.key, this.onCancel, this.onSubmit});
@@ -32,6 +31,7 @@ class _CreateBookViewContentState extends State<CreateBookViewContent> {
 
   final TextEditingController endTimeController = TextEditingController();
 
+  // ignore: unused_field
   bool _loading = false;
 
   final _formKey = GlobalKey<FormState>();

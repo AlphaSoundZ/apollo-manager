@@ -24,6 +24,7 @@ class _CreateTokenViewContentState extends State<CreateTokenViewContent> {
   final TextEditingController permissionsController = TextEditingController();
   final TextEditingController userController = TextEditingController();
 
+  // ignore: unused_field
   bool _loading = false;
   List<int> selectedPermissions = [];
   bool showPassword = false;
