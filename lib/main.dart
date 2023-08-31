@@ -14,7 +14,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 Future main() async {
   await dotenv.load(fileName: ".env");
-  usePathUrlStrategy();
+  // usePathUrlStrategy(); DOTO: uncomment this when deploying not to github pages
   runApp(const MainAppProvider());
 }
 
