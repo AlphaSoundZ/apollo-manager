@@ -18,9 +18,9 @@ class DeviceType {
 
   static DeviceType fromJson(Map<String, dynamic> json) {
     return DeviceType(
-      id: json['id'] as int,
+      id: int.parse(json['id'].toString()),
       name: json['name'].toString(),
-      amount: json['amount'] as int,
+      amount: int.parse(json['amount'].toString()),
     );
   }
 }

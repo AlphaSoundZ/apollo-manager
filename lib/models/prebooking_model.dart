@@ -40,11 +40,11 @@ class Prebooking {
   factory Prebooking.fromJson(BuildContext context, Map<String, dynamic> json) {
     return Prebooking(
       context,
-      id: json['id'],
+      id: int.parse(json['id'].toString()),
       begin: DateTime.parse(json['begin']),
       end: DateTime.parse(json['end']),
-      amount: json['amount'],
-      userId: json['user_id'],
+      amount: int.parse(json['amount'].toString()),
+      userId: int.parse(json['user_id'].toString()),
     );
   }
 }

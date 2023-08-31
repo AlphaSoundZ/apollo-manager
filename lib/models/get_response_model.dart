@@ -27,13 +27,13 @@ class GetResponseBody {
 
   factory GetResponseBody.fromJson(Map<String, dynamic> json) {
     return GetResponseBody(
-      status: json['status'],
-      message: json['message'],
-      code: json['code'],
-      version: json['version'],
-      timestamp: json['timestamp'],
-      request: json['request'],
-      method: json['method'],
+      status: json['status'].toString(),
+      message: json['message'].toString(),
+      code: int.parse(json['code'].toString()),
+      version: json['version'].toString(),
+      timestamp: int.parse(json['timestamp'].toString()),
+      request: json['request'].toString(),
+      method: json['method'].toString(),
       page: ResponseBodyPage.fromJson(json['page']),
       data: json['data'],
       search: json['search'] ?? {},

@@ -7,14 +7,14 @@ class Usercard {
   final String uid;
   final String usercardType;
   late ListTileContent content = ListTileContent(
-    title: uid,
+    title: uid.toString(),
     leading: id.toString(),
-    subTitle: usercardType,
+    subTitle: usercardType.toString(),
   );
 
   static Usercard fromJson(Map<String, dynamic> json) {
     return Usercard(
-      id: json['id'] as int,
+      id: int.parse(json['id'].toString()),
       uid: json['uid'].toString(),
       usercardType: json['type']['name'].toString(),
     );

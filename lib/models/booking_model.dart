@@ -23,11 +23,11 @@ class Booking {
 
   static Booking fromJson(Map<String, dynamic> json) {
     return Booking(
-      id: json['id'] as int,
+      id: int.parse(json['id'].toString()),
       begin: DateTime.parse(json['begin']),
       end: json['end'] != null ? DateTime.parse(json['end']) : null,
-      user: json['user_id'] as int,
-      device: json['device_id'] as int,
+      user: int.parse(json['user_id'].toString()),
+      device: int.parse(json['device_id'].toString()),
     );
   }
 }

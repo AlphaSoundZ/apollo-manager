@@ -26,7 +26,7 @@ class Token {
 
   static Token fromJson(Map<String, dynamic> json) {
     return Token(
-      id: json['token_id'] as int,
+      id: int.parse(json['token_id'].toString()),
       username: json['username'].toString(),
       permissions: json['permission_id'] as List<dynamic>,
       permissionTexts: json['permission_text'] as List<dynamic>,

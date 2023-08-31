@@ -18,9 +18,9 @@ class ClassModel {
 
   static ClassModel fromJson(Map<String, dynamic> json) {
     return ClassModel(
-      id: json['id'] as int,
+      id: int.parse(json['id'].toString()),
       name: json['name'].toString(),
-      amount: (json['amount'] ?? -1) as int,
+      amount: int.parse((json['amount'] ?? -1).toString()),
     );
   }
 }

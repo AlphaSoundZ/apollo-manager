@@ -35,7 +35,7 @@ class User {
 
   static User fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['id'] as int,
+      id: int.parse(json['id'].toString()),
       name: Name(
         firstname: json['firstname'].toString(),
         lastname: json['lastname'].toString(),
