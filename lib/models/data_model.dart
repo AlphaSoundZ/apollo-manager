@@ -1,4 +1,4 @@
-import 'package:apollo_manager/models/get_response_model.dart';
+import '../models/get_response_model.dart';
 import 'package:flutter/material.dart';
 import '../enums/which_data.dart';
 import '../services/api.dart';

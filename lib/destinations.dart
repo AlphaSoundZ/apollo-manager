@@ -1,4 +1,4 @@
-import 'package:apollo_manager/views/prebook_view.dart';
+import 'views/prebook_view.dart';
 import 'package:flutter/material.dart';
 import 'enums/permissions.dart';
 import 'views/action_views/create_book_view.dart';

@@ -1,4 +1,4 @@
-import 'package:apollo_manager/services/api.dart';
+import 'services/api.dart';
 import 'package:provider/provider.dart';
 import 'enums/app_state.dart';
 import 'models/data_model.dart';

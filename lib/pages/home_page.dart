@@ -1,8 +1,8 @@
-import 'package:apollo_manager/enums/which_data.dart';
-import 'package:apollo_manager/views/data_view.dart';
-import 'package:apollo_manager/widgets/navigation/adaptive_navigation_sub_drawer.dart';
-import 'package:apollo_manager/widgets/navigation/adaptive_navigation_bar.dart';
-import 'package:apollo_manager/widgets/navigation/adaptive_navigation_rail.dart';
+import '../enums/which_data.dart';
+import '../views/data_view.dart';
+import '../widgets/navigation/adaptive_navigation_sub_drawer.dart';
+import '../widgets/navigation/adaptive_navigation_bar.dart';
+import '../widgets/navigation/adaptive_navigation_rail.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/stack_view_model.dart';

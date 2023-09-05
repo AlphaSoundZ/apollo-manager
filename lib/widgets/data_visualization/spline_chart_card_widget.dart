@@ -1,4 +1,4 @@
-import 'package:apollo_manager/widgets/data_visualization/dual_tone_card_widget.dart';
+import '../../widgets/data_visualization/dual_tone_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 

@@ -1,5 +1,5 @@
-import 'package:apollo_manager/enums/which_data.dart';
-import 'package:apollo_manager/models/get_response_model.dart';
+import '../enums/which_data.dart';
+import '../models/get_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';

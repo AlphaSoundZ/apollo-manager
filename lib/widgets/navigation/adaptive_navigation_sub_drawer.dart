@@ -1,4 +1,4 @@
-import 'package:apollo_manager/enums/which_data.dart';
+import '../../enums/which_data.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../destinations.dart';
@@ -81,18 +81,20 @@ class SubDrawerState extends State<SubDrawer> {
                       label: Text(
                           "New ${widget.destinations[selectedView].subDestinations[selectedSubView].fabLabel}"),
                       icon: Icon(
-                        (widget.destinations[selectedView]
+                        (widget
+                                    .destinations[selectedView]
                                     .subDestinations[selectedSubView]
                                     .whichData !=
                                 null)
-                            ? (widget.destinations[selectedView]
+                            ? (widget
+                                        .destinations[selectedView]
                                         .subDestinations[selectedSubView]
                                         .fabIcon !=
                                     null)
                                 ? widget.destinations[selectedView]
-                                    .subDestinations[selectedSubView]
-                                    .fabIcon
-                                : widget.destinations[selectedView]
+                                    .subDestinations[selectedSubView].fabIcon
+                                : widget
+                                    .destinations[selectedView]
                                     .subDestinations[selectedSubView]
                                     .whichData!
                                     .icons
@@ -105,8 +107,8 @@ class SubDrawerState extends State<SubDrawer> {
                     const SizedBox(height: 32),
                     Column(
                       verticalDirection: VerticalDirection.up,
-                      children: List.from(widget.destinations[selectedView]
-                          .subDestinations
+                      children: List.from(widget
+                          .destinations[selectedView].subDestinations
                           .map<Widget>(
                             (e) => SizedBox(
                               height: 32.0, // alternative: 40.0
@@ -120,7 +122,8 @@ class SubDrawerState extends State<SubDrawer> {
                                       maxLines: 1,
                                       style: TextStyle(
                                         fontWeight: selectedSubView ==
-                                                widget.destinations[selectedView]
+                                                widget
+                                                    .destinations[selectedView]
                                                     .subDestinations
                                                     .indexOf(e)
                                             ? FontWeight.bold
@@ -132,7 +135,8 @@ class SubDrawerState extends State<SubDrawer> {
                                     ),
                                     const Spacer(),
                                     if (e.whichData != null &&
-                                        widget.destinations[selectedView]
+                                        widget
+                                            .destinations[selectedView]
                                             .subDestinations[selectedSubView]
                                             .showAmount)
                                       Text(
@@ -145,7 +149,9 @@ class SubDrawerState extends State<SubDrawer> {
                                         maxLines: 1,
                                         style: TextStyle(
                                           fontWeight: selectedSubView ==
-                                                  widget.destinations[selectedView]
+                                                  widget
+                                                      .destinations[
+                                                          selectedView]
                                                       .subDestinations
                                                       .indexOf(e)
                                               ? FontWeight.bold
@@ -171,7 +177,8 @@ class SubDrawerState extends State<SubDrawer> {
                                 ),
                                 onPressed: () {
                                   setState(() {
-                                    selectedSubView = widget.destinations[selectedView]
+                                    selectedSubView = widget
+                                        .destinations[selectedView]
                                         .subDestinations
                                         .indexOf(e);
                                   });

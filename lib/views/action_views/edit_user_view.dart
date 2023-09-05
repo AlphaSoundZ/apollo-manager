@@ -1,7 +1,7 @@
-import 'package:apollo_manager/services/api.dart';
-import 'package:apollo_manager/enums/which_data.dart';
-import 'package:apollo_manager/models/data_model.dart';
-import 'package:apollo_manager/views/action_views/edit_sidesheet_view.dart';
+import '../../services/api.dart';
+import '../../enums/which_data.dart';
+import '../../models/data_model.dart';
+import '../../views/action_views/edit_sidesheet_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

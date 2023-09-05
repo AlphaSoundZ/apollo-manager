@@ -1,8 +1,8 @@
 import 'dart:math';
 
-import 'package:apollo_manager/models/stack_view_model.dart';
-import 'package:apollo_manager/widgets/data_visualization/number_card_widget.dart';
-import 'package:apollo_manager/widgets/data_visualization/spline_chart_card_widget.dart';
+import '../../../models/stack_view_model.dart';
+import '../../../widgets/data_visualization/number_card_widget.dart';
+import '../../../widgets/data_visualization/spline_chart_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../enums/which_data.dart';
