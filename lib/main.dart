@@ -9,7 +9,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'destinations.dart';
 import 'pages/loading_page.dart';
-import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 Future main() async {

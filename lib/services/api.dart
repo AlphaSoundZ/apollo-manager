@@ -22,7 +22,7 @@ class Api {
     ..interceptors.add(PrettyDioLogger(
       requestHeader: true,
       requestBody: true,
-      responseBody: false,
+      responseBody: true,
       error: true,
       compact: true,
     ))
