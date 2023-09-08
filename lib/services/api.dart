@@ -88,7 +88,11 @@ class Api {
 
     final payload = Jwt.parseJwt(token);
 
-    return payload["permissions"].cast<int>();
+    final List<dynamic> permissions = payload["permissions"];
+    final List<int> results =
+        permissions.map((e) => int.parse(e.toString())).toList();
+
+    return results;
   }
 
   Future<String> isLoggedIn() async {
@@ -121,11 +125,8 @@ class Api {
   }
 
   Future<void> logout() async {
-    await _storage.remove("token");
-    await _storage.remove("userId");
-    await _storage.remove("username");
-    await _storage.remove("firstName");
-    await _storage.remove("lastName");
+    // check if token exists
+    _storage.clear();
   }
 
   Future<dynamic> delete(String route, Object body) async {
