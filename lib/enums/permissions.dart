@@ -1,14 +1,17 @@
+// order needs to be the same as in the database and the id too (so the first element is id 1, second id 2 and so on)
+
 enum Permissions {
   book,
   addCsv,
-  user,
-  usercard,
-  device,
-  userClass,
-  deviceType,
-  usercardType,
-  token,
+  crudUser,
+  crudUsercard,
+  crudDevice,
+  crudUserClass,
+  crudDeviceType,
+  crudUsercardType,
+  crudToken,
   event,
+  crudPrebook,
   prebook,
 }
 

@@ -336,12 +336,12 @@ class _SearchAnchorsState extends State<SearchAnchors> {
                     size: 16,
                   ),
                 ),
-                title: Text(quickSearchResults[index].content.title),
+                title: Text(quickSearchResults[index].content(context).title),
                 subtitle: Row(
                   children: [
-                    Text(quickSearchResults[index].content.subTitle),
+                    Text(quickSearchResults[index].content(context).subTitle),
                     const Spacer(),
-                    Text(quickSearchResults[index].content.leading),
+                    Text(quickSearchResults[index].content(context).leading),
                   ],
                 ),
               );

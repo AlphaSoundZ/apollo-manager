@@ -1,4 +1,3 @@
-import 'views/prebook_view.dart';
 import 'package:flutter/material.dart';
 import 'enums/permissions.dart';
 import 'views/action_views/create_book_view.dart';
@@ -19,6 +18,7 @@ class Destination {
     required this.route,
     this.view,
     this.permission,
+    this.altPermission,
   });
   final IconData icon;
   final String label;
@@ -26,6 +26,7 @@ class Destination {
   final dynamic view;
   List<SubDestination> subDestinations;
   final Permissions? permission;
+  final Permissions? altPermission;
 }
 
 class SubDestination {
@@ -40,6 +41,7 @@ class SubDestination {
     this.fabContent,
     this.showAmount = true,
     this.permission,
+    this.altPermission,
   });
   final IconData icon;
   final String label;
@@ -51,6 +53,7 @@ class SubDestination {
   final Widget? fabContent;
   final bool showAmount;
   final Permissions? permission;
+  final Permissions? altPermission;
 }
 
 class Destinations extends ChangeNotifier {
@@ -96,7 +99,7 @@ class Destinations extends ChangeNotifier {
             onCancel: onFabCancel,
             onSubmit: onFabSubmit,
           ),
-          permission: Permissions.user,
+          permission: Permissions.crudUser,
         ),
         SubDestination(
           icon: Icons.credit_card_outlined,
@@ -111,7 +114,7 @@ class Destinations extends ChangeNotifier {
           whichData: WhichData.usercards,
           fabLabel: 'Usercard',
           fabIcon: Icons.credit_card_outlined,
-          permission: Permissions.usercard,
+          permission: Permissions.crudUsercard,
         ),
         SubDestination(
           icon: Icons.devices_outlined,
@@ -131,7 +134,7 @@ class Destinations extends ChangeNotifier {
             onCancel: onFabCancel,
             onSubmit: onFabSubmit,
           ),
-          permission: Permissions.device,
+          permission: Permissions.crudDevice,
         ),
         SubDestination(
           icon: Icons.token_outlined,
@@ -151,7 +154,7 @@ class Destinations extends ChangeNotifier {
             onCancel: onFabCancel,
             onSubmit: onFabSubmit,
           ),
-          permission: Permissions.token,
+          permission: Permissions.crudToken,
         ),
         SubDestination(
           icon: Icons.class_outlined,
@@ -166,16 +169,14 @@ class Destinations extends ChangeNotifier {
           whichData: WhichData.classes,
           fabLabel: 'Class',
           fabIcon: Icons.class_outlined,
-          permission: Permissions.userClass,
+          permission: Permissions.crudUserClass,
         ),
       ],
     ),
     Destination(
-        permission: Permissions.prebook,
         icon: Icons.calendar_month,
         label: 'Book',
         route: '/book',
-        view: const PrebookView(),
         subDestinations: [
           SubDestination(
             whichData: WhichData.bookings,
@@ -218,6 +219,7 @@ class Destinations extends ChangeNotifier {
               onSubmit: onFabSubmit,
             ),
             permission: Permissions.prebook,
+            altPermission: Permissions.crudPrebook,
           ),
         ]),
     Destination(
@@ -247,14 +249,19 @@ class Destinations extends ChangeNotifier {
 
       // check if there are no subDestinations and if the destination has permission
       if (destination.permission != null &&
-          !withPermissions.contains(destination.permission!.value)) {
+          (!withPermissions.contains(destination.permission!.value)) &&
+          (destination.altPermission != null &&
+              !withPermissions.contains(destination.altPermission!.value))) {
         continue;
       }
 
       // iterate through subDestinations
       for (SubDestination subDestination in destination.subDestinations) {
         if ((subDestination.permission == null ||
-            withPermissions.contains(subDestination.permission!.value))) {
+                withPermissions.contains(subDestination.permission!.value)) ||
+            (subDestination.altPermission != null &&
+                withPermissions
+                    .contains(subDestination.altPermission!.value))) {
           subDestinations.add(subDestination);
         }
       }

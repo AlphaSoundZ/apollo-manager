@@ -33,7 +33,7 @@ class _DataListState extends State<DataList> {
           widget.data.length,
           (index) {
             dynamic rowData;
-            rowData = widget.data[index].content;
+            rowData = widget.data[index].content(context);
             return Material(
               borderRadius: BorderRadius.circular(56.0 / 2 - 8),
               clipBehavior: Clip.hardEdge,

@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 import 'list_tile_content_model.dart';
 
 class Device {
@@ -10,11 +12,13 @@ class Device {
   final int id;
   final String uid;
   final String deviceType;
-  late ListTileContent content = ListTileContent(
-    title: uid,
-    leading: id.toString(),
-    subTitle: deviceType,
-  );
+  ListTileContent content(BuildContext context) {
+    return ListTileContent(
+      title: uid,
+      leading: id.toString(),
+      subTitle: deviceType,
+    );
+  }
 
   static Device fromJson(Map<String, dynamic> json) {
     return Device(

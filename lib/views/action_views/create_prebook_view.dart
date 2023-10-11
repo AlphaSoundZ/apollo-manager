@@ -20,13 +20,10 @@ class _CreatePrebookViewContentState extends State<CreatePrebookViewContent> {
   final Api api = Api();
 
   final TextEditingController amountController = TextEditingController();
-
   final TextEditingController dateTextFieldController = TextEditingController(
     text: DateTime.now().add(const Duration(days: 1)).toString().split(' ')[0],
   );
-
   final TextEditingController startTimeController = TextEditingController();
-
   final TextEditingController endTimeController = TextEditingController();
 
   // ignore: unused_field
@@ -326,6 +323,17 @@ class _CreatePrebookViewContentState extends State<CreatePrebookViewContent> {
     setState(() {
       _loading = true;
     });
+
+    // recalculate the selected times because the user might have changed the text fields manually
+    selectedDate = DateTime.parse(dateTextFieldController.text);
+    selectedStartTime = TimeOfDay(
+      hour: int.parse(startTimeController.text.split(":")[0]),
+      minute: int.parse(startTimeController.text.split(":")[1]),
+    );
+    selectedEndTime = TimeOfDay(
+      hour: int.parse(endTimeController.text.split(":")[0]),
+      minute: int.parse(endTimeController.text.split(":")[1]),
+    );
 
     Object body = {
       "amount": amountController.text,

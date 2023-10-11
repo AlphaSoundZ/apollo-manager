@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 import 'list_tile_content_model.dart';
 
 class Booking {
@@ -15,11 +17,13 @@ class Booking {
   final int user;
   final int device;
 
-  late ListTileContent content = ListTileContent(
-    title: 'Booking #$id',
-    leading: id.toString(),
-    subTitle: '$begin - ${end ?? 'now'}',
-  );
+  ListTileContent content(BuildContext context) {
+    return ListTileContent(
+      title: 'Booking #$id',
+      leading: id.toString(),
+      subTitle: '$begin - ${end ?? 'now'}',
+    );
+  }
 
   static Booking fromJson(Map<String, dynamic> json) {
     return Booking(

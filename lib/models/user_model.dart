@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import 'list_tile_content_model.dart';
 import 'class_model.dart';
 
@@ -26,11 +28,13 @@ class User {
   final Name name;
   final bool multiBooking;
   late ClassModel class_;
-  late ListTileContent content = ListTileContent(
-    title: name.fullName,
-    leading: id.toString(),
-    subTitle: class_.name,
-  );
+  ListTileContent content(BuildContext context) {
+    return ListTileContent(
+      title: name.fullName,
+      leading: id.toString(),
+      subTitle: class_.name,
+    );
+  }
   //final List<Bookings> bookings;
 
   static User fromJson(Map<String, dynamic> json) {

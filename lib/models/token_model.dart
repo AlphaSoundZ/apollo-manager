@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import 'list_tile_content_model.dart';
 import 'user_model.dart';
 
@@ -18,11 +20,13 @@ class Token {
   final String lastChange;
   final User user;
 
-  late ListTileContent content = ListTileContent(
-    title: "$username (${user.name.fullName})",
-    leading: id.toString(),
-    subTitle: permissionTexts.join(", "),
-  );
+  ListTileContent content(BuildContext context) {
+    return ListTileContent(
+      title: "$username (${user.name.fullName})",
+      leading: id.toString(),
+      subTitle: permissionTexts.join(", "),
+    );
+  }
 
   static Token fromJson(Map<String, dynamic> json) {
     return Token(
