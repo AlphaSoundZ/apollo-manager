@@ -51,6 +51,7 @@ class DataModel extends ChangeNotifier {
 
     if (object.isEmpty()) {
       updateData(context, whichData: whichData);
+
       return null;
     }
 
@@ -63,13 +64,20 @@ class DataModel extends ChangeNotifier {
     required WhichData whichData,
     Map<String, dynamic>? params,
     bool draw = true,
+    bool ignoreFetchingErrors = false,
   }) async {
+    if (data[whichData]!.hasError() && !ignoreFetchingErrors) {
+      return;
+    }
+
     data[whichData] = await Api().get(
       context,
       route: whichData.endpoint,
       whichData: whichData,
       params: params,
     );
+
+    debugPrint("THE RESPONSE CODE IS: " + data[whichData]!.code.toString());
 
     // if there is a search result for this data type, update it
     if (!searchResults[whichData]!.isEmpty()) {
@@ -90,8 +98,15 @@ class DataModel extends ChangeNotifier {
   Future<void> updateAll(BuildContext context) async {
     final List<Future<void>> futures = [];
 
+    debugPrint("Updating all data types");
+
     for (WhichData type in data.keys) {
-      futures.add(updateData(context, whichData: type, draw: false));
+      futures.add(updateData(
+        context,
+        whichData: type,
+        draw: false,
+        ignoreFetchingErrors: true,
+      ));
     }
 
     await Future.wait(futures);

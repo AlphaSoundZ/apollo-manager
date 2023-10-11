@@ -34,7 +34,9 @@ class GetResponseBody {
       timestamp: int.parse(json['timestamp'].toString()),
       request: json['request'].toString(),
       method: json['method'].toString(),
-      page: ResponseBodyPage.fromJson(json['page']),
+      page: json['page'] != null
+          ? ResponseBodyPage.fromJson(json['page'])
+          : ResponseBodyPage.nullPage(),
       data: json['data'],
       search: json['search'] ?? {},
       params: json['params'] ?? {},
@@ -60,6 +62,10 @@ class GetResponseBody {
   bool isEmpty() {
     return code == 0;
   }
+
+  bool hasError() {
+    return code != 200 && !isEmpty();
+  }
 }
 
 class ResponseBodyPage {
@@ -81,6 +87,15 @@ class ResponseBodyPage {
       current: json['current'],
       size: json['size'],
       totalRows: json['total_rows'],
+    );
+  }
+
+  factory ResponseBodyPage.nullPage() {
+    return ResponseBodyPage(
+      total: 0,
+      current: 0,
+      size: 0,
+      totalRows: 0,
     );
   }
 }

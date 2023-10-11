@@ -34,6 +34,10 @@ class Api {
           Get.offAllNamed("/login");
         }
 
+        if (error.response?.statusCode == 403) {
+          return;
+        }
+
         if (error.response == null) {
           // can't reach server because of not being in the same network
           return handler.resolve(Response(
@@ -80,7 +84,7 @@ class Api {
   }
 
   Future<List<int>> getPermissions() async {
-    String token = await _storage.getString("token");
+    String token = await getToken();
 
     if (token == "") {
       return [];
@@ -96,7 +100,7 @@ class Api {
   }
 
   Future<String> isLoggedIn() async {
-    String? token = await _storage.getString("token");
+    String? token = await getToken();
     debugPrint("token: $token");
 
     if (token == "") {
@@ -130,7 +134,7 @@ class Api {
   }
 
   Future<dynamic> delete(String route, Object body) async {
-    final token = await _storage.getString("token");
+    final token = await getToken();
 
     try {
       final response = await dio.delete(
@@ -151,7 +155,7 @@ class Api {
   }
 
   Future<dynamic> patch(String route, Object body) async {
-    final token = await _storage.getString("token");
+    final token = await getToken();
 
     try {
       final response = await dio.patch(
@@ -172,7 +176,7 @@ class Api {
   }
 
   Future<dynamic> post(String route, Object body) async {
-    final token = await _storage.getString("token");
+    final token = await getToken();
 
     try {
       final response = await dio.post(
@@ -198,7 +202,7 @@ class Api {
     WhichData? whichData,
     Map<String, dynamic>? params,
   }) async {
-    final token = await _storage.getString("token");
+    final token = await getToken();
 
     if (token == "") {
       return GetResponseBody.empty();
@@ -219,14 +223,14 @@ class Api {
     // if whichData is not null, then we need to map the data to the model
 
     if (whichData != null) {
-      if (response.data["data"] == null) {
-        return GetResponseBody.empty();
+      if (response.data["data"] != null) {
+        data = response.data["data"]
+            .map((json) => whichData.fromJson(
+                context, json.containsKey("accordance") ? json["data"] : json))
+            .toList();
+      } else {
+        data = [];
       }
-
-      data = response.data["data"]
-          .map((json) => whichData.fromJson(
-              context, json.containsKey("accordance") ? json["data"] : json))
-          .toList();
     } else {
       data = response.data["data"];
     }
@@ -236,5 +240,9 @@ class Api {
         {...response.data, "data": data, "params": params});
 
     return responseBody;
+  }
+
+  Future<String> getToken() async {
+    return await _storage.getString("token");
   }
 }
