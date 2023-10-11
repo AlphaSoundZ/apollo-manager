@@ -198,7 +198,7 @@ class Api {
 
   Future<GetResponseBody> get(
     BuildContext context, {
-    required route,
+    required String route,
     WhichData? whichData,
     Map<String, dynamic>? params,
   }) async {

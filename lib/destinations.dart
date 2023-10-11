@@ -8,6 +8,7 @@ import '../enums/which_data.dart';
 import '../views/action_views/create_user_view.dart';
 import '../views/action_views/create_device_view.dart';
 import '../views/settings_view.dart';
+import 'views/stats_view.dart';
 
 /// [view] should be either a [Widget] or a [StatefulBuilder], use [StatefulBuilder] if you need to use [setState] inside the view
 class Destination {
@@ -226,11 +227,7 @@ class Destinations extends ChangeNotifier {
       icon: Icons.bar_chart,
       label: 'Stats',
       route: '/stats',
-      view: const Center(
-        child: Center(
-          child: Text('Stats'),
-        ),
-      ),
+      view: const StatsView(),
     ),
     Destination(
       icon: Icons.settings,
